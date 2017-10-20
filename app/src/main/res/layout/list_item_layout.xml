@@ -10,7 +10,7 @@
         android:id="@+id/movie_image"
         android:layout_width="100dp"
         android:layout_height="160dp"
-        android:background="@android:color/holo_blue_bright"
+        android:background="?android:attr/colorBackgroundFloating"
         android:scaleType="centerCrop" />
 
     <TextView

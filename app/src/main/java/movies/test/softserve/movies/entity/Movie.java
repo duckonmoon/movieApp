@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 
-public class Result {
+public class Movie {
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;

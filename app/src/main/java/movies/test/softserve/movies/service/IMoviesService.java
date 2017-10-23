@@ -9,7 +9,7 @@ import retrofit2.http.Query;
  * Created by rkrit on 20.10.17.
  */
 
-public interface MoviesService {
+public interface IMoviesService {
     @GET("3/discover/movie")
     Call<Page> getPage(@Query("api_key") String apiKey, @Query("page") int page);
 }

@@ -24,22 +24,29 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieViewHolder> impl
     private List<Movie> mPageList;
     private MoviesRepository moviesRepository;
 
+    private static MovieListAdapter INSTANCE;
+
     public static final int VIEW_TYPE_CELL = 0;
     public static final int VIEW_TYPE_FOOTER = 1;
 
-    public MovieListAdapter() {
+    private MovieListAdapter() {
         mPageList = new ArrayList<>();
         moviesRepository = MoviesRepository.getInstance();
         moviesRepository.addObserver(this);
     }
 
+    public static MovieListAdapter getInstance() {
+        if (INSTANCE==null) {
+            INSTANCE = new MovieListAdapter();
+        }
+        return INSTANCE;
+    }
 
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_CELL) {
             return new MovieViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_layout, parent, false));
-        }
-        else {
+        } else {
             return new MovieViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_item_layout, parent, false));
         }
 
@@ -47,32 +54,28 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieViewHolder> impl
 
     @Override
     public void onBindViewHolder(final MovieViewHolder holder, int position) {
-        if (holder.mImageView!=null) {
-            holder.mTextView.setText(mPageList.get(position).getTitle() + "\n" + mPageList.get(position).getVoteAverage()
+        if (holder.mImageView != null) {
+            holder.mTextView.setText("" + (1+position)+ ". " + mPageList.get(position).getTitle() + "\n" + mPageList.get(position).getVoteAverage()
                     + "\n" + mPageList.get(position).getVoteCount());
             Picasso
                     .with(holder.mImageView.getContext())
                     .load("https://image.tmdb.org/t/p/w500" + mPageList.get(position)
                             .getPosterPath())
                     .into(holder.mImageView);
-        }
-        else
-        {
-            moviesRepository.trytogetAllMovies();
+        } else {
+            moviesRepository.tryToGetAllMovies();
         }
     }
 
     @Override
     public int getItemCount() {
-        return mPageList.size()+1;
+        return mPageList.size() + 1;
     }
-
 
     @Override
     public int getItemViewType(int position) {
         return (position == mPageList.size()) ? VIEW_TYPE_FOOTER : VIEW_TYPE_CELL;
     }
-
 
     @Override
     public void update(Observable o, Object arg) {

@@ -20,28 +20,26 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by rkrit on 23.10.17.
  */
 
-public class MoviesRepository extends Observable{
-    private IMoviesService service;
+public class MoviesRepository extends Observable {
     private static MoviesRepository INSTANCE = null;
+
+    private IMoviesService service;
     private Integer page;
-    private Boolean isBusy;
     private List<Movie> movieList;
-    private MoviesRepository()
-    {
+
+    private MoviesRepository() {
         page = 1;
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://api.themoviedb.org/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         service = retrofit.create(IMoviesService.class);
-        isBusy = false;
     }
 
-
     public static synchronized MoviesRepository getInstance() {
-        if(INSTANCE == null) {
+        if (INSTANCE == null) {
             synchronized (MoviesRepository.class) {
-                if (INSTANCE==null) {
+                if (INSTANCE == null) {
                     INSTANCE = new MoviesRepository();
                 }
             }
@@ -49,10 +47,7 @@ public class MoviesRepository extends Observable{
         return INSTANCE;
     }
 
-
-
-    public synchronized void trytogetAllMovies()
-    {
+    public synchronized void tryToGetAllMovies() {
         synchronized (page) {
             Call<Page> call = service.getPage(Constans.API_KEY, page);
             call.enqueue(new Callback<Page>() {
@@ -72,7 +67,7 @@ public class MoviesRepository extends Observable{
         }
     }
 
-    public List<Movie> getMovieList(){
+    public List<Movie> getMovieList() {
         return movieList;
     }
 }

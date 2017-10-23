@@ -13,12 +13,13 @@ import movies.test.softserve.movies.R;
  * Created by rkrit on 20.10.17.
  */
 
-public class MovieViewHolder extends RecyclerView.ViewHolder{
+public class MovieViewHolder extends RecyclerView.ViewHolder {
     public TextView mTextView;
     public ImageView mImageView;
+
     public MovieViewHolder(View itemView) {
         super(itemView);
-        if (itemView.findViewById(R.id.description)!= null) {
+        if (itemView.findViewById(R.id.description) != null) {
             mTextView = itemView.findViewById(R.id.description);
             mImageView = itemView.findViewById(R.id.movie_image);
         }

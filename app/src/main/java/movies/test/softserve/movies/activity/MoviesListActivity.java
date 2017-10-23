@@ -17,12 +17,9 @@ public class MoviesListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_list);
-
         mRecyclerView = findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        mMovieListAdapter = new MovieListAdapter();
+        mMovieListAdapter = MovieListAdapter.getInstance();
         mRecyclerView.setAdapter(mMovieListAdapter);
-
     }
 }

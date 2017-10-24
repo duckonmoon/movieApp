@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimaryDark">#424242</color>
     <color name="colorAccent">#FF4081</color>
 </resources>
+<!--RatingBar
+style="?attr/ratingBarStyleSmall"
+android:id="@+id/rating"
+android:layout_width="wrap_content"
+android:layout_height="0dp"
+android:layout_gravity="center"
+android:layout_weight="1"
+android:isIndicator="true"
+android:numStars="5"
+android:stepSize="0.1" /-->

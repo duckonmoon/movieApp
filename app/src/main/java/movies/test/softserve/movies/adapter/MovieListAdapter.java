@@ -1,8 +1,12 @@
 package movies.test.softserve.movies.adapter;
 
+import android.app.Activity;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 
 import com.squareup.picasso.Picasso;
 
@@ -23,21 +27,26 @@ import movies.test.softserve.movies.viewholder.MovieViewHolder;
 public class MovieListAdapter extends RecyclerView.Adapter<MovieViewHolder> implements Observer {
     private List<Movie> mPageList;
     private MoviesRepository moviesRepository;
+    private String errorMessage;
+    private Activity mActivity;
 
     private static MovieListAdapter INSTANCE;
 
     public static final int VIEW_TYPE_CELL = 0;
     public static final int VIEW_TYPE_FOOTER = 1;
 
-    private MovieListAdapter() {
+    private MovieListAdapter(Activity activity) {
         mPageList = new ArrayList<>();
         moviesRepository = MoviesRepository.getInstance();
         moviesRepository.addObserver(this);
+        mActivity = activity;
     }
 
-    public static MovieListAdapter getInstance() {
+    public static MovieListAdapter getInstance(Activity activity) {
         if (INSTANCE==null) {
-            INSTANCE = new MovieListAdapter();
+            INSTANCE = new MovieListAdapter(activity);
+
+
         }
         return INSTANCE;
     }
@@ -57,13 +66,33 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieViewHolder> impl
         if (holder.mImageView != null) {
             holder.mTextView.setText("" + (1+position)+ ". " + mPageList.get(position).getTitle() + "\n" + mPageList.get(position).getVoteAverage()
                     + "\n" + mPageList.get(position).getVoteCount());
+            holder.mRatingBar.setRating(mPageList.get(position).getVoteAverage().floatValue()/2);
+            holder.mRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                @Override
+                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                }
+            });
             Picasso
                     .with(holder.mImageView.getContext())
                     .load("https://image.tmdb.org/t/p/w500" + mPageList.get(position)
                             .getPosterPath())
                     .into(holder.mImageView);
         } else {
-            moviesRepository.tryToGetAllMovies();
+            if (errorMessage==null) {
+                moviesRepository.tryToGetAllMovies();
+            }
+            else {
+                holder.mProgressBar.setVisibility(View.GONE);
+                holder.mButton.setVisibility(View.VISIBLE);
+                holder.mButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        moviesRepository.tryToGetAllMovies();
+                        holder.mButton.setVisibility(View.GONE);
+                        holder.mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
         }
     }
 
@@ -79,7 +108,20 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieViewHolder> impl
 
     @Override
     public void update(Observable o, Object arg) {
-        mPageList.addAll(((MoviesRepository) o).getMovieList());
-        notifyDataSetChanged();
+        if (((MoviesRepository) o).getMovieList()!=null) {
+            mPageList.addAll(((MoviesRepository) o).getMovieList());
+            errorMessage= null;
+        }
+        else {
+            errorMessage = ((MoviesRepository) o).getMessage();
+            Snackbar.make(mActivity.findViewById(R.id.constraint_layout),errorMessage,Snackbar.LENGTH_LONG).show();
+        }
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
+
     }
 }

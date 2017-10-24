@@ -19,7 +19,7 @@ public class MoviesListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movies_list);
         mRecyclerView = findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mMovieListAdapter = MovieListAdapter.getInstance();
+        mMovieListAdapter = MovieListAdapter.getInstance(this);
         mRecyclerView.setAdapter(mMovieListAdapter);
     }
 }

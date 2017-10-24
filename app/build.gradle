@@ -17,11 +17,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding {
-        enabled = true
-    }
-    productFlavors {
-    }
 }
 
 dependencies {
@@ -34,10 +29,12 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'android.arch.lifecycle:extensions:1.0.0-rc1'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.1'
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support:design:26+'
 }

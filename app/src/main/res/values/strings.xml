@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Movies</string>
     <string name="end">Load More</string>
+    <string name="add_to_favourite">Add to favourite</string>
+    <string name="try_again">Try again</string>
 </resources>

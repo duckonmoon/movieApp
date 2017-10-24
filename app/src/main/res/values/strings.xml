@@ -3,4 +3,10 @@
     <string name="end">Load More</string>
     <string name="add_to_favourite">Add to favourite</string>
     <string name="try_again">Try again</string>
+    <string name="explore">Explore</string>
+    <string name="favourite">Favourite</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="movies">Movies</string>
+    <string name="created_by_duckonmoon">created by duckonmoon</string>
 </resources>

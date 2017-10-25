@@ -10,7 +10,7 @@ import java.util.Observable;
 import movies.test.softserve.movies.constans.Constans;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.Page;
-import movies.test.softserve.movies.service.IMoviesService;
+import movies.test.softserve.movies.service.MoviesService;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MoviesRepository extends Observable {
     private static MoviesRepository INSTANCE = null;
 
-    private IMoviesService service;
+    private MoviesService service;
     private Integer page;
     private List<Movie> movieList;
     private int numberOfRequests;
@@ -63,7 +63,7 @@ public class MoviesRepository extends Observable {
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        service = retrofit.create(IMoviesService.class);
+        service = retrofit.create(MoviesService.class);
     }
 
     public static synchronized MoviesRepository getInstance() {

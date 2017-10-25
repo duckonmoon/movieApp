@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.Observable;
 
-import movies.test.softserve.movies.constans.Constans;
+import movies.test.softserve.movies.constans.Constants;
 import movies.test.softserve.movies.entity.FullMovie;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,7 +43,7 @@ public class MovieService extends Observable {
     }
 
     public synchronized void tryToGetMovie(Integer id){
-        Call<FullMovie> call = service.getMovie(id, Constans.API_KEY);
+        Call<FullMovie> call = service.getMovie(id, Constants.API_KEY);
         call.enqueue(new Callback<FullMovie>() {
             @Override
             public void onResponse(Call<FullMovie> call, Response<FullMovie> response) {

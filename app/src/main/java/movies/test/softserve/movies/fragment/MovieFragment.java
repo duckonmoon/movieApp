@@ -3,10 +3,13 @@ package movies.test.softserve.movies.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -38,6 +41,11 @@ public class MovieFragment extends DialogFragment implements Observer {
     private FullMovie fullMovie;
 
     private ImageView imageView;
+    private TextView titleView;
+    private TextView overviewView;
+    private TextView releaseView;
+    private TextView voteCountView;
+    private RatingBar voteAverageView;
 
     private MovieService service;
 
@@ -81,6 +89,18 @@ public class MovieFragment extends DialogFragment implements Observer {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie, container, false);
         imageView = view.findViewById(R.id.movie_image_detail);
+        titleView = view.findViewById(R.id.title);
+        titleView.setText(title);
+        overviewView = view.findViewById(R.id.overview);
+        overviewView.setText(overview);
+        releaseView = view.findViewById(R.id.release_date);
+        releaseView.setText("release date:\n " + releaseDate);
+        voteAverageView = view.findViewById(R.id.vote_average);
+        voteAverageView.setRating(voteAverage.floatValue()/2);
+        voteCountView= view.findViewById(R.id.vote_count);
+        voteCountView.setText("voted: " + voteCount);
+
+
         Picasso
                 .with(imageView.getContext())
                 .load("https://image.tmdb.org/t/p/w500" + posterPath)
@@ -101,5 +121,27 @@ public class MovieFragment extends DialogFragment implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         fullMovie = ((MovieService) o).getFullMovie();
+        String newInfoFromFullMovieDescription = "Genres :\n";
+        for (int i =0;i< fullMovie.getGenres().size(); i++)
+        {
+            newInfoFromFullMovieDescription += " " + fullMovie.getGenres().get(i).getName() + ";\n";
+        }
+        newInfoFromFullMovieDescription+= "\nCompanies:\n";
+
+        for (int i =0;i< fullMovie.getProductionCompanies().size(); i++)
+        {
+            newInfoFromFullMovieDescription += " " + fullMovie.getProductionCompanies().get(i).getName() + ";\n";
+        }
+        newInfoFromFullMovieDescription+= "\nCountries:\n";
+
+        for (int i =0;i< fullMovie.getProductionCountries().size(); i++)
+        {
+            newInfoFromFullMovieDescription += " " + fullMovie.getProductionCountries().get(i).getName() + ";\n";
+        }
+        newInfoFromFullMovieDescription+= "\n";
+        overviewView.setText(newInfoFromFullMovieDescription + overviewView.getText().toString());
+
+
+
     }
 }

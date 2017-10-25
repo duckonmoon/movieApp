@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Observable;
 
-import movies.test.softserve.movies.constans.Constans;
+import movies.test.softserve.movies.constans.Constants;
+import movies.test.softserve.movies.controllers.MainController;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.Page;
 import movies.test.softserve.movies.service.MoviesService;
@@ -28,14 +29,11 @@ public class MoviesRepository extends Observable {
     private static MoviesRepository INSTANCE = null;
 
     private MoviesService service;
-    private Integer page;
     private List<Movie> movieList;
     private int numberOfRequests;
     private String message;
 
-
     private MoviesRepository() {
-        page = 1;
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
@@ -78,34 +76,31 @@ public class MoviesRepository extends Observable {
     }
 
     public synchronized void tryToGetAllMovies() {
-        synchronized (page) {
-            numberOfRequests = 0;
-            Call<Page> call = service.getPage(Constans.API_KEY, page);
-            call.enqueue(new Callback<Page>() {
-                @Override
-                public void onResponse(Call<Page> call, Response<Page> response) {
-                    page = response.body().getPage() + 1;
-                    movieList = response.body().getMovies();
-                    MoviesRepository.this.setChanged();
-                    MoviesRepository.this.notifyObservers();
-                }
+        numberOfRequests = 0;
+        Call<Page> call = service.getPage(Constants.API_KEY, MainController.getInstance().getPage());
+        call.enqueue(new Callback<Page>() {
+            @Override
+            public void onResponse(Call<Page> call, Response<Page> response) {
+                movieList = response.body().getMovies();
+                MoviesRepository.this.setChanged();
+                MoviesRepository.this.notifyObservers();
+            }
 
-                @Override
-                public void onFailure(Call<Page> call, Throwable t) {
-                    Log.e("Smth went wrong", t.toString());
+            @Override
+            public void onFailure(Call<Page> call, Throwable t) {
+                Log.e("Smth went wrong", t.toString());
 
-                }
-            });
-        }
+            }
+        });
     }
+
 
     private synchronized void tryAgain(Exception e) {
         if (numberOfRequests < 3) {
-            Call<Page> call = service.getPage(Constans.API_KEY, page);
+            Call<Page> call = service.getPage(Constants.API_KEY,MainController.getInstance().getPage());
             call.enqueue(new Callback<Page>() {
                 @Override
                 public void onResponse(Call<Page> call, Response<Page> response) {
-                    page = response.body().getPage() + 1;
                     movieList = response.body().getMovies();
                     MoviesRepository.this.setChanged();
                     MoviesRepository.this.notifyObservers();

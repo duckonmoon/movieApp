@@ -29,8 +29,9 @@ public class MoviesListActivity extends AppCompatActivity
         setContentView(R.layout.activity_movies);
         mRecyclerView = findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mMovieListAdapter = MovieListAdapter.getInstance(this);
+        mMovieListAdapter = new MovieListAdapter(this);
         mRecyclerView.setAdapter(mMovieListAdapter);
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -43,6 +44,7 @@ public class MoviesListActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     @Override

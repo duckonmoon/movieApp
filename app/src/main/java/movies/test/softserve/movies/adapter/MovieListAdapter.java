@@ -1,8 +1,6 @@
 package movies.test.softserve.movies.adapter;
 
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,18 +10,10 @@ import android.widget.RatingBar;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.EventListener;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
 import movies.test.softserve.movies.R;
+import movies.test.softserve.movies.activity.MovieDetailsActivity;
 import movies.test.softserve.movies.controllers.MainController;
-import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.event.AddedItemsEvent;
-import movies.test.softserve.movies.fragment.MovieFragment;
-import movies.test.softserve.movies.repository.MoviesRepository;
 import movies.test.softserve.movies.viewholder.MovieViewHolder;
 
 /**
@@ -78,10 +68,19 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieViewHolder>{
             holder.mViewGroup.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FragmentManager fm = mActivity.getSupportFragmentManager();
+                    /*FragmentManager fm = mActivity.getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.add(MovieFragment.newInstance( mainController.getMovies().get(position)), "movie_fragment");
-                    ft.commit();
+                    ft.commit();*/
+                    Intent intent = new Intent(mActivity, MovieDetailsActivity.class);
+                    intent.putExtra(MovieDetailsActivity.ID,mainController.getMovies().get(position).getId());
+                    intent.putExtra(MovieDetailsActivity.TITLE,mainController.getMovies().get(position).getTitle());
+                    intent.putExtra(MovieDetailsActivity.POSTER_PATH,mainController.getMovies().get(position).getPosterPath());
+                    intent.putExtra(MovieDetailsActivity.RELEASE_DATE,mainController.getMovies().get(position).getReleaseDate());
+                    intent.putExtra(MovieDetailsActivity.VOTE_COUNT,mainController.getMovies().get(position).getVoteCount());
+                    intent.putExtra(MovieDetailsActivity.VOTE_AVERAGE,mainController.getMovies().get(position).getVoteAverage());
+                    intent.putExtra(MovieDetailsActivity.OVERVIEW,mainController.getMovies().get(position).getOverview());
+                    mActivity.startActivity(intent);
 
                 }
             });

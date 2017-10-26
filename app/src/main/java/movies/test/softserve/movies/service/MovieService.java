@@ -1,11 +1,15 @@
 package movies.test.softserve.movies.service;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 import movies.test.softserve.movies.constans.Constants;
 import movies.test.softserve.movies.entity.FullMovie;
+import movies.test.softserve.movies.event.OnMovieInformationGet;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -16,11 +20,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by rkrit on 25.10.17.
  */
 
-public class MovieService extends Observable {
+public class MovieService {
 
     private static MovieService INSTANCE;
     private MoviesService service;
-    private FullMovie fullMovie;
+    private List<OnMovieInformationGet> listOfListeners;
+
 
     private MovieService() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -28,6 +33,7 @@ public class MovieService extends Observable {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         service = retrofit.create(MoviesService.class);
+        listOfListeners = new ArrayList<>();
     }
 
 
@@ -42,14 +48,16 @@ public class MovieService extends Observable {
         return INSTANCE;
     }
 
-    public synchronized void tryToGetMovie(Integer id){
+    public synchronized void tryToGetMovie(Integer id) {
         Call<FullMovie> call = service.getMovie(id, Constants.API_KEY);
         call.enqueue(new Callback<FullMovie>() {
             @Override
             public void onResponse(Call<FullMovie> call, Response<FullMovie> response) {
-                fullMovie = response.body();
-                MovieService.this.setChanged();
-                MovieService.this.notifyObservers();
+                FullMovie fullMovie = response.body();
+                for (OnMovieInformationGet listener :
+                        listOfListeners) {
+                    listener.onMovieGet(fullMovie);
+                }
             }
 
             @Override
@@ -59,7 +67,12 @@ public class MovieService extends Observable {
         });
     }
 
-    public FullMovie getFullMovie() {
-        return fullMovie;
+
+    public void addListener(@NonNull OnMovieInformationGet listener) {
+        listOfListeners.add(listener);
+    }
+
+    public void removeListener(@NonNull OnMovieInformationGet listener){
+        listOfListeners.remove(listener);
     }
 }

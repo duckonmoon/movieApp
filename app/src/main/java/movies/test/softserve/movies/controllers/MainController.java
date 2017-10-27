@@ -1,6 +1,7 @@
 package movies.test.softserve.movies.controllers;
 
 import android.app.Application;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.Observer;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.event.AddedItemsEvent;
 import movies.test.softserve.movies.repository.MoviesRepository;
+import movies.test.softserve.movies.service.DBService;
+import movies.test.softserve.movies.service.MovieReaderDbHelper;
 
 /**
  * Created by rkrit on 25.10.17.
@@ -21,6 +24,9 @@ public class MainController extends Application implements Observer{
     private MoviesRepository moviesRepository;
     private String errorMessage;
     private AddedItemsEvent eventListener;
+    private MovieReaderDbHelper movieReaderDbHelper;
+    private SQLiteDatabase database;
+
 
     private static MainController INSTANCE;
 
@@ -30,6 +36,8 @@ public class MainController extends Application implements Observer{
         INSTANCE = this;
         movies = new ArrayList<>();
         page = 1;
+        movieReaderDbHelper = new MovieReaderDbHelper(getApplicationContext());
+        database = movieReaderDbHelper.getWritableDatabase();
         moviesRepository = MoviesRepository.getInstance();
         moviesRepository.addObserver(this);
     }
@@ -76,5 +84,9 @@ public class MainController extends Application implements Observer{
 
     public void requestMore() {
         moviesRepository.tryToGetAllMovies();
+    }
+
+    public SQLiteDatabase getDatabase() {
+        return database;
     }
 }

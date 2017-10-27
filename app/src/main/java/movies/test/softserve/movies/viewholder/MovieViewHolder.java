@@ -21,7 +21,7 @@ public class MovieViewHolder extends RecyclerView.ViewHolder {
     public TextView mTextView;
     public ImageView mImageView;
     public RatingBar mRatingBar;
-    public CheckBox mCheckbox;
+    public ImageView mFavourite;
     public Button mButton;
     public ProgressBar mProgressBar;
     public ViewGroup mViewGroup;
@@ -32,7 +32,7 @@ public class MovieViewHolder extends RecyclerView.ViewHolder {
             mTextView = itemView.findViewById(R.id.description);
             mImageView = itemView.findViewById(R.id.movie_image);
             mRatingBar = itemView.findViewById(R.id.rating);
-            mCheckbox = itemView.findViewById(R.id.favourite);
+            mFavourite = itemView.findViewById(R.id.favourite);
             mViewGroup = itemView.findViewById(R.id.card_of_list);
         }else {
             mProgressBar = itemView.findViewById(R.id.spinner);

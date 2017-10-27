@@ -104,5 +104,7 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
-    <string name="release_date">release date : </string>
+    <string name="release_date">release date :\u0020</string>
+    <string name="homepage">homepage:\u0020</string>
+    <string name="favourite1">favourite</string>
 </resources>

@@ -4,7 +4,8 @@
     <color name="colorPrimaryDark">#424242</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#ffffff</color>
-
+    <color name="main_app_color">#80CAC3</color>
+    <color name="color_favourite">#FFEB3B</color>
 </resources>
 <!--RatingBar
 style="?attr/ratingBarStyleSmall"

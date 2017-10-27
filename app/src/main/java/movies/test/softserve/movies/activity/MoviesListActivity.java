@@ -47,6 +47,13 @@ public class MoviesListActivity extends AppCompatActivity
 
     }
 
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        mMovieListAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

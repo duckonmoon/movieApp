@@ -6,6 +6,7 @@
     <color name="white">#ffffff</color>
     <color name="main_app_color">#80CAC3</color>
     <color name="color_favourite">#FFEB3B</color>
+    <color name="main_background">#303030</color>
 </resources>
 <!--RatingBar
 style="?attr/ratingBarStyleSmall"

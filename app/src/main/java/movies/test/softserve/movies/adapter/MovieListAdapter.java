@@ -38,7 +38,13 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         mainController.setAddedItemsEventListener(new AddedItemsEvent() {
             @Override
             public void onItemsAdded() {
-                notifyDataSetChanged();
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+
             }
         });
     }

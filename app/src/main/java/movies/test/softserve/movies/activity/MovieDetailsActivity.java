@@ -101,7 +101,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         });
         releaseDateView.setText(releaseDateView.getText().toString() + releaseDate);
-        voteCountView.setText("" + voteAverage + "/" + voteCount);
+        voteCountView.setText("" + ((float)Math.round(voteAverage*10))/10 + "/" + voteCount);
         if (dbService.checkIfMovieExists(id)) {
             fab.setImageResource(R.drawable.ic_stars_black_24dp);
         }
@@ -187,8 +187,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         toolbarLayout = findViewById(R.id.toolbar_layout);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

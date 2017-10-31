@@ -34,7 +34,10 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import movies.test.softserve.movies.R;
+import movies.test.softserve.movies.entity.Code;
 import movies.test.softserve.movies.entity.FullMovie;
+import movies.test.softserve.movies.entity.Movie;
+import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnMovieInformationGet;
 import movies.test.softserve.movies.service.DBService;
 import movies.test.softserve.movies.service.MovieService;
@@ -53,14 +56,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private MovieService service;
     private DBService dbService;
 
-    private Integer id;
-    private String title;
-    private String releaseDate;
-    private Double voteAverage;
-    private Integer voteCount;
-    private String posterPath;
-    private String overview;
-
     private Toolbar toolbar;
     private CollapsingToolbarLayout toolbarLayout;
     private FloatingActionButton fab;
@@ -77,6 +72,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     FullMovieViewModel viewModel;
 
     private OnMovieInformationGet listener;
+    private OnInfoUpdatedListener infoListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,27 +88,35 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (infoListener == null) {
+            infoListener = new OnInfoUpdatedListener() {
+                @Override
+                public void OnInfoUpdated(float code) {
+                    ratingBar.setRating(code);
+                    Snackbar.make(findViewById(R.id.nested_scroll_view), "Your rating saved", Snackbar.LENGTH_LONG).show();
+                }
+            };
+            MovieService.getInstance().addOnInfoUpdatedListener(infoListener);
+        }
         getFullInfo();
     }
 
     private void useIntentInfo() {
-        getSupportActionBar().setTitle(title);
-        overViewView.setText(overview);
-        ratingBar.setRating(voteAverage.floatValue() / 2);
+        getSupportActionBar().setTitle(viewModel.getMovie().getTitle());
+        overViewView.setText(viewModel.getMovie().getOverview());
+        ratingBar.setRating(viewModel.getMovie().getVoteAverage().floatValue() / 2);
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 if (fromUser) {
-                    ratingBar.setRating(rating);
 
-                    Snackbar.make(findViewById(R.id.nested_scroll_view), "Your rating saved", Snackbar.LENGTH_LONG).show();
-                    service.rateMovie(id,rating*2);
+                    MovieService.getInstance().rateMovie(viewModel.getMovie().getId(), rating * 2);
                 }
             }
         });
-        releaseDateView.setText(releaseDateView.getText().toString() + releaseDate);
-        voteCountView.setText("" + ((float)Math.round(voteAverage*10))/10 + "/" + voteCount);
-        if (dbService.checkIfMovieExists(id)) {
+        releaseDateView.setText(releaseDateView.getText().toString() + viewModel.getMovie().getReleaseDate());
+        voteCountView.setText("" + ((float) Math.round(viewModel.getMovie().getVoteAverage() * 10)) / 10 + "/" + viewModel.getMovie().getVoteCount());
+        if (dbService.checkIfMovieExists(viewModel.getMovie().getId())) {
             fab.setImageResource(R.drawable.ic_stars_black_24dp);
         }
 
@@ -120,10 +124,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
-                        .setQuote(title+ "     \r\nPlot: " + overview)
-                        .setContentUrl(Uri.parse("https://image.tmdb.org/t/p/w500" + posterPath))
+                        .setQuote(viewModel.getMovie().getTitle() + "     \r\nPlot: " + viewModel.getMovie().getOverview())
+                        .setContentUrl(Uri.parse("https://image.tmdb.org/t/p/w500" + viewModel.getMovie().getPosterPath()))
                         .build();
-                ShareDialog.show(MovieDetailsActivity.this,shareLinkContent);
+                ShareDialog.show(MovieDetailsActivity.this, shareLinkContent);
             }
         });
 
@@ -141,7 +145,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     }
                 };
                 service.addListener(listener);
-                service.tryToGetMovie(id);
+                service.tryToGetMovie(viewModel.getMovie().getId());
             } else {
                 addGenresCountriesCompanies();
             }
@@ -213,13 +217,19 @@ public class MovieDetailsActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!dbService.checkIfMovieExists(id)) {
-                    dbService.insertMovie(id, title, voteAverage.floatValue(), voteCount, overview, releaseDate,posterPath);
+                if (!dbService.checkIfMovieExists(viewModel.getMovie().getId())) {
+                    dbService.insertMovie(viewModel.getMovie().getId(),
+                            viewModel.getMovie().getTitle(),
+                            viewModel.getMovie().getVoteAverage().floatValue(),
+                            viewModel.getMovie().getVoteCount(),
+                            viewModel.getMovie().getOverview(),
+                            viewModel.getMovie().getReleaseDate(),
+                            viewModel.getMovie().getPosterPath());
                     fab.setImageResource(R.drawable.ic_stars_black_24dp);
                     Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 } else {
-                    dbService.deleteMovieFromDb(id);
+                    dbService.deleteMovieFromDb(viewModel.getMovie().getId());
                     fab.setImageResource(R.drawable.ic_star_border_black_24dp);
                     Snackbar.make(view, "Removed to favourite", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
@@ -240,17 +250,19 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private void getIntentInfo() {
         Intent intent = getIntent();
         if (intent != null) {
+            Movie movie = new Movie();
             Bundle bundle = intent.getExtras();
-            id = bundle.getInt(ID);
-            title = bundle.getString(TITLE);
-            releaseDate = bundle.getString(RELEASE_DATE);
-            voteAverage = bundle.getDouble(VOTE_AVERAGE);
-            voteCount = bundle.getInt(VOTE_COUNT);
-            posterPath = bundle.getString(POSTER_PATH);
-            overview = bundle.getString(OVERVIEW);
+            movie.setId(bundle.getInt(ID));
+            movie.setTitle(bundle.getString(TITLE));
+            movie.setReleaseDate(bundle.getString(RELEASE_DATE));
+            movie.setVoteAverage(bundle.getDouble(VOTE_AVERAGE));
+            movie.setVoteCount(bundle.getInt(VOTE_COUNT));
+            movie.setPosterPath(bundle.getString(POSTER_PATH));
+            movie.setOverview(bundle.getString(OVERVIEW));
+            viewModel.setMovie(movie);
             Picasso
                     .with(this)
-                    .load("https://image.tmdb.org/t/p/w500" + posterPath)
+                    .load("https://image.tmdb.org/t/p/w500" + viewModel.getMovie().getPosterPath())
                     .into(new Target() {
                         @Override
                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -276,7 +288,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if (listener != null) {
-            service.removeListener(listener);
+            MovieService.getInstance().removeListener(listener);
+        }
+        if (infoListener != null) {
+            MovieService.getInstance().removeOnInfoUpdatedListener(infoListener);
         }
     }
 

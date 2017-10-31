@@ -19,6 +19,9 @@ public final class MovieDbEntities {
         public static final String COLUMN_NAME_IMAGE = "image";
         public static final String COLUMN_NAME_RELEASE_DATE = "release_date";
         public static final String COLUMN_NAME_OVERVIEW = "overview";
+        //TODO add watched and favorite as different movie types
+        public static final String COLUMN_NAME_WATCHED = "watched";
+        public static final String COLUMN_NAME_FAVOURITE = "favourite";
     }
 
 }

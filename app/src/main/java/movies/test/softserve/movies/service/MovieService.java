@@ -6,7 +6,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
 import movies.test.softserve.movies.constans.Constants;
 import movies.test.softserve.movies.controllers.MainController;
@@ -14,6 +13,7 @@ import movies.test.softserve.movies.entity.Code;
 import movies.test.softserve.movies.entity.FullMovie;
 import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.Rating;
+import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnMovieInformationGet;
 import movies.test.softserve.movies.event.OnSessionGetListener;
 import retrofit2.Call;
@@ -32,6 +32,7 @@ public class MovieService {
     private MoviesService service;
     private List<OnMovieInformationGet> listOfListeners;
     private List<OnSessionGetListener> onSessionGetListenersList;
+    private List<OnInfoUpdatedListener> onInfoUpdatedList;
 
 
     private MovieService() {
@@ -42,6 +43,7 @@ public class MovieService {
         service = retrofit.create(MoviesService.class);
         listOfListeners = new ArrayList<>();
         onSessionGetListenersList = new ArrayList<>();
+        onInfoUpdatedList = new ArrayList<>();
     }
 
 
@@ -95,7 +97,7 @@ public class MovieService {
 
     }
 
-    public void rateMovie(Integer movie_id,float value){
+    public void rateMovie(Integer movie_id, final float value){
         GuestSession session = MainController.getInstance().getGuestSession();
         if (session!=null) {
 
@@ -104,6 +106,10 @@ public class MovieService {
                 @Override
                 public void onResponse(Call<Code> call, Response<Code> response) {
                     Log.d("Success",response.body().getStatusMessage());
+                    for (OnInfoUpdatedListener listener :
+                            onInfoUpdatedList) {
+                        listener.OnInfoUpdated(value/2);
+                    }
                 }
 
                 @Override
@@ -133,5 +139,13 @@ public class MovieService {
 
     public void removeSessionListener(@NonNull OnSessionGetListener listener) {
         onSessionGetListenersList.remove(listener);
+    }
+
+    public void addOnInfoUpdatedListener(@NonNull OnInfoUpdatedListener listener){
+        onInfoUpdatedList.add(listener);
+    }
+
+    public void removeOnInfoUpdatedListener(@NonNull OnInfoUpdatedListener listener){
+        onInfoUpdatedList.remove(listener);
     }
 }

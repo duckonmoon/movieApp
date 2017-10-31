@@ -3,11 +3,16 @@ package movies.test.softserve.movies.controllers;
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.sromku.simple.fb.Permission;
+import com.sromku.simple.fb.SimpleFacebook;
+import com.sromku.simple.fb.SimpleFacebookConfiguration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.event.AddedItemsEvent;
 import movies.test.softserve.movies.repository.MoviesRepository;
@@ -40,6 +45,23 @@ public class MainController extends Application implements Observer{
         database = movieReaderDbHelper.getWritableDatabase();
         moviesRepository = MoviesRepository.getInstance();
         moviesRepository.addObserver(this);
+        setFBConfig();
+    }
+
+    private void setFBConfig() {
+        Permission[] permissions = new Permission[] {
+                Permission.USER_PHOTOS,
+                Permission.EMAIL,
+                Permission.PUBLISH_ACTION
+        };
+
+        SimpleFacebookConfiguration configuration = new SimpleFacebookConfiguration.Builder()
+                .setAppId(getString(R.string.app_id))
+                .setNamespace("movies.test.softserve.movies")
+                .setPermissions(permissions)
+                .build();
+
+        SimpleFacebook.setConfiguration(configuration);
     }
 
     @Override

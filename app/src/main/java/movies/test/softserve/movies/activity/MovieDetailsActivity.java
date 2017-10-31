@@ -21,12 +21,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.sromku.simple.fb.SimpleFacebook;
+import com.sromku.simple.fb.entities.Feed;
+import com.sromku.simple.fb.listeners.OnPublishListener;
 
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.entity.FullMovie;
@@ -67,6 +71,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private LinearLayout genres;
     private LinearLayout countries;
     private LinearLayout companies;
+    private ImageView share;
+    private SimpleFacebook mSimpleFacebook;
 
     FullMovieViewModel viewModel;
 
@@ -86,6 +92,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mSimpleFacebook = SimpleFacebook.getInstance(MovieDetailsActivity.this);
         getFullInfo();
     }
 
@@ -105,6 +112,29 @@ public class MovieDetailsActivity extends AppCompatActivity {
         if (dbService.checkIfMovieExists(id)) {
             fab.setImageResource(R.drawable.ic_stars_black_24dp);
         }
+
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Feed feed = new Feed.Builder()
+                        .setMessage(overview)
+                        .setName(title)
+                        .setCaption(title)
+                        .setDescription(overview)
+                        .setLink("https://image.tmdb.org/t/p/w500" + posterPath)
+                        .setPicture("https://image.tmdb.org/t/p/w500" + posterPath)
+                        .build();
+
+                OnPublishListener onPublishListener = new OnPublishListener() {
+                    @Override
+                    public void onComplete(String response) {
+                        Log.w("Everything is ok","+");
+                    }
+                };
+
+                mSimpleFacebook.publish(feed,true,onPublishListener);
+            }
+        });
 
     }
 
@@ -212,6 +242,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         countries = findViewById(R.id.countries);
         companies = findViewById(R.id.companies);
         links = findViewById(R.id.links);
+        share = findViewById(R.id.share);
+
     }
 
     private void getIntentInfo() {
@@ -270,5 +302,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mSimpleFacebook.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

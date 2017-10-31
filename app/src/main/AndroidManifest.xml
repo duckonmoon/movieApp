@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+
+
     <application
         android:name=".controllers.MainController"
         android:allowBackup="true"
@@ -14,7 +16,7 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".activity.MoviesListActivity">
-            <intent-filter>
+            <intent-filter>f[f[
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,6 +29,19 @@
             android:theme="@style/AppTheme">
 
         </activity>
+
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:label="@string/app_id" >
+        </activity>
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/app_id"/>
+
     </application>
+
+
 
 </manifest>

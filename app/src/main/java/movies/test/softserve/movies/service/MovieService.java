@@ -2,14 +2,20 @@ package movies.test.softserve.movies.service;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
 import movies.test.softserve.movies.constans.Constants;
+import movies.test.softserve.movies.controllers.MainController;
+import movies.test.softserve.movies.entity.Code;
 import movies.test.softserve.movies.entity.FullMovie;
+import movies.test.softserve.movies.entity.GuestSession;
+import movies.test.softserve.movies.entity.Rating;
 import movies.test.softserve.movies.event.OnMovieInformationGet;
+import movies.test.softserve.movies.event.OnSessionGetListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,6 +31,7 @@ public class MovieService {
     private static MovieService INSTANCE;
     private MoviesService service;
     private List<OnMovieInformationGet> listOfListeners;
+    private List<OnSessionGetListener> onSessionGetListenersList;
 
 
     private MovieService() {
@@ -34,6 +41,7 @@ public class MovieService {
                 .build();
         service = retrofit.create(MoviesService.class);
         listOfListeners = new ArrayList<>();
+        onSessionGetListenersList = new ArrayList<>();
     }
 
 
@@ -67,12 +75,63 @@ public class MovieService {
         });
     }
 
+    public synchronized void tryToGetSession() {
+        Call<GuestSession> call = service.getGuestSession(Constants.API_KEY);
+        call.enqueue(new Callback<GuestSession>() {
+            @Override
+            public void onResponse(Call<GuestSession> call, Response<GuestSession> response) {
+                GuestSession guestSession = response.body();
+                for (OnSessionGetListener listener :
+                        onSessionGetListenersList) {
+                    listener.onSessionGet(guestSession);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GuestSession> call, Throwable t) {
+                Log.e("Smth went wrong", t.getMessage());
+            }
+        });
+
+    }
+
+    public void rateMovie(Integer movie_id,float value){
+        GuestSession session = MainController.getInstance().getGuestSession();
+        if (session!=null) {
+
+            Call<Code> call = service.rateMovie(Constants.CONTENT_TYPE, movie_id, Constants.API_KEY,  session.getGuestSessionId(),new Rating(value));
+            call.enqueue(new Callback<Code>() {
+                @Override
+                public void onResponse(Call<Code> call, Response<Code> response) {
+                    Log.d("Success",response.body().getStatusMessage());
+                }
+
+                @Override
+                public void onFailure(Call<Code> call, Throwable t) {
+                    Log.e("Smth went wrong", t.getMessage());
+                }
+            });
+        }
+        else{
+            tryToGetSession();
+            Toast.makeText(MainController.getInstance().getApplicationContext(),"No internet",Toast.LENGTH_LONG).show();
+        }
+    }
+
 
     public void addListener(@NonNull OnMovieInformationGet listener) {
         listOfListeners.add(listener);
     }
 
-    public void removeListener(@NonNull OnMovieInformationGet listener){
+    public void removeListener(@NonNull OnMovieInformationGet listener) {
         listOfListeners.remove(listener);
+    }
+
+    public void addSessionListener(@NonNull OnSessionGetListener listener) {
+        onSessionGetListenersList.add(listener);
+    }
+
+    public void removeSessionListener(@NonNull OnSessionGetListener listener) {
+        onSessionGetListenersList.remove(listener);
     }
 }

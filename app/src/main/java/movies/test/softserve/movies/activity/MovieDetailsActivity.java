@@ -26,11 +26,12 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-import com.sromku.simple.fb.SimpleFacebook;
-import com.sromku.simple.fb.entities.Feed;
-import com.sromku.simple.fb.listeners.OnPublishListener;
 
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.entity.FullMovie;
@@ -72,7 +73,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private LinearLayout countries;
     private LinearLayout companies;
     private ImageView share;
-    private SimpleFacebook mSimpleFacebook;
 
     FullMovieViewModel viewModel;
 
@@ -92,7 +92,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mSimpleFacebook = SimpleFacebook.getInstance(MovieDetailsActivity.this);
         getFullInfo();
     }
 
@@ -103,8 +102,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                ratingBar.setRating(rating);
-                Snackbar.make(findViewById(R.id.nested_scroll_view), "Your rating saved", Snackbar.LENGTH_LONG).show();
+                if (fromUser) {
+                    ratingBar.setRating(rating);
+
+                    Snackbar.make(findViewById(R.id.nested_scroll_view), "Your rating saved", Snackbar.LENGTH_LONG).show();
+                    service.rateMovie(id,rating*2);
+                }
             }
         });
         releaseDateView.setText(releaseDateView.getText().toString() + releaseDate);
@@ -116,23 +119,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Feed feed = new Feed.Builder()
-                        .setMessage(overview)
-                        .setName(title)
-                        .setCaption(title)
-                        .setDescription(overview)
-                        .setLink("https://image.tmdb.org/t/p/w500" + posterPath)
-                        .setPicture("https://image.tmdb.org/t/p/w500" + posterPath)
+                ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
+                        .setQuote(title+ "     \r\nPlot: " + overview)
+                        .setContentUrl(Uri.parse("https://image.tmdb.org/t/p/w500" + posterPath))
                         .build();
-
-                OnPublishListener onPublishListener = new OnPublishListener() {
-                    @Override
-                    public void onComplete(String response) {
-                        Log.w("Everything is ok","+");
-                    }
-                };
-
-                mSimpleFacebook.publish(feed,true,onPublishListener);
+                ShareDialog.show(MovieDetailsActivity.this,shareLinkContent);
             }
         });
 
@@ -306,7 +297,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mSimpleFacebook.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

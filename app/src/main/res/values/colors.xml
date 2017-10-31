@@ -19,3 +19,22 @@ android:layout_weight="1"
 android:isIndicator="true"
 android:numStars="5"
 android:stepSize="0.1" /-->
+
+
+    <!--/*Intent shareIntent = new Intent();
+    shareIntent.setAction(Intent.ACTION_SEND);
+    shareIntent.putExtra(Intent.EXTRA_TEXT, overview);
+    shareIntent.putExtra(Intent.EXTRA_STREAM,Uri.parse("https://image.tmdb.org/t/p/w500" + posterPath));  //optional//use this when you want to send an image
+    shareIntent.setType("image/jpeg");
+    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    startActivity(Intent.createChooser(shareIntent, "send"));*/-->
+
+    <!--SharePhoto photo = new SharePhoto.Builder()
+    .setImageUrl(Uri.parse("https://image.tmdb.org/t/p/w500" + posterPath))
+    .build();
+    ShareDialog shareDialog = new ShareDialog(MovieDetailsActivity.this);
+    if (ShareDialog.canShow(SharePhotoContent.class)) {
+    SharePhotoContent content = new SharePhotoContent.Builder()
+    .addPhoto(photo)
+    .build();
+    shareDialog.show(content);}-->

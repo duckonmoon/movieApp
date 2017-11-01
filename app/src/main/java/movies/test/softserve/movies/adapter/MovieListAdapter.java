@@ -69,13 +69,13 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieViewHolder> {
                 public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 }
             });
-            holder.mFavourite.setImageResource(DBService.getInstance().checkIfMovieExists(mainController.getMovies().get(position).getId())?R.drawable.ic_stary_black_24dp:R.drawable.ic_star_border_black_24dp);
+            holder.mFavourite.setImageResource(DBService.getInstance().checkIfMovieIsFavourite(mainController.getMovies().get(position).getId())?R.drawable.ic_stary_black_24dp:R.drawable.ic_star_border_black_24dp);
             holder.mFavourite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Movie movie = mainController.getMovies().get(position);
                     DBService dbService = DBService.getInstance();
-                    if(dbService.checkIfMovieExists(movie.getId())){
+                    if(dbService.checkIfMovieIsFavourite(movie.getId())){
                         holder.mFavourite.setImageResource(R.drawable.ic_star_border_black_24dp);
                         dbService.deleteMovieFromDb(movie.getId());
                         Snackbar.make(mActivity.findViewById(R.id.recyclerview), "Deleted from favourite", Snackbar.LENGTH_LONG).show();

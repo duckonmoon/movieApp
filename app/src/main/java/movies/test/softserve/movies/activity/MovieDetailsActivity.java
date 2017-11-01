@@ -116,7 +116,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         });
         releaseDateView.setText(releaseDateView.getText().toString() + viewModel.getMovie().getReleaseDate());
         voteCountView.setText("" + ((float) Math.round(viewModel.getMovie().getVoteAverage() * 10)) / 10 + "/" + viewModel.getMovie().getVoteCount());
-        if (dbService.checkIfMovieExists(viewModel.getMovie().getId())) {
+        if (dbService.checkIfMovieIsFavourite(viewModel.getMovie().getId())) {
             fab.setImageResource(R.drawable.ic_stars_black_24dp);
         }
 
@@ -217,7 +217,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!dbService.checkIfMovieExists(viewModel.getMovie().getId())) {
+                if (!dbService.checkIfMovieIsFavourite(viewModel.getMovie().getId())) {
                     dbService.insertMovie(viewModel.getMovie().getId(),
                             viewModel.getMovie().getTitle(),
                             viewModel.getMovie().getVoteAverage().floatValue(),

@@ -45,7 +45,7 @@ public class MovieFragment extends Fragment {
             Context context = view.getContext();
             mRecyclerView = (RecyclerView) view;
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            mRecyclerView.setAdapter(new MyMovieRecyclerViewAdapter(DBService.getInstance().getAllMovies(), new MyMovieRecyclerViewAdapter.OnMovieSelect() {
+            mRecyclerView.setAdapter(new MyMovieRecyclerViewAdapter(DBService.getInstance().getFavouriteMovies(), new MyMovieRecyclerViewAdapter.OnMovieSelect() {
                 @Override
                 public void OnMovieSelected(Movie movie) {
                     Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);

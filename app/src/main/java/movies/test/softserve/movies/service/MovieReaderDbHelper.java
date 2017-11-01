@@ -20,7 +20,9 @@ public class MovieReaderDbHelper extends SQLiteOpenHelper {
                     MovieEntry.COLUMN_NAME_IMAGE + " TEXT," +
                     MovieEntry.COLUMN_NAME_VOTE_AVERAGE + " REAL," +
                     MovieEntry.COLUMN_NAME_RELEASE_DATE + " TEXT," +
-                    MovieEntry.COLUMN_NAME_VOTE_COUNT + " INTEGER)";
+                    MovieEntry.COLUMN_NAME_VOTE_COUNT + " INTEGER," +
+                    MovieEntry.COLUMN_NAME_FAVOURITE + " INTEGER," +
+                    MovieEntry.COLUMN_NAME_WATCHED + " INTEGER)";
 
 
     public static final int DATABASE_VERSION = 1;
@@ -41,3 +43,4 @@ public class MovieReaderDbHelper extends SQLiteOpenHelper {
 
     }
 }
+

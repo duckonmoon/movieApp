@@ -1,4 +1,4 @@
-package movies.test.softserve.movies.controllers;
+package movies.test.softserve.movies.controller;
 
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;

@@ -18,15 +18,14 @@ import movies.test.softserve.movies.adapter.MyMovieRecyclerViewAdapter;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.service.DBService;
 
+public class WatchedFragment extends Fragment {
 
-public class MovieFragment extends Fragment {
 
-    private static final String BUNDLE_RECYCLER_LAYOUT = "fragment.recycler.layout";
+    private static final String BUNDLE_RECYCLER_LAYOUT = "watch.fragment.recycler.layout";
 
     private RecyclerView mRecyclerView;
 
-    public MovieFragment() {
-
+    public WatchedFragment() {
     }
 
     @Override
@@ -37,13 +36,13 @@ public class MovieFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_watched_movie_list, container, false);
 
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             mRecyclerView = (RecyclerView) view;
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            mRecyclerView.setAdapter(new MyMovieRecyclerViewAdapter(DBService.getInstance().getFavouriteMovies(), new MyMovieRecyclerViewAdapter.OnMovieSelect() {
+            mRecyclerView.setAdapter(new MyMovieRecyclerViewAdapter(DBService.getInstance().getAllMovies(), new MyMovieRecyclerViewAdapter.OnMovieSelect() {
                 @Override
                 public void OnMovieSelected(Movie movie) {
                     Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
@@ -88,7 +87,7 @@ public class MovieFragment extends Fragment {
     }
 
     private void setAdapter() {
-        ((MyMovieRecyclerViewAdapter)mRecyclerView.getAdapter()).setMovies(DBService.getInstance().getFavouriteMovies());
+        ((MyMovieRecyclerViewAdapter)mRecyclerView.getAdapter()).setMovies(DBService.getInstance().getAllMovies());
         mRecyclerView.getAdapter().notifyDataSetChanged();
 
     }
@@ -98,4 +97,5 @@ public class MovieFragment extends Fragment {
         super.onResume();
         setAdapter();
     }
+
 }

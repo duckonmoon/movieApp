@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import movies.test.softserve.movies.constans.Constants;
-import movies.test.softserve.movies.controllers.MainController;
+import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.entity.Code;
 import movies.test.softserve.movies.entity.FullMovie;
 import movies.test.softserve.movies.entity.GuestSession;

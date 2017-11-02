@@ -27,14 +27,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import movies.test.softserve.movies.R;
-import movies.test.softserve.movies.entity.Code;
 import movies.test.softserve.movies.entity.FullMovie;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;

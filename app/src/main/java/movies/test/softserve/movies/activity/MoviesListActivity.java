@@ -1,8 +1,11 @@
 package movies.test.softserve.movies.activity;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,9 +16,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import movies.test.softserve.movies.fragment.WatchedFragment;
 import movies.test.softserve.movies.fragment.MovieFragment;
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.adapter.MovieListAdapter;
+import movies.test.softserve.movies.viewmodel.FragmentViewModel;
 
 public class MoviesListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -25,6 +30,8 @@ public class MoviesListActivity extends AppCompatActivity
     private RecyclerView mRecyclerView;
     private MovieListAdapter mMovieListAdapter;
 
+    private FragmentViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +40,7 @@ public class MoviesListActivity extends AppCompatActivity
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mMovieListAdapter = new MovieListAdapter(this);
         mRecyclerView.setAdapter(mMovieListAdapter);
-
+        viewModel = ViewModelProviders.of(this).get(FragmentViewModel.class);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -81,21 +88,24 @@ public class MoviesListActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         if (id == R.id.explore) {
-            if (MovieFragment.isAlive()) {
-                getSupportFragmentManager().beginTransaction().remove(MovieFragment.getMovieFrament()).commit();
-                MovieFragment.kill();
+            transaction.remove(getSupportFragmentManager().findFragmentById(R.id.constraint_layout));
+        } else if (id == R.id.favourite) {
+            if (viewModel.getMovieFragment()==null) {
+                viewModel.setMovieFragment(new MovieFragment());
             }
-        } else if (id == R.id.favourite && !MovieFragment.isAlive()) {
-            MovieFragment movieFragment = new MovieFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.constraint_layout, movieFragment).commit();
+            transaction.replace(R.id.constraint_layout, viewModel.getMovieFragment());
+        } else if (id == R.id.watched) {
+            if (viewModel.getWatchedFragment() == null) {
+                 viewModel.setWatchedFragment(new WatchedFragment());            }
+            transaction.replace(R.id.constraint_layout, viewModel.getWatchedFragment());
         }
-
+        transaction.commit();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

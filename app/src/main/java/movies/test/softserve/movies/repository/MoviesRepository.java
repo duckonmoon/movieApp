@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Observable;
 
 import movies.test.softserve.movies.constans.Constants;
-import movies.test.softserve.movies.controllers.MainController;
+import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.Page;
 import movies.test.softserve.movies.service.MoviesService;

@@ -7,14 +7,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.RatingBar;
 
 import com.squareup.picasso.Picasso;
 
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.activity.MovieDetailsActivity;
-import movies.test.softserve.movies.controllers.MainController;
+import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.event.AddedItemsEvent;
 import movies.test.softserve.movies.service.DBService;

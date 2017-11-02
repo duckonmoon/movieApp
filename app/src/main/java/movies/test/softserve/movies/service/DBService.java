@@ -3,12 +3,11 @@ package movies.test.softserve.movies.service;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import movies.test.softserve.movies.controllers.MainController;
+import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.db.entity.MovieDbEntities.MovieEntry;
 import movies.test.softserve.movies.entity.Movie;
 

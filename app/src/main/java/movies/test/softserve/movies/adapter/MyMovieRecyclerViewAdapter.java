@@ -52,7 +52,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
                 event.OnMovieSelected(movies.get(position));
             }
         });
-        holder.mFavourite.setImageResource(R.drawable.ic_stary_black_24dp);
+        holder.mFavourite.setImageResource(DBService.getInstance().checkIfMovieIsFavourite(movies.get(position).getId())?R.drawable.ic_stary_black_24dp:R.drawable.ic_star_border_black_24dp);
         holder.mFavourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

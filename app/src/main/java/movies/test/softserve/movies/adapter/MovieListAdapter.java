@@ -76,18 +76,23 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieViewHolder> {
                     DBService dbService = DBService.getInstance();
                     if(dbService.checkIfMovieIsFavourite(movie.getId())){
                         holder.mFavourite.setImageResource(R.drawable.ic_star_border_black_24dp);
-                        dbService.deleteMovieFromDb(movie.getId());
+                        dbService.cancelFavourite(movie.getId());
                         Snackbar.make(mActivity.findViewById(R.id.recyclerview), "Deleted from favourite", Snackbar.LENGTH_LONG).show();
                     }
                     else {
+                        if (!dbService.checkIfMovieExists(movie.getId())) {
+                            dbService.insertMovieToFavourite(movie.getId(),
+                                    movie.getTitle(),
+                                    movie.getVoteAverage().floatValue(),
+                                    movie.getVoteCount(),
+                                    movie.getOverview(),
+                                    movie.getReleaseDate(),
+                                    movie.getPosterPath());
+                        }
+                        else{
+                            dbService.setFavourite(movie.getId());
+                        }
                         holder.mFavourite.setImageResource(R.drawable.ic_stary_black_24dp);
-                        dbService.insertMovie(movie.getId(),
-                                movie.getTitle(),
-                                movie.getVoteAverage().floatValue(),
-                                movie.getVoteCount(),
-                                movie.getOverview(),
-                                movie.getReleaseDate(),
-                                movie.getPosterPath());
                         Snackbar.make(mActivity.findViewById(R.id.recyclerview), "Added to favourite", Snackbar.LENGTH_LONG).show();
                     }
                 }

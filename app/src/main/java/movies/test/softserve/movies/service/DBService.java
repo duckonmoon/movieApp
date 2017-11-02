@@ -33,7 +33,7 @@ public class DBService {
         database = MainController.getInstance().getDatabase();
     }
 
-    public long insertMovie(Integer id, String title, float voteAverage, int voteCount, String overview, String releaseDate,String posterpath) {
+    public long insertMovieToFavourite(Integer id, String title, float voteAverage, int voteCount, String overview, String releaseDate, String posterpath) {
         ContentValues values = new ContentValues();
         values.put(MovieEntry._ID, id);
         values.put(MovieEntry.COLUMN_NAME_TITLE, title);
@@ -46,6 +46,21 @@ public class DBService {
         values.put(MovieEntry.COLUMN_NAME_WATCHED,1);
         return database.insert(MovieEntry.TABLE_NAME, null, values);
     }
+
+    public long addMovieToDb(Integer id, String title, float voteAverage, int voteCount, String overview, String releaseDate, String posterpath){
+        ContentValues values = new ContentValues();
+        values.put(MovieEntry._ID, id);
+        values.put(MovieEntry.COLUMN_NAME_TITLE, title);
+        values.put(MovieEntry.COLUMN_NAME_VOTE_AVERAGE, voteAverage);
+        values.put(MovieEntry.COLUMN_NAME_VOTE_COUNT, voteCount);
+        values.put(MovieEntry.COLUMN_NAME_OVERVIEW, overview);
+        values.put(MovieEntry.COLUMN_NAME_RELEASE_DATE, releaseDate);
+        values.put(MovieEntry.COLUMN_NAME_IMAGE,posterpath);
+        values.put(MovieEntry.COLUMN_NAME_FAVOURITE,0);
+        values.put(MovieEntry.COLUMN_NAME_WATCHED,1);
+        return database.insert(MovieEntry.TABLE_NAME, null, values);
+    }
+
 
     public boolean checkIfMovieExists(Integer id) {
         String[] projection = {
@@ -164,5 +179,67 @@ public class DBService {
         }
         return movieArrayList;
 
+    }
+
+    public Movie getMovieByID(Integer id){
+        String[] projection = {
+                MovieEntry._ID,
+                MovieEntry.COLUMN_NAME_VOTE_COUNT,
+                MovieEntry.COLUMN_NAME_VOTE_AVERAGE,
+                MovieEntry.COLUMN_NAME_RELEASE_DATE,
+                MovieEntry.COLUMN_NAME_IMAGE,
+                MovieEntry.COLUMN_NAME_TITLE,
+                MovieEntry.COLUMN_NAME_OVERVIEW,
+                MovieEntry.COLUMN_NAME_WATCHED,
+                MovieEntry.COLUMN_NAME_FAVOURITE
+        };
+        Cursor cursor = database.query(
+                MovieEntry.TABLE_NAME,
+                projection,
+                MovieEntry._ID + " = " + id,
+                null,
+                null,
+                null,
+                null
+        );
+        Movie movie = new Movie();
+        if (cursor.moveToNext()){
+            movie.setId(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry._ID)));
+            movie.setVoteCount(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_COUNT)));
+            movie.setPosterPath(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_IMAGE)));
+            movie.setOverview(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_OVERVIEW)));
+            movie.setReleaseDate(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_RELEASE_DATE)));
+            movie.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
+            movie.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
+        }
+        return movie;
+    }
+
+
+    public void setFavourite(Integer id) {
+        Movie movie = getMovieByID(id);
+        database.delete(MovieEntry.TABLE_NAME, MovieEntry._ID + " = " + id, null);
+        insertMovieToFavourite(
+                movie.getId(),
+                movie.getTitle(),
+                movie.getVoteAverage().floatValue(),
+                movie.getVoteCount(),
+                movie.getOverview(),
+                movie.getReleaseDate(),
+                movie.getPosterPath()
+        );
+
+    }
+
+    public void cancelFavourite(Integer id){
+        Movie movie = getMovieByID(id);
+        database.delete(MovieEntry.TABLE_NAME, MovieEntry._ID + " = " + id, null);
+        addMovieToDb(movie.getId(),
+                movie.getTitle(),
+                movie.getVoteAverage().floatValue(),
+                movie.getVoteCount(),
+                movie.getOverview(),
+                movie.getReleaseDate(),
+                movie.getPosterPath());
     }
 }

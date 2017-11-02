@@ -65,6 +65,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private LinearLayout countries;
     private LinearLayout companies;
     private ImageView share;
+    private ImageView watched;
 
     FullMovieViewModel viewModel;
 
@@ -106,7 +107,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 if (fromUser) {
-
                     MovieService.getInstance().rateMovie(viewModel.getMovie().getId(), rating * 2);
                 }
             }
@@ -127,7 +127,21 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 ShareDialog.show(MovieDetailsActivity.this, shareLinkContent);
             }
         });
-
+        watched.setImageResource(DBService.getInstance().checkIfMovieExists(viewModel.getMovie().getId()) ? R.mipmap.checked : R.mipmap.not_checked);
+        watched.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                watched.setImageResource(R.mipmap.checked);
+                DBService.getInstance().addMovieToDb(viewModel.getMovie().getId(),
+                        viewModel.getMovie().getTitle(),
+                        viewModel.getMovie().getVoteAverage().floatValue(),
+                        viewModel.getMovie().getVoteCount(),
+                        viewModel.getMovie().getOverview(),
+                        viewModel.getMovie().getReleaseDate(),
+                        viewModel.getMovie().getPosterPath()
+                );
+            }
+        });
     }
 
     private void getFullInfo() {
@@ -209,24 +223,29 @@ public class MovieDetailsActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         toolbarLayout = findViewById(R.id.toolbar_layout);
         setSupportActionBar(toolbar);
-
+        watched = findViewById(R.id.watched);
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!dbService.checkIfMovieIsFavourite(viewModel.getMovie().getId())) {
-                    dbService.insertMovie(viewModel.getMovie().getId(),
-                            viewModel.getMovie().getTitle(),
-                            viewModel.getMovie().getVoteAverage().floatValue(),
-                            viewModel.getMovie().getVoteCount(),
-                            viewModel.getMovie().getOverview(),
-                            viewModel.getMovie().getReleaseDate(),
-                            viewModel.getMovie().getPosterPath());
+                    if (!dbService.checkIfMovieExists(viewModel.getMovie().getId())) {
+                        dbService.insertMovieToFavourite(viewModel.getMovie().getId(),
+                                viewModel.getMovie().getTitle(),
+                                viewModel.getMovie().getVoteAverage().floatValue(),
+                                viewModel.getMovie().getVoteCount(),
+                                viewModel.getMovie().getOverview(),
+                                viewModel.getMovie().getReleaseDate(),
+                                viewModel.getMovie().getPosterPath());
+                    } else {
+                        dbService.setFavourite(viewModel.getMovie().getId());
+                    }
                     fab.setImageResource(R.drawable.ic_stars_black_24dp);
                     Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
+                    watched.setImageResource(R.mipmap.checked);
                 } else {
-                    dbService.deleteMovieFromDb(viewModel.getMovie().getId());
+                    dbService.cancelFavourite(viewModel.getMovie().getId());
                     fab.setImageResource(R.drawable.ic_star_border_black_24dp);
                     Snackbar.make(view, "Removed to favourite", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();

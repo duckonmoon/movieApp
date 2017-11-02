@@ -43,4 +43,13 @@
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_star_border_black_24dp" />
 
+    <!--android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="bottom|end"
+        android:layout_marginBottom="80dp"
+        app:srcCompat="@android:drawable/checkbox_off_background" /-->
+
 </android.support.design.widget.CoordinatorLayout>

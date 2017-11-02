@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".activity.MoviesListActivity">
-            <intent-filter>f[f[
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />

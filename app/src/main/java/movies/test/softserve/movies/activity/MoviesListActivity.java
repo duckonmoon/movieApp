@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -94,7 +95,9 @@ public class MoviesListActivity extends AppCompatActivity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         if (id == R.id.explore) {
-            transaction.remove(getSupportFragmentManager().findFragmentById(R.id.constraint_layout));
+            for(Fragment fragment: getSupportFragmentManager().getFragments()) {
+                transaction.remove(fragment);
+            }
         } else if (id == R.id.favourite) {
             if (viewModel.getMovieFragment()==null) {
                 viewModel.setMovieFragment(new MovieFragment());

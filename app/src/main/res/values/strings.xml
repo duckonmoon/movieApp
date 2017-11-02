@@ -108,4 +108,7 @@
     <string name="favourite1">favourite</string>
     <string name="facebook">Facebook</string>
     <string name="watched">Watched</string>
+    <string name="confirm">Are you sure?\nIt will affect your achievements</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

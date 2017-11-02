@@ -1,6 +1,7 @@
 package movies.test.softserve.movies.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -12,6 +13,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -131,15 +133,39 @@ public class MovieDetailsActivity extends AppCompatActivity {
         watched.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                watched.setImageResource(R.mipmap.checked);
-                DBService.getInstance().addMovieToDb(viewModel.getMovie().getId(),
-                        viewModel.getMovie().getTitle(),
-                        viewModel.getMovie().getVoteAverage().floatValue(),
-                        viewModel.getMovie().getVoteCount(),
-                        viewModel.getMovie().getOverview(),
-                        viewModel.getMovie().getReleaseDate(),
-                        viewModel.getMovie().getPosterPath()
-                );
+                if (!DBService.getInstance().checkIfMovieExists(viewModel.getMovie().getId())) {
+                    watched.setImageResource(R.mipmap.checked);
+                    DBService.getInstance().addMovieToDb(viewModel.getMovie().getId(),
+                            viewModel.getMovie().getTitle(),
+                            viewModel.getMovie().getVoteAverage().floatValue(),
+                            viewModel.getMovie().getVoteCount(),
+                            viewModel.getMovie().getOverview(),
+                            viewModel.getMovie().getReleaseDate(),
+                            viewModel.getMovie().getPosterPath()
+                    );
+                    Snackbar.make(findViewById(R.id.nested_scroll_view), "Added to watched", Snackbar.LENGTH_SHORT).show();
+                }
+                else{
+
+                    if (DBService.getInstance().checkIfMovieIsFavourite(viewModel.getMovie().getId())){
+                        Snackbar.make(findViewById(R.id.nested_scroll_view), "It's favourite, u cant do this", Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MovieDetailsActivity.this);
+                        builder.setMessage(R.string.confirm)
+                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        DBService.getInstance().deleteMovieFromDb(viewModel.getMovie().getId());
+                                        watched.setImageResource(R.mipmap.not_checked);
+                                        Snackbar.make(findViewById(R.id.nested_scroll_view), "Marked as unwatched", Snackbar.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                    }
+                                });
+                            builder.create().show();
+                    }
+                }
             }
         });
     }

@@ -34,7 +34,7 @@ public class MovieViewHolder extends RecyclerView.ViewHolder {
             mRatingBar = itemView.findViewById(R.id.rating);
             mFavourite = itemView.findViewById(R.id.favourite);
             mViewGroup = itemView.findViewById(R.id.card_of_list);
-        }else {
+        } else {
             mProgressBar = itemView.findViewById(R.id.spinner);
             mButton = itemView.findViewById(R.id.error_button);
         }

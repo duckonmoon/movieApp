@@ -112,4 +112,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="login">login</string>
+    <string name="sessionPreferences">SessionPreferences</string>
 </resources>

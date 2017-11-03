@@ -1,13 +1,10 @@
 package movies.test.softserve.movies.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -17,19 +14,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
-
-import org.jetbrains.annotations.NotNull;
 
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.adapter.MovieListAdapter;
-import movies.test.softserve.movies.constans.Constants;
-import movies.test.softserve.movies.controller.MainController;
-import movies.test.softserve.movies.entity.LoginSession;
-import movies.test.softserve.movies.event.OnLoginSessionGetListener;
 import movies.test.softserve.movies.fragment.MovieFragment;
 import movies.test.softserve.movies.fragment.WatchedFragment;
 import movies.test.softserve.movies.service.MovieService;
@@ -45,9 +33,6 @@ public class MoviesListActivity extends AppCompatActivity
 
     private FragmentViewModel viewModel;
 
-    private Menu menu;
-
-    private OnLoginSessionGetListener onLoginSessionGetListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,27 +78,6 @@ public class MoviesListActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         mMovieListAdapter.notifyDataSetChanged();
-        if (onLoginSessionGetListener == null) {
-            onLoginSessionGetListener = new OnLoginSessionGetListener() {
-                @Override
-                public void OnLoginSessionGet(@NotNull LoginSession loginSession) {
-
-                    menu.findItem(R.id.login).setVisible(false);
-                    menu.findItem(R.id.log_out).setVisible(true);
-
-                }
-            };
-            MovieService.getInstance().addOnLoginSessionGetListener(onLoginSessionGetListener);
-        }
-        Uri uri = getIntent().getData();
-        if (uri != null) {
-            if (uri.getQueryParameter("approved") != null) {
-                MainController.getInstance().isTokenApproved();
-                MovieService.getInstance().tryToGetLoginSession();
-            } else {
-                Snackbar.make(mRecyclerView, "Denied!!!", Snackbar.LENGTH_SHORT).show();
-            }
-        }
     }
 
     @Override
@@ -152,43 +116,9 @@ public class MoviesListActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_movie_list_menu, menu);
-        menu.findItem(R.id.login).setVisible(MainController.getInstance().getLoginSession() == null);
-        menu.findItem(R.id.log_out).setVisible(MainController.getInstance().getLoginSession() != null);
-        this.menu = menu;
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.login:
-                MainController controller = MainController.getInstance();
-                if (controller.getAppToken() != null) {
-                    Intent intent = new Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse(Constants.AUTHENTICATE + MainController.getInstance().getAppToken().getRequestToken() + Constants.REDIRECT_URI));
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(controller.getApplicationContext(), "No internet", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.log_out:
-                MainController.getInstance().LogOut();
-                menu.findItem(R.id.login).setVisible(true);
-                menu.findItem(R.id.log_out).setVisible(false);
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MovieService.getInstance().removeOnLoginSessionGetListener(onLoginSessionGetListener);
     }
 }

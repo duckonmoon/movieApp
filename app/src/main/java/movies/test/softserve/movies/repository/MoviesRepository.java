@@ -97,7 +97,7 @@ public class MoviesRepository extends Observable {
 
     private synchronized void tryAgain(Exception e) {
         if (numberOfRequests < 3) {
-            Call<Page> call = service.getPage(Constants.API_KEY,MainController.getInstance().getPage());
+            Call<Page> call = service.getPage(Constants.API_KEY, MainController.getInstance().getPage());
             call.enqueue(new Callback<Page>() {
                 @Override
                 public void onResponse(Call<Page> call, Response<Page> response) {

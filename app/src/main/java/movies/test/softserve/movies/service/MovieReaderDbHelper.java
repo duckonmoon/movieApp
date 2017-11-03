@@ -13,7 +13,7 @@ import movies.test.softserve.movies.db.entity.MovieDbEntities.MovieEntry;
 public class MovieReaderDbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE " +  MovieEntry.TABLE_NAME + " (" +
+            "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
                     MovieEntry._ID + " INTEGER PRIMARY KEY," +
                     MovieEntry.COLUMN_NAME_TITLE + " TEXT," +
                     MovieEntry.COLUMN_NAME_OVERVIEW + " TEXT," +
@@ -29,8 +29,8 @@ public class MovieReaderDbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "Movie.db";
 
 
-    public MovieReaderDbHelper(Context context){
-        super(context,DATABASE_NAME,null, DATABASE_VERSION);
+    public MovieReaderDbHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override

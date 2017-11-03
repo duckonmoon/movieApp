@@ -87,13 +87,13 @@ public class WatchedFragment extends Fragment {
     }
 
     private void setAdapter() {
-        ((MyMovieRecyclerViewAdapter)mRecyclerView.getAdapter()).setMovies(DBService.getInstance().getAllMovies());
+        ((MyMovieRecyclerViewAdapter) mRecyclerView.getAdapter()).setMovies(DBService.getInstance().getAllMovies());
         mRecyclerView.getAdapter().notifyDataSetChanged();
 
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         setAdapter();
     }

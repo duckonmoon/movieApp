@@ -23,7 +23,6 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
     private OnMovieSelect event;
 
 
-
     public MyMovieRecyclerViewAdapter(List<Movie> items, @NonNull OnMovieSelect onMovieSelect) {
         movies = items;
         event = onMovieSelect;
@@ -38,7 +37,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.mTextView.setText("" + (1 + position) + ". " + movies.get(position).getTitle() + "\n" + ((float)Math.round(movies.get(position).getVoteAverage()*10))/10
+        holder.mTextView.setText("" + (1 + position) + ". " + movies.get(position).getTitle() + "\n" + ((float) Math.round(movies.get(position).getVoteAverage() * 10)) / 10
                 + "\n" + movies.get(position).getVoteCount());
         holder.mRatingBar.setRating(movies.get(position).getVoteAverage().floatValue() / 2);
         holder.mRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -52,7 +51,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
                 event.OnMovieSelected(movies.get(position));
             }
         });
-        holder.mFavourite.setImageResource(DBService.getInstance().checkIfMovieIsFavourite(movies.get(position).getId())?R.drawable.ic_stary_black_24dp:R.drawable.ic_star_border_black_24dp);
+        holder.mFavourite.setImageResource(DBService.getInstance().checkIfMovieIsFavourite(movies.get(position).getId()) ? R.drawable.ic_stary_black_24dp : R.drawable.ic_star_border_black_24dp);
         holder.mFavourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,7 +69,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
         return movies.size();
     }
 
-    public void setMovies(List<Movie> movies){
+    public void setMovies(List<Movie> movies) {
         this.movies = movies;
     }
 
@@ -97,9 +96,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
     }
 
 
-
-
-    public interface OnMovieSelect{
+    public interface OnMovieSelect {
         void OnMovieSelected(Movie movie);
     }
 }

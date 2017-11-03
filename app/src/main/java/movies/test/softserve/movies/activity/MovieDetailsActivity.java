@@ -144,10 +144,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
                             viewModel.getMovie().getPosterPath()
                     );
                     Snackbar.make(findViewById(R.id.nested_scroll_view), "Added to watched", Snackbar.LENGTH_SHORT).show();
-                }
-                else{
+                } else {
 
-                    if (DBService.getInstance().checkIfMovieIsFavourite(viewModel.getMovie().getId())){
+                    if (DBService.getInstance().checkIfMovieIsFavourite(viewModel.getMovie().getId())) {
                         Snackbar.make(findViewById(R.id.nested_scroll_view), "It's favourite, u cant do this", Snackbar.LENGTH_SHORT).show();
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MovieDetailsActivity.this);
@@ -163,7 +162,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int id) {
                                     }
                                 });
-                            builder.create().show();
+                        builder.create().show();
                     }
                 }
             }

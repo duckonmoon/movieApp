@@ -20,8 +20,6 @@ public class DBService {
     private SQLiteDatabase database;
 
 
-
-
     public static DBService getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new DBService();
@@ -41,13 +39,13 @@ public class DBService {
         values.put(MovieEntry.COLUMN_NAME_VOTE_COUNT, voteCount);
         values.put(MovieEntry.COLUMN_NAME_OVERVIEW, overview);
         values.put(MovieEntry.COLUMN_NAME_RELEASE_DATE, releaseDate);
-        values.put(MovieEntry.COLUMN_NAME_IMAGE,posterpath);
-        values.put(MovieEntry.COLUMN_NAME_FAVOURITE,1);
-        values.put(MovieEntry.COLUMN_NAME_WATCHED,1);
+        values.put(MovieEntry.COLUMN_NAME_IMAGE, posterpath);
+        values.put(MovieEntry.COLUMN_NAME_FAVOURITE, 1);
+        values.put(MovieEntry.COLUMN_NAME_WATCHED, 1);
         return database.insert(MovieEntry.TABLE_NAME, null, values);
     }
 
-    public long addMovieToDb(Integer id, String title, float voteAverage, int voteCount, String overview, String releaseDate, String posterpath){
+    public long addMovieToDb(Integer id, String title, float voteAverage, int voteCount, String overview, String releaseDate, String posterpath) {
         ContentValues values = new ContentValues();
         values.put(MovieEntry._ID, id);
         values.put(MovieEntry.COLUMN_NAME_TITLE, title);
@@ -55,9 +53,9 @@ public class DBService {
         values.put(MovieEntry.COLUMN_NAME_VOTE_COUNT, voteCount);
         values.put(MovieEntry.COLUMN_NAME_OVERVIEW, overview);
         values.put(MovieEntry.COLUMN_NAME_RELEASE_DATE, releaseDate);
-        values.put(MovieEntry.COLUMN_NAME_IMAGE,posterpath);
-        values.put(MovieEntry.COLUMN_NAME_FAVOURITE,0);
-        values.put(MovieEntry.COLUMN_NAME_WATCHED,1);
+        values.put(MovieEntry.COLUMN_NAME_IMAGE, posterpath);
+        values.put(MovieEntry.COLUMN_NAME_FAVOURITE, 0);
+        values.put(MovieEntry.COLUMN_NAME_WATCHED, 1);
         return database.insert(MovieEntry.TABLE_NAME, null, values);
     }
 
@@ -83,7 +81,7 @@ public class DBService {
         return false;
     }
 
-    public boolean checkIfMovieIsFavourite(Integer id){
+    public boolean checkIfMovieIsFavourite(Integer id) {
         String[] projection = {
                 MovieEntry._ID
         };
@@ -108,7 +106,7 @@ public class DBService {
         return database.delete(MovieEntry.TABLE_NAME, MovieEntry._ID + " = " + id, null) > 0;
     }
 
-    public List<Movie> getAllMovies(){
+    public List<Movie> getAllMovies() {
         ArrayList<Movie> movieArrayList = new ArrayList<>();
         String[] projection = {
                 MovieEntry._ID,
@@ -130,7 +128,7 @@ public class DBService {
                 null,
                 null
         );
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             Movie movie = new Movie();
             movie.setId(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry._ID)));
             movie.setVoteCount(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_COUNT)));
@@ -144,7 +142,7 @@ public class DBService {
         return movieArrayList;
     }
 
-    public List<Movie> getFavouriteMovies(){
+    public List<Movie> getFavouriteMovies() {
         ArrayList<Movie> movieArrayList = new ArrayList<>();
         String[] projection = {
                 MovieEntry._ID,
@@ -166,7 +164,7 @@ public class DBService {
                 null,
                 null
         );
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             Movie movie = new Movie();
             movie.setId(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry._ID)));
             movie.setVoteCount(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_COUNT)));
@@ -181,7 +179,7 @@ public class DBService {
 
     }
 
-    public Movie getMovieByID(Integer id){
+    public Movie getMovieByID(Integer id) {
         String[] projection = {
                 MovieEntry._ID,
                 MovieEntry.COLUMN_NAME_VOTE_COUNT,
@@ -203,7 +201,7 @@ public class DBService {
                 null
         );
         Movie movie = new Movie();
-        if (cursor.moveToNext()){
+        if (cursor.moveToNext()) {
             movie.setId(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry._ID)));
             movie.setVoteCount(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_COUNT)));
             movie.setPosterPath(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_IMAGE)));
@@ -231,7 +229,7 @@ public class DBService {
 
     }
 
-    public void cancelFavourite(Integer id){
+    public void cancelFavourite(Integer id) {
         Movie movie = getMovieByID(id);
         database.delete(MovieEntry.TABLE_NAME, MovieEntry._ID + " = " + id, null);
         addMovieToDb(movie.getId(),

@@ -111,4 +111,5 @@
     <string name="confirm">Are you sure?\nIt will affect your achievements</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="login">login</string>
 </resources>

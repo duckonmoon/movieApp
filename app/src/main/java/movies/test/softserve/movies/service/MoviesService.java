@@ -1,8 +1,10 @@
 package movies.test.softserve.movies.service;
 
+import movies.test.softserve.movies.entity.AppToken;
 import movies.test.softserve.movies.entity.Code;
 import movies.test.softserve.movies.entity.FullMovie;
 import movies.test.softserve.movies.entity.GuestSession;
+import movies.test.softserve.movies.entity.LoginSession;
 import movies.test.softserve.movies.entity.Page;
 import movies.test.softserve.movies.entity.Rating;
 import retrofit2.Call;
@@ -29,4 +31,13 @@ public interface MoviesService {
 
     @POST("3/movie/{movie_id}/rating")
     Call<Code> rateMovie(@Header("Content-Type") String contentType,@Path("movie_id") Integer movie_id, @Query("api_key") String apiKey, @Query("guest_session_id") String guestSessionId, @Body Rating value);
+
+    @POST("3/movie/{movie_id}/rating")
+    Call<Code> rateMovieLog(@Header("Content-Type") String contentType,@Path("movie_id") Integer movie_id, @Query("api_key") String apiKey, @Query("session_id") String sessionId, @Body Rating value);
+
+    @GET("3/authentication/token/new")
+    Call<AppToken> getAppToken(@Query("api_key") String apiKey);
+
+    @GET("3/authentication/session/new")
+    Call<LoginSession> getLoginSession(@Query("api_key")  String apiKey, @Query("request_token") String requestToken);
 }

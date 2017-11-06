@@ -1,7 +1,9 @@
 package movies.test.softserve.movies.adapter;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -72,12 +74,26 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieViewHolder> {
             holder.mFavourite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Movie movie = mainController.getMovies().get(position);
-                    DBService dbService = DBService.getInstance();
+                    final Movie movie = mainController.getMovies().get(position);
+                    final DBService dbService = DBService.getInstance();
                     if (dbService.checkIfMovieIsFavourite(movie.getId())) {
-                        holder.mFavourite.setImageResource(R.drawable.ic_star_border_black_24dp);
-                        dbService.cancelFavourite(movie.getId());
-                        Snackbar.make(mActivity.findViewById(R.id.recyclerview), "Deleted from favourite", Snackbar.LENGTH_LONG).show();
+                        new AlertDialog.Builder(mActivity)
+                                .setMessage(R.string.delete_from_watched)
+                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dbService.deleteMovieFromDb(movie.getId());
+                                        holder.mFavourite.setImageResource(R.drawable.ic_star_border_black_24dp);
+                                        Snackbar.make(mActivity.findViewById(R.id.recyclerview), "Deleted from favourite", Snackbar.LENGTH_LONG).show();
+                                    }
+                                })
+                                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dbService.cancelFavourite(movie.getId());
+                                        holder.mFavourite.setImageResource(R.drawable.ic_star_border_black_24dp);
+                                        Snackbar.make(mActivity.findViewById(R.id.recyclerview), "Deleted from favourite", Snackbar.LENGTH_LONG).show();
+                                    }
+                                }).create()
+                                .show();
                     } else {
                         if (!dbService.checkIfMovieExists(movie.getId())) {
                             dbService.insertMovieToFavourite(movie.getId(),

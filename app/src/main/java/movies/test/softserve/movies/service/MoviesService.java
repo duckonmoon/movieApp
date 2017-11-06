@@ -19,15 +19,55 @@ import retrofit2.http.Query;
 
 public interface MoviesService {
     @GET("3/discover/movie")
-    Call<Page> getPage(@Query("api_key") String apiKey, @Query("page") int page);
+    Call<Page> getPage(@Query("api_key") String apiKey,
+                       @Query("page") int page);
 
     @GET("3/movie/{movie_id}")
-    Call<FullMovie> getMovie(@Path("movie_id") Integer movie_id, @Query("api_key") String apiKey);
+    Call<FullMovie> getMovie(@Path("movie_id") Integer movie_id,
+                             @Query("api_key") String apiKey);
 
     @GET("3/authentication/guest_session/new")
     Call<GuestSession> getGuestSession(@Query("api_key") String apiKey);
 
     @POST("3/movie/{movie_id}/rating")
-    Call<Code> rateMovie(@Header("Content-Type") String contentType, @Path("movie_id") Integer movie_id, @Query("api_key") String apiKey, @Query("guest_session_id") String guestSessionId, @Body Rating value);
+    Call<Code> rateMovie(@Header("Content-Type") String contentType,
+                         @Path("movie_id") Integer movie_id,
+                         @Query("api_key") String apiKey,
+                         @Query("guest_session_id") String guestSessionId,
+                         @Body Rating value);
+
+    @GET("3/discover/movie")
+    Call<Page> discoverMovie(
+            @Query("api_key") String apiKey,
+            @Query("language") String language,
+            @Query("region") String region,
+            @Query("sort_by") String sort_by,
+            @Query("certification_country") String certification_country,
+            @Query("certification.lte") String certification_lte,
+            @Query("include_adult") Boolean include_adult,
+            @Query("include_video") Boolean include_video,
+            @Query("page") Integer page,
+            @Query("primary_release_year") Integer primary_release_year,
+            @Query("primary_release_date.gte") String primary_release_date_gte,
+            @Query("primary_release_date.lte") String primary_release_date_lte,
+            @Query("release_date.gte") String release_date_gte,
+            @Query("release_date.lte") String release_date_lte,
+            @Query("vote_count.gte") Integer vote_count_gte,
+            @Query("vote_count.lte") Integer vote_count_lte,
+            @Query("vote_average.gte") Double vote_average_gte,
+            @Query("vote_average.lte") Double vote_average_lte,
+            @Query("with_cast") String with_cast,
+            @Query("with_crew") String with_crew,
+            @Query("with_companies") Integer with_companies,
+            @Query("with_genres") Integer with_genres,
+            @Query("with_keywords") String with_keywords,
+            @Query("with_people") String with_people,
+            @Query("year") Integer year,
+            @Query("without_genres") String without_genres,
+            @Query("with_runtime.gte") Integer with_runtime_gte,
+            @Query("with_runtime.lte") Integer with_runtime_lte,
+            @Query("with_release_type") Integer with_release_type,
+            @Query("with_original_language") String with_original_language,
+            @Query("without_keywords") String without_keywords);
 
 }

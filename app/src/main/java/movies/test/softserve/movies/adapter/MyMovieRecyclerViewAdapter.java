@@ -16,8 +16,9 @@ import java.util.List;
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.service.DBService;
+import movies.test.softserve.movies.viewholder.MainViewHolder;
 
-public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecyclerViewAdapter.ViewHolder> {
+public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolder> {
 
     private List<Movie> movies;
     private OnMovieSelect event;
@@ -29,14 +30,14 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_layout, parent, false);
-        return new ViewHolder(view);
+        return new MainViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final MainViewHolder holder, final int position) {
         holder.mTextView.setText("" + (1 + position) + ". " + movies.get(position).getTitle() + "\n" + ((float) Math.round(movies.get(position).getVoteAverage() * 10)) / 10
                 + "\n" + movies.get(position).getVoteCount());
         holder.mRatingBar.setRating(movies.get(position).getVoteAverage().floatValue() / 2);
@@ -73,27 +74,6 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
         this.movies = movies;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTextView;
-        public ImageView mImageView;
-        public RatingBar mRatingBar;
-        public ImageView mFavourite;
-        public ViewGroup mViewGroup;
-
-        public ViewHolder(View view) {
-            super(view);
-            mTextView = itemView.findViewById(R.id.description);
-            mImageView = itemView.findViewById(R.id.movie_image);
-            mRatingBar = itemView.findViewById(R.id.rating);
-            mFavourite = itemView.findViewById(R.id.favourite);
-            mViewGroup = itemView.findViewById(R.id.card_of_list);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString();
-        }
-    }
 
 
     public interface OnMovieSelect {

@@ -11,9 +11,14 @@ import movies.test.softserve.movies.constans.Constants;
 import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.entity.Code;
 import movies.test.softserve.movies.entity.FullMovie;
+import movies.test.softserve.movies.entity.Genre;
 import movies.test.softserve.movies.entity.GuestSession;
+import movies.test.softserve.movies.entity.Page;
+import movies.test.softserve.movies.entity.ProductionCompany;
+import movies.test.softserve.movies.entity.ProductionCountry;
 import movies.test.softserve.movies.entity.Rating;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
+import movies.test.softserve.movies.event.OnListOfMoviesGetListener;
 import movies.test.softserve.movies.event.OnMovieInformationGet;
 import movies.test.softserve.movies.event.OnSessionGetListener;
 import retrofit2.Call;
@@ -33,7 +38,7 @@ public class MovieService {
     private List<OnMovieInformationGet> listOfListeners;
     private List<OnSessionGetListener> onSessionGetListenersList;
     private List<OnInfoUpdatedListener> onInfoUpdatedList;
-
+    private List<OnListOfMoviesGetListener> onListOfMoviesGetListeners;
 
     private MovieService() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -44,6 +49,7 @@ public class MovieService {
         listOfListeners = new ArrayList<>();
         onSessionGetListenersList = new ArrayList<>();
         onInfoUpdatedList = new ArrayList<>();
+        onListOfMoviesGetListeners = new ArrayList<>();
     }
 
 
@@ -123,6 +129,58 @@ public class MovieService {
     }
 
 
+    public void getMovieByGenreCompany(Integer genre, Integer productionCompany, Integer page){
+        Call<Page> call = service.discoverMovie(Constants.API_KEY,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                page,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                productionCompany,
+                genre,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+                );
+        call.enqueue(new Callback<Page>() {
+            @Override
+            public void onResponse(Call<Page> call, Response<Page> response) {
+                for (OnListOfMoviesGetListener listener:
+                     onListOfMoviesGetListeners) {
+                    listener.onListOfMoviesGetListener(response.body().getMovies());
+                }
+                Log.w("i am here" , "" + response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Page> call, Throwable t) {
+                Log.e("Smth went wrong", t.getMessage());
+            }
+        });
+
+    }
+
+
     public void addListener(@NonNull OnMovieInformationGet listener) {
         listOfListeners.add(listener);
     }
@@ -144,6 +202,12 @@ public class MovieService {
         onInfoUpdatedList.remove(listener);
     }
 
+    public void addOnListOfMoviesGetListener(@NonNull OnListOfMoviesGetListener listener){
+        onListOfMoviesGetListeners.add(listener);
+    }
 
+    public void removeOnListOfMoviesGetListener(@NonNull OnListOfMoviesGetListener listener){
+        onListOfMoviesGetListeners.remove(listener);
+    }
 
 }

@@ -194,10 +194,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
             button.setTextColor(ContextCompat.getColor(MovieDetailsActivity.this, R.color.main_app_color));
             button.setBackgroundColor(Color.TRANSPARENT);
             button.setText(viewModel.getFullMovie().getGenres().get(i).getName());
+            final int finalI = i;
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Snackbar.make(findViewById(R.id.nested_scroll_view), "Isn't ready :)", Snackbar.LENGTH_LONG).show();
+                    Intent intent = new Intent(MovieDetailsActivity.this,SearchActivity.class);
+                    intent.putExtra(SearchActivity.SEARCH_PARAM,SearchActivity.GENRES);
+                    intent.putExtra(SearchActivity.ID,viewModel.getFullMovie().getGenres().get(finalI).getId());
+                    intent.putExtra(SearchActivity.NAME,viewModel.getFullMovie().getGenres().get(finalI).getName());
+                    startActivity(intent);
                 }
             });
             genres.addView(button);
@@ -211,7 +217,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Snackbar.make(findViewById(R.id.nested_scroll_view), "Isn't ready :)", Snackbar.LENGTH_LONG).show();
                 }
             });
             countries.addView(button);
@@ -222,10 +227,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
             button.setBackgroundColor(Color.TRANSPARENT);
             button.setText(viewModel.getFullMovie().getProductionCompanies().get(i).getName());
             button.setPadding(0, 0, 50, 0);
+            final int finalI = i;
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Snackbar.make(findViewById(R.id.nested_scroll_view), "Isn't ready :)", Snackbar.LENGTH_LONG).show();
+                    Intent intent = new Intent(MovieDetailsActivity.this,SearchActivity.class);
+                    intent.putExtra(SearchActivity.SEARCH_PARAM,SearchActivity.GENRES);
+                    intent.putExtra(SearchActivity.ID,viewModel.getFullMovie().getProductionCompanies().get(finalI).getId());
+                    intent.putExtra(SearchActivity.NAME,viewModel.getFullMovie().getProductionCompanies().get(finalI).getName());
+                    startActivity(intent);
                 }
             });
             companies.addView(button);

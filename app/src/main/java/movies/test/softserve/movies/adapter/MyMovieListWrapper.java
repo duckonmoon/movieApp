@@ -42,7 +42,7 @@ public class MyMovieListWrapper extends RecyclerView.Adapter<MainViewHolder> {
         if (position < adapter.getItemCount()) {
             adapter.onBindViewHolder(holder, position);
         } else {
-            mOnEndReachListener.onEndReach();
+            mOnEndReachListener.onEndReach(holder);
         }
     }
 
@@ -69,6 +69,6 @@ public class MyMovieListWrapper extends RecyclerView.Adapter<MainViewHolder> {
     }
 
     public interface OnEndReachListener {
-        void onEndReach();
+        void onEndReach(MainViewHolder mainViewHolder);
     }
 }

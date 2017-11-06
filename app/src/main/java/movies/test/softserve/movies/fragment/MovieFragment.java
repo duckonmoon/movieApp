@@ -56,6 +56,11 @@ public class MovieFragment extends Fragment {
                     intent.putExtra(MovieDetailsActivity.OVERVIEW, movie.getOverview());
                     getActivity().startActivity(intent);
                 }
+            }, new MyMovieRecyclerViewAdapter.OnFavouriteClick() {
+                @Override
+                public void onFavouriteClick(Movie movie) {
+
+                }
             }));
         }
         return view;

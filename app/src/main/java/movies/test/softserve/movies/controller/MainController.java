@@ -79,6 +79,10 @@ public class MainController extends Application implements Observer {
         eventListener = addedItemsEventListener;
     }
 
+    public void removeAddedItemsEventListener() {
+        eventListener = null;
+    }
+
     public List<Movie> getMovies() {
         return movies;
     }

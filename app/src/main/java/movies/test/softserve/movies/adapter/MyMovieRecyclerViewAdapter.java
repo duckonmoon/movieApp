@@ -22,11 +22,13 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHol
 
     private List<Movie> movies;
     private OnMovieSelect event;
+    private OnFavouriteClick favouriteClick;
 
 
-    public MyMovieRecyclerViewAdapter(List<Movie> items, @NonNull OnMovieSelect onMovieSelect) {
+    public MyMovieRecyclerViewAdapter(List<Movie> items, @NonNull OnMovieSelect onMovieSelect, @NonNull OnFavouriteClick onFavouriteClick) {
         movies = items;
         event = onMovieSelect;
+        favouriteClick = onFavouriteClick;
     }
 
     @Override
@@ -56,6 +58,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHol
         holder.mFavourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                favouriteClick.onFavouriteClick(movies.get(position));
             }
         });
         Picasso
@@ -78,5 +81,9 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHol
 
     public interface OnMovieSelect {
         void OnMovieSelected(Movie movie);
+    }
+
+    public interface OnFavouriteClick {
+        void onFavouriteClick(Movie movie);
     }
 }

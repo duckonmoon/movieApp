@@ -44,17 +44,19 @@ public class MoviesListActivity extends AppCompatActivity
 
     private FragmentViewModel viewModel;
 
+    private String errorMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         event = new AddedItemsEvent() {
             @Override
-            public void onItemsAdded() {
+            public void onItemsAdded(final String message) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         mRecyclerView.getAdapter().notifyDataSetChanged();
+                        errorMessage = message;
                     }
                 });
             }
@@ -89,12 +91,14 @@ public class MoviesListActivity extends AppCompatActivity
                                 public void onClick(DialogInterface dialog, int id) {
                                     dbService.deleteMovieFromDb(movie.getId());
                                     Snackbar.make(MoviesListActivity.this.findViewById(R.id.recyclerview), "Deleted from favourite", Snackbar.LENGTH_LONG).show();
+                                    mRecyclerView.getAdapter().notifyDataSetChanged();
                                 }
                             })
                             .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dbService.cancelFavourite(movie.getId());
                                     Snackbar.make(MoviesListActivity.this.findViewById(R.id.recyclerview), "Deleted from favourite", Snackbar.LENGTH_LONG).show();
+                                    mRecyclerView.getAdapter().notifyDataSetChanged();
                                 }
                             }).create()
                             .show();
@@ -111,15 +115,16 @@ public class MoviesListActivity extends AppCompatActivity
                         dbService.setFavourite(movie.getId());
                     }
                     Snackbar.make(MoviesListActivity.this.findViewById(R.id.recyclerview), "Added to favourite", Snackbar.LENGTH_LONG).show();
+                    mRecyclerView.getAdapter().notifyDataSetChanged();
                 }
-                mRecyclerView.getAdapter().notifyDataSetChanged();
+
             }
         }), new MyMovieListWrapper.OnEndReachListener() {
             @Override
             public void onEndReach(MainViewHolder mholder) {
                 final MyMovieListWrapper.ViewHolder holder = (MyMovieListWrapper.ViewHolder) mholder;
                 final MainController mainController = MainController.getInstance();
-                if (mainController.getErrorMessage() == null) {
+                if (errorMessage == null) {
                     mainController.requestMore();
                 } else {
                     holder.mProgressBar.setVisibility(View.GONE);
@@ -173,7 +178,8 @@ public class MoviesListActivity extends AppCompatActivity
         if (event!=null){
             event = new AddedItemsEvent() {
                 @Override
-                public void onItemsAdded() {
+                public void onItemsAdded(String message) {
+                    errorMessage = message;
                     mRecyclerView.getAdapter().notifyDataSetChanged();
                 }
             };

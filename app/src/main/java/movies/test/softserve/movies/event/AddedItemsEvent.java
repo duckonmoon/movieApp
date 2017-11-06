@@ -5,5 +5,5 @@ package movies.test.softserve.movies.event;
  */
 
 public interface AddedItemsEvent {
-    void onItemsAdded();
+    void onItemsAdded(String message);
 }

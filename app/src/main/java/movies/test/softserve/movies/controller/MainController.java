@@ -24,7 +24,6 @@ public class MainController extends Application implements Observer {
     private List<Movie> movies;
     private Integer page;
     private MoviesRepository moviesRepository;
-    private String errorMessage;
     private AddedItemsEvent eventListener;
     private MovieReaderDbHelper movieReaderDbHelper;
     private SQLiteDatabase database;
@@ -61,15 +60,13 @@ public class MainController extends Application implements Observer {
         if (o instanceof MoviesRepository) {
             if (moviesRepository.getMovieList() != null) {
                 movies.addAll(moviesRepository.getMovieList());
-                errorMessage = null;
                 page += 1;
                 if (eventListener != null) {
-                    eventListener.onItemsAdded();
+                    eventListener.onItemsAdded(null);
                 }
             } else {
-                errorMessage = ((MoviesRepository) o).getMessage();
                 if (eventListener != null) {
-                    eventListener.onItemsAdded();
+                    eventListener.onItemsAdded(((MoviesRepository) o).getMessage());
                 }
             }
         }
@@ -89,10 +86,6 @@ public class MainController extends Application implements Observer {
 
     public Integer getPage() {
         return page;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
     }
 
     public static MainController getInstance() {

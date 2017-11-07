@@ -44,7 +44,6 @@ public class MainController extends Application implements Observer {
         moviesRepository = MoviesRepository.getInstance();
         moviesRepository.addObserver(this);
         movieService = MovieService.getInstance();
-
         movieService.addSessionListener(new OnSessionGetListener() {
             @Override
             public void onSessionGet(GuestSession session) {

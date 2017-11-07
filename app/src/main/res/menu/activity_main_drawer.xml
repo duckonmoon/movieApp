@@ -15,5 +15,9 @@
             android:id="@+id/watched"
             android:icon="@drawable/ic_done_all_black_24dp"
             android:title="@string/watched"/>
+        <item
+            android:id="@+id/genres"
+            android:icon="@drawable/ic_voicemail_black_24dp"
+            android:title="@string/genres"/>
     </group>
 </menu>

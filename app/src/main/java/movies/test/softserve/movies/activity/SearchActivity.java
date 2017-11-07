@@ -97,8 +97,12 @@ public class SearchActivity extends AppCompatActivity {
             onListOfMoviesGetListener = new OnListOfMoviesGetListener() {
                 @Override
                 public void onListOfMoviesGetListener(@NotNull List<? extends Movie> movies) {
-                    mPageViewModel.getList().addAll(movies);
-                    mPageViewModel.setPage(mPageViewModel.getPage() + 1);
+                    if (movies.size()>0) {
+                        mPageViewModel.getList().addAll(movies);
+                        mPageViewModel.setPage(mPageViewModel.getPage() + 1);
+
+                    }
+
                     mRecyclerView.getAdapter().notifyDataSetChanged();
                 }
             };
@@ -106,6 +110,7 @@ public class SearchActivity extends AppCompatActivity {
             Intent intent = getIntent();
             id = intent.getIntExtra(ID, -1);
         }
+        mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override

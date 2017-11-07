@@ -1,7 +1,11 @@
 package movies.test.softserve.movies.service;
 
+import java.util.List;
+
 import movies.test.softserve.movies.entity.Code;
 import movies.test.softserve.movies.entity.FullMovie;
+import movies.test.softserve.movies.entity.Genre;
+import movies.test.softserve.movies.entity.GenresContainer;
 import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.Page;
 import movies.test.softserve.movies.entity.Rating;
@@ -69,5 +73,8 @@ public interface MoviesService {
             @Query("with_release_type") Integer with_release_type,
             @Query("with_original_language") String with_original_language,
             @Query("without_keywords") String without_keywords);
+
+    @GET("3/genre/movie/list")
+    Call<GenresContainer> getAllGenres(@Query("api_key") String apiKey);
 
 }

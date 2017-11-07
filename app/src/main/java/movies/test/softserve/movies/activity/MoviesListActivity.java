@@ -27,6 +27,7 @@ import movies.test.softserve.movies.adapter.MyMovieRecyclerViewAdapter;
 import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.event.AddedItemsEvent;
+import movies.test.softserve.movies.fragment.GenreFragment;
 import movies.test.softserve.movies.fragment.MovieFragment;
 import movies.test.softserve.movies.fragment.WatchedFragment;
 import movies.test.softserve.movies.service.DBService;
@@ -175,7 +176,7 @@ public class MoviesListActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (event!=null){
+        if (event != null) {
             event = new AddedItemsEvent() {
                 @Override
                 public void onItemsAdded(String message) {
@@ -183,6 +184,7 @@ public class MoviesListActivity extends AppCompatActivity
                     mRecyclerView.getAdapter().notifyDataSetChanged();
                 }
             };
+            MainController.getInstance().setAddedItemsEventListener(event);
         }
 
         mRecyclerView.getAdapter().notifyDataSetChanged();
@@ -217,6 +219,11 @@ public class MoviesListActivity extends AppCompatActivity
                 viewModel.setWatchedFragment(new WatchedFragment());
             }
             transaction.replace(R.id.constraint_layout, viewModel.getWatchedFragment());
+        } else if (id == R.id.genres) {
+            if (viewModel.getGenresFragment() == null){
+                viewModel.setGenresFragment(new GenreFragment());
+            }
+            transaction.replace(R.id.constraint_layout,viewModel.getGenresFragment());
         }
         transaction.commit();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -232,3 +239,5 @@ public class MoviesListActivity extends AppCompatActivity
         event = null;
     }
 }
+
+

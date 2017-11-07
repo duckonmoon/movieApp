@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import movies.test.softserve.movies.R
 import movies.test.softserve.movies.activity.SearchActivity
+import movies.test.softserve.movies.adapter.ViewAdapter
 import movies.test.softserve.movies.entity.Genre
 import movies.test.softserve.movies.event.OnListOfGenresGetListener
 import movies.test.softserve.movies.service.MovieService
@@ -34,12 +35,12 @@ class GenreFragment : Fragment() {
         if (view is RecyclerView) {
             val context = view.getContext()
             view.layoutManager = LinearLayoutManager(context)
-            view.adapter = ViewAdapter(viewModel.genres,onItemClickListener = object : ViewAdapter.OnItemClickListener{
+            view.adapter = ViewAdapter(viewModel.genres, onItemClickListener = object : ViewAdapter.OnItemClickListener {
                 override fun onItemClick(genre: Genre) {
-                    val intent = Intent(activity,SearchActivity::class.java)
-                    intent.putExtra(SearchActivity.SEARCH_PARAM,SearchActivity.GENRES)
-                    intent.putExtra(SearchActivity.ID,genre.id)
-                    intent.putExtra(SearchActivity.NAME,genre.name)
+                    val intent = Intent(activity, SearchActivity::class.java)
+                    intent.putExtra(SearchActivity.SEARCH_PARAM, SearchActivity.GENRES)
+                    intent.putExtra(SearchActivity.ID, genre.id)
+                    intent.putExtra(SearchActivity.NAME, genre.name)
                     startActivity(intent)
                 }
             })

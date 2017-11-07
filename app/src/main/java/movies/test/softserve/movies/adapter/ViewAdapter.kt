@@ -1,4 +1,4 @@
-package movies.test.softserve.movies.fragment
+package movies.test.softserve.movies.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

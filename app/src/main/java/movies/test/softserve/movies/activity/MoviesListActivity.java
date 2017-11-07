@@ -179,9 +179,14 @@ public class MoviesListActivity extends AppCompatActivity
         if (event != null) {
             event = new AddedItemsEvent() {
                 @Override
-                public void onItemsAdded(String message) {
-                    errorMessage = message;
-                    mRecyclerView.getAdapter().notifyDataSetChanged();
+                public void onItemsAdded(final String message) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            errorMessage = message;
+                            mRecyclerView.getAdapter().notifyDataSetChanged();
+                        }
+                    });
                 }
             };
             MainController.getInstance().setAddedItemsEventListener(event);

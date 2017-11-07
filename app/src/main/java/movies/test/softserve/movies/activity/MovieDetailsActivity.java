@@ -1,10 +1,16 @@
 package movies.test.softserve.movies.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -22,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -69,10 +76,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private ImageView share;
     private ImageView watched;
 
-    FullMovieViewModel viewModel;
+    private FullMovieViewModel viewModel;
 
     private OnMovieInformationGet listener;
     private OnInfoUpdatedListener infoListener;
+
+    private Animator mCurrentAnimator;
+    BitmapDrawable mBitmapDrawable;
+
+    private int mShortAnimationDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -295,6 +307,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
         companies = findViewById(R.id.companies);
         links = findViewById(R.id.links);
         share = findViewById(R.id.share);
+        mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        toolbarLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                zoomImageFromThumb(toolbarLayout,mBitmapDrawable);
+            }
+        });
 
     }
 
@@ -317,9 +336,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     .into(new Target() {
                         @Override
                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            BitmapDrawable bitmapDrawable = new BitmapDrawable(MovieDetailsActivity.this.getResources(), bitmap);
-                            bitmapDrawable.setGravity(Gravity.NO_GRAVITY);
-                            toolbarLayout.setBackground(bitmapDrawable);
+                            mBitmapDrawable = new BitmapDrawable(MovieDetailsActivity.this.getResources(), bitmap);
+                            mBitmapDrawable.setGravity(Gravity.NO_GRAVITY);
+                            toolbarLayout.setBackground(mBitmapDrawable);
                         }
 
                         @Override
@@ -364,5 +383,108 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    private void zoomImageFromThumb(final View thumbView, BitmapDrawable bitmapDrawable) {
+        if (mCurrentAnimator != null) {
+            mCurrentAnimator.cancel();
+        }
+
+        final ImageView expandedImageView = findViewById(R.id.expanded_image);
+        expandedImageView.setImageDrawable(bitmapDrawable);
+
+        final Rect startBounds = new Rect();
+        final Rect finalBounds = new Rect();
+        final Point globalOffset = new Point();
+
+        thumbView.getGlobalVisibleRect(startBounds);
+        findViewById(R.id.container).getGlobalVisibleRect(finalBounds, globalOffset);
+        startBounds.offset(-globalOffset.x, -globalOffset.y);
+        finalBounds.offset(-globalOffset.x, -globalOffset.y);
+
+        float startScale;
+        if ((float) finalBounds.width() / finalBounds.height()
+                > (float) startBounds.width() / startBounds.height()) {
+            startScale = (float) startBounds.height() / finalBounds.height();
+            float startWidth = startScale * finalBounds.width();
+            float deltaWidth = (startWidth - startBounds.width()) / 2;
+            startBounds.left -= deltaWidth;
+            startBounds.right += deltaWidth;
+        } else {
+            startScale = (float) startBounds.width() / finalBounds.width();
+            float startHeight = startScale * finalBounds.height();
+            float deltaHeight = (startHeight - startBounds.height()) / 2;
+            startBounds.top -= deltaHeight;
+            startBounds.bottom += deltaHeight;
+        }
+
+        thumbView.setAlpha(0f);
+        expandedImageView.setVisibility(View.VISIBLE);
+
+        expandedImageView.setPivotX(0f);
+        expandedImageView.setPivotY(0f);
+
+        AnimatorSet set = new AnimatorSet();
+        set
+                .play(ObjectAnimator.ofFloat(expandedImageView, View.X, startBounds.left,
+                        finalBounds.left))
+                .with(ObjectAnimator.ofFloat(expandedImageView, View.Y, startBounds.top,
+                        finalBounds.top))
+                .with(ObjectAnimator.ofFloat(expandedImageView, View.SCALE_X, startScale, 1f))
+                .with(ObjectAnimator.ofFloat(expandedImageView, View.SCALE_Y, startScale, 1f));
+        set.setDuration(mShortAnimationDuration);
+        set.setInterpolator(new DecelerateInterpolator());
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mCurrentAnimator = null;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                mCurrentAnimator = null;
+            }
+        });
+        set.start();
+        mCurrentAnimator = set;
+
+        final float startScaleFinal = startScale;
+        expandedImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mCurrentAnimator != null) {
+                    mCurrentAnimator.cancel();
+                }
+
+                AnimatorSet set = new AnimatorSet();
+                set
+                        .play(ObjectAnimator.ofFloat(expandedImageView, View.X, startBounds.left))
+                        .with(ObjectAnimator.ofFloat(expandedImageView, View.Y, startBounds.top))
+                        .with(ObjectAnimator
+                                .ofFloat(expandedImageView, View.SCALE_X, startScaleFinal))
+                        .with(ObjectAnimator
+                                .ofFloat(expandedImageView, View.SCALE_Y, startScaleFinal));
+                set.setDuration(mShortAnimationDuration);
+                set.setInterpolator(new DecelerateInterpolator());
+                set.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        thumbView.setAlpha(1f);
+                        expandedImageView.setVisibility(View.GONE);
+                        mCurrentAnimator = null;
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        thumbView.setAlpha(1f);
+                        expandedImageView.setVisibility(View.GONE);
+                        mCurrentAnimator = null;
+                    }
+                });
+                set.start();
+                mCurrentAnimator = set;
+            }
+        });
     }
 }

@@ -18,12 +18,12 @@ import movies.test.softserve.movies.viewholder.MainViewHolder;
 
 public class MyMovieListWrapper extends RecyclerView.Adapter<MainViewHolder> {
 
-    MyMovieRecyclerViewAdapter adapter;
+    RecyclerView.Adapter<MainViewHolder> adapter;
     OnEndReachListener mOnEndReachListener;
     private int VIEW_TYPE_CELL = 1;
     private int VIEW_TYPE_FOOTER = 0;
 
-    public MyMovieListWrapper(MyMovieRecyclerViewAdapter adapter,@NonNull OnEndReachListener onEndReachListener) {
+    public MyMovieListWrapper(RecyclerView.Adapter<MainViewHolder> adapter,@NonNull OnEndReachListener onEndReachListener) {
         this.adapter = adapter;
         mOnEndReachListener = onEndReachListener;
     }

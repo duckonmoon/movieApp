@@ -171,8 +171,6 @@ public class MovieService {
                      onListOfMoviesGetListeners) {
                     if (response.body()!=null && response.body().getMovies().size()>0) {
                         listener.onListOfMoviesGetListener(response.body().getMovies());
-                    }else{
-
                     }
                 }
                 Log.w("i am here" , "" + response.body());

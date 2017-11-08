@@ -29,6 +29,7 @@ import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.event.AddedItemsEvent;
 import movies.test.softserve.movies.fragment.GenreFragment;
 import movies.test.softserve.movies.fragment.MovieFragment;
+import movies.test.softserve.movies.fragment.TVShowFragment;
 import movies.test.softserve.movies.fragment.WatchedFragment;
 import movies.test.softserve.movies.service.DBService;
 import movies.test.softserve.movies.viewholder.MainViewHolder;
@@ -229,6 +230,11 @@ public class MoviesListActivity extends AppCompatActivity
                 viewModel.setGenresFragment(new GenreFragment());
             }
             transaction.replace(R.id.constraint_layout,viewModel.getGenresFragment());
+        } else if (id == R.id.tv_shows){
+            if (viewModel.getTvShowFragment() == null){
+                viewModel.setTvShowFragment(new TVShowFragment());
+            }
+            transaction.replace(R.id.constraint_layout,viewModel.getTvShowFragment());
         }
         transaction.commit();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

@@ -1,9 +1,6 @@
 package movies.test.softserve.movies.service
 
-import movies.test.softserve.movies.entity.Code
-import movies.test.softserve.movies.entity.FullTVShow
-import movies.test.softserve.movies.entity.Rating
-import movies.test.softserve.movies.entity.TVPage
+import movies.test.softserve.movies.entity.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -23,4 +20,7 @@ interface TVShowsService {
                    @Query("api_key") apiKey: String,
                    @Query("guest_session_id") guestSessionId: String,
                    @Body value: Rating) : Call<Code>
+
+    @GET("3/tv/{tv_id}/season/{season_number}/videos")
+    fun getVideos(@Path("tv_id") tvID: Int, @Path("season_number") season_number: Int, @Query("api_key") apiKey: String) : Call<VideoContainer>
 }

@@ -3,6 +3,7 @@ package movies.test.softserve.movies.entity;
 /**
  * Created by rkrit on 20.10.17.
  */
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -40,7 +41,7 @@ public class Movie {
     private String originalTitle;
     @SerializedName("genre_ids")
     @Expose
-    private List<Integer> genreIds = null;
+    private List<Integer> genreIds = new ArrayList<>();
     @SerializedName("backdrop_path")
     @Expose
     private String backdropPath;

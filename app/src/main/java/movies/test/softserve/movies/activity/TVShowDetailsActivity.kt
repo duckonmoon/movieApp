@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
@@ -163,13 +164,19 @@ class TVShowDetailsActivity : AppCompatActivity() {
         runOnUiThread({
             release_date.visibility = View.VISIBLE
             release_date.text = "" + release_date.text + tvShow.firstAirDate
+            if (tvShow.homepage != null && tvShow.homepage != ""){
+                links.text = tvShow.homepage
+                links.setOnClickListener({
+                    val webPage = Uri.parse(tvShow.homepage)
+                    val webIntent = Intent(Intent.ACTION_VIEW, webPage)
+                    startActivity(webIntent!!)})
+            }
             for (i in tvShow.seasons!!.indices){
                 var image = ImageView(this@TVShowDetailsActivity)
                 Picasso
                         .with(this@TVShowDetailsActivity)
                         .load("https://image.tmdb.org/t/p/w500" + viewModel.fullTVShow!!.seasons!![i].posterPath)
                         .into(image)
-                image.setOnClickListener({})
                 image.setPadding(0,20,20,0)
                 genres.addView(image)
             }

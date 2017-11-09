@@ -10,12 +10,13 @@ import java.util.List;
 import movies.test.softserve.movies.constans.Constants;
 import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.entity.Code;
-import movies.test.softserve.movies.entity.FullMovie;
 import movies.test.softserve.movies.entity.FullTVShow;
 import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.Rating;
 import movies.test.softserve.movies.entity.TVPage;
 import movies.test.softserve.movies.entity.TVShow;
+import movies.test.softserve.movies.entity.Video;
+import movies.test.softserve.movies.entity.VideoContainer;
 import movies.test.softserve.movies.event.OnFullTVShowGetListener;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnListOfTVShowsGetListener;
@@ -139,6 +140,22 @@ public class TVShowsRepository {
             Toast.makeText(MainController.getInstance().getApplicationContext(), "No internet", Toast.LENGTH_LONG).show();
         }
     }
+
+    public void getVideo(Integer tv_id,Integer season_number){
+        Call<VideoContainer> call = service.getVideos(tv_id,season_number,Constants.API_KEY);
+        call.enqueue(new Callback<VideoContainer>() {
+            @Override
+            public void onResponse(Call<VideoContainer> call, Response<VideoContainer> response) {
+                Log.d("Success", "" + response.body().getResults());
+            }
+
+            @Override
+            public void onFailure(Call<VideoContainer> call, Throwable t) {
+                Log.e("Smth went wrong", t.getMessage());
+            }
+        });
+    }
+
 
 
 

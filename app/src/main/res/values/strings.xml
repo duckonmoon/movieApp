@@ -118,4 +118,6 @@
     <string name="tv_shows">TV Shows</string>
     <string name="title_activity_tvshow_details">TVShowDetailsActivity</string>
     <string name="tvshows">TVShows</string>
+    <string name="title_activity_season_info">SeasonInfoActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>

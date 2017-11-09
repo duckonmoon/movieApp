@@ -4,6 +4,7 @@ package movies.test.softserve.movies.entity;
  * Created by rkrit on 20.10.17.
  */
 
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -23,7 +24,7 @@ public class Page {
     private Integer totalPages;
     @SerializedName("results")
     @Expose
-    private List<Movie> movies = null;
+    private List<Movie> movies = new ArrayList<>();
 
     public Integer getPage() {
         return page;

@@ -2,6 +2,7 @@ package movies.test.softserve.movies.entity
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.util.ArrayList
 
 class TVShow {
 
@@ -10,7 +11,7 @@ class TVShow {
     var originalName: String? = null
     @SerializedName("genre_ids")
     @Expose
-    var genreIds: List<Int>? = null
+    var genreIds: List<Int>? = ArrayList()
     @SerializedName("name")
     @Expose
     var name: String? = null
@@ -19,7 +20,7 @@ class TVShow {
     var popularity: Double? = null
     @SerializedName("origin_country")
     @Expose
-    var originCountry: List<String>? = null
+    var originCountry: List<String>? = ArrayList()
     @SerializedName("vote_count")
     @Expose
     var voteCount: Int? = null

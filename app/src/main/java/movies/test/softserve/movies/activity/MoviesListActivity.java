@@ -18,6 +18,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -31,7 +33,7 @@ import movies.test.softserve.movies.fragment.GenreFragment;
 import movies.test.softserve.movies.fragment.MovieFragment;
 import movies.test.softserve.movies.fragment.TVShowFragment;
 import movies.test.softserve.movies.fragment.WatchedFragment;
-import movies.test.softserve.movies.service.DBService;
+import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.viewholder.MainViewHolder;
 import movies.test.softserve.movies.viewmodel.FragmentViewModel;
 
@@ -85,7 +87,7 @@ public class MoviesListActivity extends AppCompatActivity
                 }, new MyMovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
             public void onFavouriteClick(final Movie movie) {
-                final DBService dbService = DBService.getInstance();
+                final DBMovieService dbService = DBMovieService.getInstance();
                 if (dbService.checkIfMovieIsFavourite(movie.getId())) {
                     new AlertDialog.Builder(MoviesListActivity.this)
                             .setMessage(R.string.delete_from_watched)
@@ -248,6 +250,21 @@ public class MoviesListActivity extends AppCompatActivity
         super.onPause();
         MainController.getInstance().removeAddedItemsEventListener();
         event = null;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
 

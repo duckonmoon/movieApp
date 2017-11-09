@@ -16,7 +16,7 @@ import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.activity.MovieDetailsActivity;
 import movies.test.softserve.movies.adapter.MyMovieRecyclerViewAdapter;
 import movies.test.softserve.movies.entity.Movie;
-import movies.test.softserve.movies.service.DBService;
+import movies.test.softserve.movies.service.DBMovieService;
 
 public class WatchedFragment extends Fragment {
 
@@ -42,7 +42,7 @@ public class WatchedFragment extends Fragment {
             Context context = view.getContext();
             mRecyclerView = (RecyclerView) view;
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            mRecyclerView.setAdapter(new MyMovieRecyclerViewAdapter(DBService.getInstance().getAllMovies(), new MyMovieRecyclerViewAdapter.OnMovieSelect() {
+            mRecyclerView.setAdapter(new MyMovieRecyclerViewAdapter(DBMovieService.getInstance().getAllMovies(), new MyMovieRecyclerViewAdapter.OnMovieSelect() {
                 @Override
                 public void OnMovieSelected(Movie movie) {
                     Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
@@ -92,7 +92,7 @@ public class WatchedFragment extends Fragment {
     }
 
     private void setAdapter() {
-        ((MyMovieRecyclerViewAdapter) mRecyclerView.getAdapter()).setMovies(DBService.getInstance().getAllMovies());
+        ((MyMovieRecyclerViewAdapter) mRecyclerView.getAdapter()).setMovies(DBMovieService.getInstance().getAllMovies());
         mRecyclerView.getAdapter().notifyDataSetChanged();
 
     }

@@ -50,6 +50,7 @@ public class MainController extends Application implements Observer {
                 guestSession = session;
             }
         });
+        movieService.tryToGetSession();
         TVShowsRepository.getInstance().tryToGetTVShows();
     }
 

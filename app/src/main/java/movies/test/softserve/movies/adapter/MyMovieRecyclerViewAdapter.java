@@ -5,9 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -15,7 +13,7 @@ import java.util.List;
 
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.entity.Movie;
-import movies.test.softserve.movies.service.DBService;
+import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.viewholder.MainViewHolder;
 
 public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolder> {
@@ -54,7 +52,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHol
                 event.OnMovieSelected(movies.get(position));
             }
         });
-        holder.mFavourite.setImageResource(DBService.getInstance().checkIfMovieIsFavourite(movies.get(position).getId()) ? R.drawable.ic_stary_black_24dp : R.drawable.ic_star_border_black_24dp);
+        holder.mFavourite.setImageResource(DBMovieService.getInstance().checkIfMovieIsFavourite(movies.get(position).getId()) ? R.drawable.ic_stary_black_24dp : R.drawable.ic_star_border_black_24dp);
         holder.mFavourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

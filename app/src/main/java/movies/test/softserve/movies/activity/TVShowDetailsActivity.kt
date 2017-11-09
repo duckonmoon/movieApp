@@ -10,24 +10,26 @@ import android.graphics.Point
 import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
+import com.facebook.share.model.ShareLinkContent
+import com.facebook.share.widget.ShareDialog
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.activity_movie_details.*
 import kotlinx.android.synthetic.main.content_movie_details.*
 import movies.test.softserve.movies.R
 import movies.test.softserve.movies.entity.FullTVShow
-import movies.test.softserve.movies.entity.Season
 import movies.test.softserve.movies.entity.TVShow
 import movies.test.softserve.movies.event.OnFullTVShowGetListener
+import movies.test.softserve.movies.event.OnInfoUpdatedListener
 import movies.test.softserve.movies.repository.TVShowsRepository
 import movies.test.softserve.movies.viewmodel.FullTVSeriesViewModel
 
@@ -50,6 +52,7 @@ class TVShowDetailsActivity : AppCompatActivity() {
     private var mShortAnimationDuration: Int = 0
 
     private var listener : OnFullTVShowGetListener? = null
+    private var onInfoUpdatedListener : OnInfoUpdatedListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +62,10 @@ class TVShowDetailsActivity : AppCompatActivity() {
         initView()
         getIntentInfo()
         useIntentInfo()
+        if (savedInstanceState!=null){
+            if (viewModel.fullTVShow!=null)
+                getFullInfo(viewModel.fullTVShow!!)
+        }
     }
 
     override fun onResume() {
@@ -73,8 +80,6 @@ class TVShowDetailsActivity : AppCompatActivity() {
                 }
                 TVShowsRepository.getInstance().addOnFullTVShowGetListeners(listener)
                 TVShowsRepository.getInstance().trytoGetFullTVShow(viewModel.tvShow!!.id)
-            } else{
-                getFullInfo(viewModel.fullTVShow!!)
             }
         }
     }
@@ -83,6 +88,10 @@ class TVShowDetailsActivity : AppCompatActivity() {
         super.onPause()
         if (listener!=null){
             TVShowsRepository.getInstance().removeOnFullTVShowGetListeners(listener)
+            listener = null
+        }
+        if (onInfoUpdatedListener!=null){
+            TVShowsRepository.getInstance().removeOnInfoUpdatedListener(onInfoUpdatedListener!!)
             listener = null
         }
     }
@@ -113,9 +122,23 @@ class TVShowDetailsActivity : AppCompatActivity() {
         toolbar_layout.title = viewModel.tvShow!!.name
         toolbar_layout.setOnClickListener({ zoomImageFromThumb(toolbar_layout, mBitmapDrawable!!) })
         ratingBar.rating = viewModel.tvShow!!.voteAverage!!.toFloat() / 2
+        ratingBar.setOnRatingBarChangeListener({ _, rating, fromUser ->  if (fromUser) {
+            onInfoUpdatedListener = OnInfoUpdatedListener { code ->
+                ratingBar.rating = code
+                Snackbar.make(findViewById(R.id.nested_scroll_view), "Your rating saved", Snackbar.LENGTH_LONG).show()
+            }
+            TVShowsRepository.getInstance().addOnInfoUpdatedListener(onInfoUpdatedListener!!)
+            TVShowsRepository.getInstance().rateTVShow(viewModel.tvShow!!.id,rating*2)
+        }})
         vote_count.text = "" + Math.round(viewModel.tvShow!!.voteAverage!! * 10).toFloat() / 10 + "/" + viewModel.tvShow!!.voteCount
         overview.text = viewModel.tvShow!!.overview
         release_date.visibility = View.GONE
+        share.setOnClickListener{
+            val shareLinkContent = ShareLinkContent.Builder()
+                    .setQuote(viewModel.tvShow!!.name + "     \r\nPlot: " + viewModel.tvShow!!.overview)
+                    .setContentUrl(Uri.parse("https://image.tmdb.org/t/p/w500" + viewModel.tvShow!!.posterPath))
+                    .build()
+            ShareDialog.show(this@TVShowDetailsActivity, shareLinkContent)}
         Picasso
                 .with(this)
                 .load("https://image.tmdb.org/t/p/w500" + viewModel.tvShow!!.posterPath)
@@ -146,6 +169,7 @@ class TVShowDetailsActivity : AppCompatActivity() {
                         .with(this@TVShowDetailsActivity)
                         .load("https://image.tmdb.org/t/p/w500" + viewModel.fullTVShow!!.seasons!![i].posterPath)
                         .into(image)
+                image.setOnClickListener({})
                 image.setPadding(0,20,20,0)
                 genres.addView(image)
             }

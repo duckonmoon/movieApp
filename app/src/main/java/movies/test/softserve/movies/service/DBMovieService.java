@@ -15,19 +15,19 @@ import movies.test.softserve.movies.entity.Movie;
  * Created by rkrit on 27.10.17.
  */
 
-public class DBService {
-    private static DBService INSTANCE;
+public class DBMovieService {
+    private static DBMovieService INSTANCE;
     private SQLiteDatabase database;
 
 
-    public static DBService getInstance() {
+    public static DBMovieService getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new DBService();
+            INSTANCE = new DBMovieService();
         }
         return INSTANCE;
     }
 
-    private DBService() {
+    private DBMovieService() {
         database = MainController.getInstance().getDatabase();
     }
 

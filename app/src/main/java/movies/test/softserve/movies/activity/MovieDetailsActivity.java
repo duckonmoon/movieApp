@@ -45,7 +45,7 @@ import movies.test.softserve.movies.entity.FullMovie;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnMovieInformationGet;
-import movies.test.softserve.movies.service.DBService;
+import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.viewmodel.FullMovieViewModel;
 
@@ -60,7 +60,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     public static final String OVERVIEW = "overview";
 
     private MovieService service;
-    private DBService dbService;
+    private DBMovieService dbService;
 
     private Toolbar toolbar;
     private CollapsingToolbarLayout toolbarLayout;
@@ -91,7 +91,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
         viewModel = ViewModelProviders.of(this).get(FullMovieViewModel.class);
-        dbService = DBService.getInstance();
+        dbService = DBMovieService.getInstance();
         initView();
         getIntentInfo();
         useIntentInfo();
@@ -141,13 +141,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 ShareDialog.show(MovieDetailsActivity.this, shareLinkContent);
             }
         });
-        watched.setImageResource(DBService.getInstance().checkIfMovieExists(viewModel.getMovie().getId()) ? R.mipmap.checked : R.mipmap.not_checked);
+        watched.setImageResource(DBMovieService.getInstance().checkIfMovieExists(viewModel.getMovie().getId()) ? R.mipmap.checked : R.mipmap.not_checked);
         watched.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!DBService.getInstance().checkIfMovieExists(viewModel.getMovie().getId())) {
+                if (!DBMovieService.getInstance().checkIfMovieExists(viewModel.getMovie().getId())) {
                     watched.setImageResource(R.mipmap.checked);
-                    DBService.getInstance().addMovieToDb(viewModel.getMovie().getId(),
+                    DBMovieService.getInstance().addMovieToDb(viewModel.getMovie().getId(),
                             viewModel.getMovie().getTitle(),
                             viewModel.getMovie().getVoteAverage().floatValue(),
                             viewModel.getMovie().getVoteCount(),
@@ -158,14 +158,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     Snackbar.make(findViewById(R.id.nested_scroll_view), "Added to watched", Snackbar.LENGTH_SHORT).show();
                 } else {
 
-                    if (DBService.getInstance().checkIfMovieIsFavourite(viewModel.getMovie().getId())) {
+                    if (DBMovieService.getInstance().checkIfMovieIsFavourite(viewModel.getMovie().getId())) {
                         Snackbar.make(findViewById(R.id.nested_scroll_view), "It's favourite, u cant do this", Snackbar.LENGTH_SHORT).show();
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MovieDetailsActivity.this);
                         builder.setMessage(R.string.confirm)
                                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        DBService.getInstance().deleteMovieFromDb(viewModel.getMovie().getId());
+                                        DBMovieService.getInstance().deleteMovieFromDb(viewModel.getMovie().getId());
                                         watched.setImageResource(R.mipmap.not_checked);
                                         Snackbar.make(findViewById(R.id.nested_scroll_view), "Marked as unwatched", Snackbar.LENGTH_SHORT).show();
                                     }

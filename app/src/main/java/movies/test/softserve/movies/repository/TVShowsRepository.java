@@ -1,17 +1,25 @@
 package movies.test.softserve.movies.repository;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import movies.test.softserve.movies.constans.Constants;
+import movies.test.softserve.movies.controller.MainController;
+import movies.test.softserve.movies.entity.Code;
 import movies.test.softserve.movies.entity.FullMovie;
 import movies.test.softserve.movies.entity.FullTVShow;
+import movies.test.softserve.movies.entity.GuestSession;
+import movies.test.softserve.movies.entity.Rating;
 import movies.test.softserve.movies.entity.TVPage;
 import movies.test.softserve.movies.entity.TVShow;
 import movies.test.softserve.movies.event.OnFullTVShowGetListener;
+import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnListOfTVShowsGetListener;
+import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.service.TVShowsService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +42,7 @@ public class TVShowsRepository {
 
     private List<OnListOfTVShowsGetListener> listOfTVShowsGetListeners;
     private List<OnFullTVShowGetListener> onFullTVShowGetListeners;
+    private List<OnInfoUpdatedListener> onInfoUpdatedList;
 
     private TVShowsRepository(){
         Retrofit retrofit = new Retrofit.Builder()
@@ -46,6 +55,7 @@ public class TVShowsRepository {
 
         listOfTVShowsGetListeners = new ArrayList<>();
         onFullTVShowGetListeners = new ArrayList<>();
+        onInfoUpdatedList = new ArrayList<>();
     }
 
     public static synchronized TVShowsRepository getInstance() {
@@ -105,6 +115,32 @@ public class TVShowsRepository {
     }
 
 
+    public void rateTVShow(Integer tvShow_id, final float value) {
+        GuestSession session = MainController.getInstance().getGuestSession();
+        if (session != null) {
+            Call<Code> call = service.rateTVShow(Constants.CONTENT_TYPE, tvShow_id, Constants.API_KEY, session.getGuestSessionId(), new Rating(value));
+            call.enqueue(new Callback<Code>() {
+                @Override
+                public void onResponse(Call<Code> call, Response<Code> response) {
+                    Log.d("Success", response.body().getStatusMessage());
+                    for (OnInfoUpdatedListener listener
+                            : onInfoUpdatedList){
+                        listener.OnInfoUpdated(value/2);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Code> call, Throwable t) {
+                    Log.e("Smth went wrong", t.getMessage());
+                }
+            });
+        } else {
+            MovieService.getInstance().tryToGetSession();
+            Toast.makeText(MainController.getInstance().getApplicationContext(), "No internet", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
 
     public List<TVShow> getTvShows() {
         return tvShows;
@@ -124,5 +160,13 @@ public class TVShowsRepository {
 
     public void removeOnFullTVShowGetListeners(OnFullTVShowGetListener listener){
         onFullTVShowGetListeners.remove(listener);
+    }
+
+    public void addOnInfoUpdatedListener(@NonNull OnInfoUpdatedListener listener) {
+        onInfoUpdatedList.add(listener);
+    }
+
+    public void removeOnInfoUpdatedListener(@NonNull OnInfoUpdatedListener listener) {
+        onInfoUpdatedList.remove(listener);
     }
 }

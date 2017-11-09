@@ -1,5 +1,6 @@
 package movies.test.softserve.movies.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import movies.test.softserve.movies.R
+import movies.test.softserve.movies.activity.TVShowDetailsActivity
 import movies.test.softserve.movies.adapter.MyMovieListWrapper
 import movies.test.softserve.movies.adapter.MyTVShowRecyclerViewAdapter
 import movies.test.softserve.movies.entity.TVShow
@@ -16,9 +18,9 @@ import movies.test.softserve.movies.repository.TVShowsRepository
 
 class TVShowFragment : Fragment() {
 
-    var mRecyclerView: RecyclerView? = null
-    var repository: TVShowsRepository = TVShowsRepository.getInstance()
-    var listener: OnListOfTVShowsGetListener? = null
+    private var mRecyclerView: RecyclerView? = null
+    private var repository: TVShowsRepository = TVShowsRepository.getInstance()
+    private var listener: OnListOfTVShowsGetListener? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -29,6 +31,14 @@ class TVShowFragment : Fragment() {
             view.adapter = MyMovieListWrapper(MyTVShowRecyclerViewAdapter(repository.tvShows,
                     object : MyTVShowRecyclerViewAdapter.OnMovieSelect {
                         override fun OnMovieSelected(tvShow: TVShow) {
+                            var intent = Intent(activity,TVShowDetailsActivity::class.java)
+                            intent.putExtra(TVShowDetailsActivity.NAME,tvShow.name)
+                            intent.putExtra(TVShowDetailsActivity.ID,tvShow.id)
+                            intent.putExtra(TVShowDetailsActivity.OVERVIEW,tvShow.overview)
+                            intent.putExtra(TVShowDetailsActivity.POSTER_PATH,tvShow.posterPath)
+                            intent.putExtra(TVShowDetailsActivity.VOTE_COUNT,tvShow.voteCount)
+                            intent.putExtra(TVShowDetailsActivity.VOTE_AVERAGE,tvShow.voteAverage)
+                            startActivity(intent)
                         }
                     }, object : MyTVShowRecyclerViewAdapter.OnFavouriteClick {
                 override fun onFavouriteClick(tvShow: TVShow) {

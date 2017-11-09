@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar" />
 
-    <style name="SearchTheme" parent="Theme.AppCompat"/>
+    <style name="SearchTheme" parent="Theme.AppCompat" />
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

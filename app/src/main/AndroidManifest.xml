@@ -23,7 +23,7 @@
             android:name=".activity.MovieDetailsActivity"
             android:label="@string/title_activity_movie_details"
             android:parentActivityName=".activity.MoviesListActivity"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -34,7 +34,13 @@
             android:authorities="com.facebook.app.FacebookContentProvider203288643546859"
             android:exported="true" />
 
-        <activity android:name=".activity.SearchActivity" android:theme="@style/SearchTheme"/>
+        <activity
+            android:name=".activity.SearchActivity"
+            android:theme="@style/SearchTheme" />
+        <activity
+            android:name=".activity.TVShowDetailsActivity"
+            android:label="@string/title_activity_tvshow_details"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

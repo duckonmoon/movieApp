@@ -20,9 +20,14 @@
             android:icon="@drawable/ic_voicemail_black_24dp"
             android:title="@string/genres"/>
         <item
-            android:id="@+id/tv_shows"
-            android:icon="@drawable/ic_weekend_black_24dp"
-            android:title="@string/tv_shows"
-            />
+
+            android:title="@string/tv_shows">
+            <menu>
+                <item android:id="@+id/tv_shows"
+                    android:title="@string/explore"
+                    android:icon="@drawable/ic_weekend_black_24dp"/>
+            </menu>
+
+        </item>
     </group>
 </menu>

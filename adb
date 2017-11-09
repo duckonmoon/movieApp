@@ -1,1 +1,0 @@
-/android/platform-tools/adb/bin/adb

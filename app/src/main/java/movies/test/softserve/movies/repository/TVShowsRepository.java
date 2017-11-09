@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import movies.test.softserve.movies.constans.Constants;
+import movies.test.softserve.movies.entity.FullMovie;
+import movies.test.softserve.movies.entity.FullTVShow;
 import movies.test.softserve.movies.entity.TVPage;
 import movies.test.softserve.movies.entity.TVShow;
+import movies.test.softserve.movies.event.OnFullTVShowGetListener;
 import movies.test.softserve.movies.event.OnListOfTVShowsGetListener;
 import movies.test.softserve.movies.service.TVShowsService;
 import retrofit2.Call;
@@ -22,15 +25,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TVShowsRepository {
 
+    private static TVShowsRepository INSTANCE;
+
     private int page = 1;
     private List<TVShow> tvShows;
 
-
-    private List<OnListOfTVShowsGetListener> listOfTVShowsGetListeners;
-    private static TVShowsRepository INSTANCE;
-
     private TVShowsService service;
 
+    private List<OnListOfTVShowsGetListener> listOfTVShowsGetListeners;
+    private List<OnFullTVShowGetListener> onFullTVShowGetListeners;
 
     private TVShowsRepository(){
         Retrofit retrofit = new Retrofit.Builder()
@@ -42,6 +45,7 @@ public class TVShowsRepository {
         tvShows = new ArrayList<>();
 
         listOfTVShowsGetListeners = new ArrayList<>();
+        onFullTVShowGetListeners = new ArrayList<>();
     }
 
     public static synchronized TVShowsRepository getInstance() {
@@ -79,6 +83,28 @@ public class TVShowsRepository {
         });
     }
 
+    public void trytoGetFullTVShow(Integer id){
+        Call<FullTVShow> call = service.getTVShow(id,Constants.API_KEY);
+        call.enqueue(new Callback<FullTVShow>() {
+            @Override
+            public void onResponse(Call<FullTVShow> call, Response<FullTVShow> response) {
+                Log.w("Success",response.body().toString());
+                if (response.body()!=null){
+                    for (OnFullTVShowGetListener listener:
+                         onFullTVShowGetListeners) {
+                        listener.onFullTVShowGet(response.body());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FullTVShow> call, Throwable t) {
+                Log.e("Smth went wrong", t.getMessage());
+            }
+        });
+    }
+
+
 
     public List<TVShow> getTvShows() {
         return tvShows;
@@ -90,5 +116,13 @@ public class TVShowsRepository {
 
     public void removeOnListOfTVShowsGetListener(OnListOfTVShowsGetListener listener){
         listOfTVShowsGetListeners.remove(listener);
+    }
+
+    public void addOnFullTVShowGetListeners(OnFullTVShowGetListener listener){
+        onFullTVShowGetListeners.add(listener);
+    }
+
+    public void removeOnFullTVShowGetListeners(OnFullTVShowGetListener listener){
+        onFullTVShowGetListeners.remove(listener);
     }
 }

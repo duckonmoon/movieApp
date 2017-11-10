@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.util.ArrayList
 
-class TVShow {
+class TVShow : TVEntity {
 
     @SerializedName("original_name")
     @Expose
@@ -23,7 +23,7 @@ class TVShow {
     var originCountry: List<String>? = ArrayList()
     @SerializedName("vote_count")
     @Expose
-    var voteCount: Int? = null
+    override var voteCount: Int? = null
     @SerializedName("first_air_date")
     @Expose
     var firstAirDate: String? = null
@@ -35,15 +35,17 @@ class TVShow {
     var originalLanguage: String? = null
     @SerializedName("id")
     @Expose
-    var id: Int? = null
+    override var id: Int? = null
     @SerializedName("vote_average")
     @Expose
-    var voteAverage: Double? = null
+    override var voteAverage: Double? = null
     @SerializedName("overview")
     @Expose
-    var overview: String? = null
+    override var overview: String? = null
     @SerializedName("poster_path")
     @Expose
-    var posterPath: String? = null
+    override var posterPath: String? = null
 
+    override val title: String?
+        get() = name
 }

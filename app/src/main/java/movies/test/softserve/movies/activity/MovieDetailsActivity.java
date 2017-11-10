@@ -127,7 +127,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         });
         releaseDateView.setText(releaseDateView.getText().toString() + viewModel.getMovie().getReleaseDate());
         voteCountView.setText("" + ((float) Math.round(viewModel.getMovie().getVoteAverage() * 10)) / 10 + "/" + viewModel.getMovie().getVoteCount());
-        if (dbService.checkIfMovieIsFavourite(viewModel.getMovie().getId())) {
+        if (dbService.checkIfIsFavourite(viewModel.getMovie().getId())) {
             fab.setImageResource(R.drawable.ic_stars_black_24dp);
         }
 
@@ -141,11 +141,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 ShareDialog.show(MovieDetailsActivity.this, shareLinkContent);
             }
         });
-        watched.setImageResource(DBMovieService.getInstance().checkIfMovieExists(viewModel.getMovie().getId()) ? R.mipmap.checked : R.mipmap.not_checked);
+        watched.setImageResource(DBMovieService.getInstance().checkIfExists(viewModel.getMovie().getId()) ? R.mipmap.checked : R.mipmap.not_checked);
         watched.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!DBMovieService.getInstance().checkIfMovieExists(viewModel.getMovie().getId())) {
+                if (!DBMovieService.getInstance().checkIfExists(viewModel.getMovie().getId())) {
                     watched.setImageResource(R.mipmap.checked);
                     DBMovieService.getInstance().addMovieToDb(viewModel.getMovie().getId(),
                             viewModel.getMovie().getTitle(),
@@ -158,14 +158,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     Snackbar.make(findViewById(R.id.nested_scroll_view), "Added to watched", Snackbar.LENGTH_SHORT).show();
                 } else {
 
-                    if (DBMovieService.getInstance().checkIfMovieIsFavourite(viewModel.getMovie().getId())) {
+                    if (DBMovieService.getInstance().checkIfIsFavourite(viewModel.getMovie().getId())) {
                         Snackbar.make(findViewById(R.id.nested_scroll_view), "It's favourite, u cant do this", Snackbar.LENGTH_SHORT).show();
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MovieDetailsActivity.this);
                         builder.setMessage(R.string.confirm)
                                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        DBMovieService.getInstance().deleteMovieFromDb(viewModel.getMovie().getId());
+                                        DBMovieService.getInstance().deleteFromDb(viewModel.getMovie().getId());
                                         watched.setImageResource(R.mipmap.not_checked);
                                         Snackbar.make(findViewById(R.id.nested_scroll_view), "Marked as unwatched", Snackbar.LENGTH_SHORT).show();
                                     }
@@ -275,8 +275,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!dbService.checkIfMovieIsFavourite(viewModel.getMovie().getId())) {
-                    if (!dbService.checkIfMovieExists(viewModel.getMovie().getId())) {
+                if (!dbService.checkIfIsFavourite(viewModel.getMovie().getId())) {
+                    if (!dbService.checkIfExists(viewModel.getMovie().getId())) {
                         dbService.insertMovieToFavourite(viewModel.getMovie().getId(),
                                 viewModel.getMovie().getTitle(),
                                 viewModel.getMovie().getVoteAverage().floatValue(),

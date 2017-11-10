@@ -12,10 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.activity.MovieDetailsActivity;
+import movies.test.softserve.movies.activity.TVShowDetailsActivity;
 import movies.test.softserve.movies.adapter.MyMovieRecyclerViewAdapter;
 import movies.test.softserve.movies.entity.Movie;
+import movies.test.softserve.movies.entity.TVEntity;
+import movies.test.softserve.movies.entity.TVShow;
 import movies.test.softserve.movies.service.DBMovieService;
 
 
@@ -43,22 +49,38 @@ public class MovieFragment extends Fragment {
             Context context = view.getContext();
             mRecyclerView = (RecyclerView) view;
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            mRecyclerView.setAdapter(new MyMovieRecyclerViewAdapter(DBMovieService.getInstance().getFavouriteMovies(), new MyMovieRecyclerViewAdapter.OnMovieSelect() {
+            List< TVEntity > listOfMovies =  new ArrayList<>();
+            listOfMovies.addAll(DBMovieService.getInstance().getFavouriteMovies());
+            listOfMovies.addAll(DBMovieService.getInstance().getFavouriteTVShows());
+            mRecyclerView.setAdapter(new MyMovieRecyclerViewAdapter(listOfMovies, new MyMovieRecyclerViewAdapter.OnMovieSelect() {
                 @Override
-                public void OnMovieSelected(Movie movie) {
-                    Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-                    intent.putExtra(MovieDetailsActivity.ID, movie.getId());
-                    intent.putExtra(MovieDetailsActivity.TITLE, movie.getTitle());
-                    intent.putExtra(MovieDetailsActivity.POSTER_PATH, movie.getPosterPath());
-                    intent.putExtra(MovieDetailsActivity.RELEASE_DATE, movie.getReleaseDate());
-                    intent.putExtra(MovieDetailsActivity.VOTE_COUNT, movie.getVoteCount());
-                    intent.putExtra(MovieDetailsActivity.VOTE_AVERAGE, movie.getVoteAverage());
-                    intent.putExtra(MovieDetailsActivity.OVERVIEW, movie.getOverview());
-                    getActivity().startActivity(intent);
+                public void OnMovieSelected(TVEntity mov) {
+                    if (mov instanceof Movie) {
+                        Movie movie = (Movie) mov;
+                        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
+                        intent.putExtra(MovieDetailsActivity.ID, movie.getId());
+                        intent.putExtra(MovieDetailsActivity.TITLE, movie.getTitle());
+                        intent.putExtra(MovieDetailsActivity.POSTER_PATH, movie.getPosterPath());
+                        intent.putExtra(MovieDetailsActivity.RELEASE_DATE, movie.getReleaseDate());
+                        intent.putExtra(MovieDetailsActivity.VOTE_COUNT, movie.getVoteCount());
+                        intent.putExtra(MovieDetailsActivity.VOTE_AVERAGE, movie.getVoteAverage());
+                        intent.putExtra(MovieDetailsActivity.OVERVIEW, movie.getOverview());
+                        getActivity().startActivity(intent);
+                    } else if (mov instanceof TVShow) {
+                        TVShow tvShow = (TVShow) mov;
+                        Intent intent = new Intent(getActivity(), TVShowDetailsActivity.class);
+                        intent.putExtra(TVShowDetailsActivity.Companion.getID(), tvShow.getId());
+                        intent.putExtra(TVShowDetailsActivity.Companion.getNAME(), tvShow.getTitle());
+                        intent.putExtra(TVShowDetailsActivity.Companion.getPOSTER_PATH(), tvShow.getPosterPath());
+                        intent.putExtra(TVShowDetailsActivity.Companion.getVOTE_COUNT(), tvShow.getVoteCount());
+                        intent.putExtra(TVShowDetailsActivity.Companion.getVOTE_AVERAGE(), tvShow.getVoteAverage());
+                        intent.putExtra(TVShowDetailsActivity.Companion.getOVERVIEW(), tvShow.getOverview());
+                        getActivity().startActivity(intent);
+                    }
                 }
             }, new MyMovieRecyclerViewAdapter.OnFavouriteClick() {
                 @Override
-                public void onFavouriteClick(Movie movie) {
+                public void onFavouriteClick(TVEntity movie) {
 
                 }
             }));
@@ -93,7 +115,10 @@ public class MovieFragment extends Fragment {
     }
 
     private void setAdapter() {
-        ((MyMovieRecyclerViewAdapter) mRecyclerView.getAdapter()).setMovies(DBMovieService.getInstance().getFavouriteMovies());
+        List< TVEntity > listOfMovies =  new ArrayList<>();
+        listOfMovies.addAll(DBMovieService.getInstance().getFavouriteMovies());
+        listOfMovies.addAll(DBMovieService.getInstance().getFavouriteTVShows());
+        ((MyMovieRecyclerViewAdapter) mRecyclerView.getAdapter()).setMovies(listOfMovies);
         mRecyclerView.getAdapter().notifyDataSetChanged();
 
     }

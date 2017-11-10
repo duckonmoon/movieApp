@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import movies.test.softserve.movies.R
 import movies.test.softserve.movies.activity.TVShowDetailsActivity
 import movies.test.softserve.movies.adapter.MyMovieListWrapper
-import movies.test.softserve.movies.adapter.MyTVShowRecyclerViewAdapter
+import movies.test.softserve.movies.adapter.MyMovieRecyclerViewAdapter
 import movies.test.softserve.movies.entity.TVShow
 import movies.test.softserve.movies.event.OnListOfTVShowsGetListener
 import movies.test.softserve.movies.repository.TVShowsRepository
@@ -28,22 +28,19 @@ class TVShowFragment : Fragment() {
         if (view is RecyclerView) {
             val context = view.getContext()
             view.layoutManager = LinearLayoutManager(context)
-            view.adapter = MyMovieListWrapper(MyTVShowRecyclerViewAdapter(repository.tvShows,
-                    object : MyTVShowRecyclerViewAdapter.OnMovieSelect {
-                        override fun OnMovieSelected(tvShow: TVShow) {
-                            var intent = Intent(activity,TVShowDetailsActivity::class.java)
-                            intent.putExtra(TVShowDetailsActivity.NAME,tvShow.name)
-                            intent.putExtra(TVShowDetailsActivity.ID,tvShow.id)
-                            intent.putExtra(TVShowDetailsActivity.OVERVIEW,tvShow.overview)
-                            intent.putExtra(TVShowDetailsActivity.POSTER_PATH,tvShow.posterPath)
-                            intent.putExtra(TVShowDetailsActivity.VOTE_COUNT,tvShow.voteCount)
-                            intent.putExtra(TVShowDetailsActivity.VOTE_AVERAGE,tvShow.voteAverage)
-                            startActivity(intent)
-                        }
-                    }, object : MyTVShowRecyclerViewAdapter.OnFavouriteClick {
-                override fun onFavouriteClick(tvShow: TVShow) {
-                }
-            }), MyMovieListWrapper.OnEndReachListener { repository.tryToGetTVShows() })
+            view.adapter = MyMovieListWrapper(MyMovieRecyclerViewAdapter(repository.tvShows,
+                    MyMovieRecyclerViewAdapter.OnMovieSelect { mov ->
+                        val tvShow = mov as TVShow
+                        val intent = Intent(activity, TVShowDetailsActivity::class.java)
+                        intent.putExtra(TVShowDetailsActivity.ID, tvShow.id)
+                        intent.putExtra(TVShowDetailsActivity.NAME, tvShow.title)
+                        intent.putExtra(TVShowDetailsActivity.POSTER_PATH, tvShow.posterPath)
+                        intent.putExtra(TVShowDetailsActivity.VOTE_COUNT, tvShow.voteCount)
+                        intent.putExtra(TVShowDetailsActivity.VOTE_AVERAGE, tvShow.voteAverage)
+                        intent.putExtra(TVShowDetailsActivity.OVERVIEW, tvShow.overview)
+                        startActivity(intent)
+                    }, MyMovieRecyclerViewAdapter.OnFavouriteClick { }),
+                    MyMovieListWrapper.OnEndReachListener { repository.tryToGetTVShows() })
             mRecyclerView = view
         }
         return view

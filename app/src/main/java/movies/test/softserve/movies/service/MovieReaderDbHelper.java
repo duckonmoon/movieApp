@@ -22,7 +22,9 @@ public class MovieReaderDbHelper extends SQLiteOpenHelper {
                     MovieEntry.COLUMN_NAME_RELEASE_DATE + " TEXT," +
                     MovieEntry.COLUMN_NAME_VOTE_COUNT + " INTEGER," +
                     MovieEntry.COLUMN_NAME_FAVOURITE + " INTEGER," +
-                    MovieEntry.COLUMN_NAME_WATCHED + " INTEGER)";
+                    MovieEntry.COLUMN_NAME_WATCHED + " INTEGER," +
+                    MovieEntry.COLUMN_NAME_TYPE + " INTEGER)";
+
 
 
     public static final int DATABASE_VERSION = 1;

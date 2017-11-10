@@ -16,6 +16,8 @@ import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.adapter.MyMovieListWrapper;
 import movies.test.softserve.movies.adapter.MyMovieRecyclerViewAdapter;
 import movies.test.softserve.movies.entity.Movie;
+import movies.test.softserve.movies.entity.TVEntity;
+import movies.test.softserve.movies.entity.TVShow;
 import movies.test.softserve.movies.event.OnListOfMoviesGetListener;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.viewholder.MainViewHolder;
@@ -51,20 +53,23 @@ public class SearchActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(new MyMovieListWrapper(new MyMovieRecyclerViewAdapter(mPageViewModel.getList(), new MyMovieRecyclerViewAdapter.OnMovieSelect() {
             @Override
-            public void OnMovieSelected(Movie movie) {
-                Intent intent = new Intent(SearchActivity.this, MovieDetailsActivity.class);
-                intent.putExtra(MovieDetailsActivity.ID, movie.getId());
-                intent.putExtra(MovieDetailsActivity.TITLE, movie.getTitle());
-                intent.putExtra(MovieDetailsActivity.POSTER_PATH, movie.getPosterPath());
-                intent.putExtra(MovieDetailsActivity.RELEASE_DATE, movie.getReleaseDate());
-                intent.putExtra(MovieDetailsActivity.VOTE_COUNT, movie.getVoteCount());
-                intent.putExtra(MovieDetailsActivity.VOTE_AVERAGE, movie.getVoteAverage());
-                intent.putExtra(MovieDetailsActivity.OVERVIEW, movie.getOverview());
-                startActivity(intent);
+            public void OnMovieSelected(TVEntity mov) {
+                if (mov instanceof Movie) {
+                    Movie movie = (Movie) mov;
+                    Intent intent = new Intent(SearchActivity.this, MovieDetailsActivity.class);
+                    intent.putExtra(MovieDetailsActivity.ID, movie.getId());
+                    intent.putExtra(MovieDetailsActivity.TITLE, movie.getTitle());
+                    intent.putExtra(MovieDetailsActivity.POSTER_PATH, movie.getPosterPath());
+                    intent.putExtra(MovieDetailsActivity.RELEASE_DATE, movie.getReleaseDate());
+                    intent.putExtra(MovieDetailsActivity.VOTE_COUNT, movie.getVoteCount());
+                    intent.putExtra(MovieDetailsActivity.VOTE_AVERAGE, movie.getVoteAverage());
+                    intent.putExtra(MovieDetailsActivity.OVERVIEW, movie.getOverview());
+                    startActivity(intent);
+                } else if (mov instanceof TVShow){}
             }
         }, new MyMovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
-            public void onFavouriteClick(Movie movie) {
+            public void onFavouriteClick(TVEntity movie) {
 
             }
         }), new MyMovieListWrapper.OnEndReachListener() {

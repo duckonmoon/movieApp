@@ -28,6 +28,8 @@ import movies.test.softserve.movies.adapter.MyMovieListWrapper;
 import movies.test.softserve.movies.adapter.MyMovieRecyclerViewAdapter;
 import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.entity.Movie;
+import movies.test.softserve.movies.entity.TVEntity;
+import movies.test.softserve.movies.entity.TVShow;
 import movies.test.softserve.movies.event.AddedItemsEvent;
 import movies.test.softserve.movies.fragment.GenreFragment;
 import movies.test.softserve.movies.fragment.MovieFragment;
@@ -73,55 +75,61 @@ public class MoviesListActivity extends AppCompatActivity
         mRecyclerView.setAdapter(new MyMovieListWrapper(new MyMovieRecyclerViewAdapter(MainController.getInstance().getMovies(),
                 new MyMovieRecyclerViewAdapter.OnMovieSelect() {
                     @Override
-                    public void OnMovieSelected(Movie movie) {
-                        Intent intent = new Intent(MoviesListActivity.this, MovieDetailsActivity.class);
-                        intent.putExtra(MovieDetailsActivity.ID, movie.getId());
-                        intent.putExtra(MovieDetailsActivity.TITLE, movie.getTitle());
-                        intent.putExtra(MovieDetailsActivity.POSTER_PATH, movie.getPosterPath());
-                        intent.putExtra(MovieDetailsActivity.RELEASE_DATE, movie.getReleaseDate());
-                        intent.putExtra(MovieDetailsActivity.VOTE_COUNT, movie.getVoteCount());
-                        intent.putExtra(MovieDetailsActivity.VOTE_AVERAGE, movie.getVoteAverage());
-                        intent.putExtra(MovieDetailsActivity.OVERVIEW, movie.getOverview());
-                        MoviesListActivity.this.startActivity(intent);
+                    public void OnMovieSelected(TVEntity mov) {
+                        if (mov instanceof Movie) {
+                            Movie movie = (Movie) mov;
+                            Intent intent = new Intent(MoviesListActivity.this, MovieDetailsActivity.class);
+                            intent.putExtra(MovieDetailsActivity.ID, movie.getId());
+                            intent.putExtra(MovieDetailsActivity.TITLE, movie.getTitle());
+                            intent.putExtra(MovieDetailsActivity.POSTER_PATH, movie.getPosterPath());
+                            intent.putExtra(MovieDetailsActivity.RELEASE_DATE, movie.getReleaseDate());
+                            intent.putExtra(MovieDetailsActivity.VOTE_COUNT, movie.getVoteCount());
+                            intent.putExtra(MovieDetailsActivity.VOTE_AVERAGE, movie.getVoteAverage());
+                            intent.putExtra(MovieDetailsActivity.OVERVIEW, movie.getOverview());
+                            MoviesListActivity.this.startActivity(intent);
+                        } else if (mov instanceof TVShow){}
                     }
                 }, new MyMovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
-            public void onFavouriteClick(final Movie movie) {
-                final DBMovieService dbService = DBMovieService.getInstance();
-                if (dbService.checkIfMovieIsFavourite(movie.getId())) {
-                    new AlertDialog.Builder(MoviesListActivity.this)
-                            .setMessage(R.string.delete_from_watched)
-                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dbService.deleteMovieFromDb(movie.getId());
-                                    Snackbar.make(MoviesListActivity.this.findViewById(R.id.recyclerview), "Deleted from favourite", Snackbar.LENGTH_LONG).show();
-                                    mRecyclerView.getAdapter().notifyDataSetChanged();
-                                }
-                            })
-                            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dbService.cancelFavourite(movie.getId());
-                                    Snackbar.make(MoviesListActivity.this.findViewById(R.id.recyclerview), "Deleted from favourite", Snackbar.LENGTH_LONG).show();
-                                    mRecyclerView.getAdapter().notifyDataSetChanged();
-                                }
-                            }).create()
-                            .show();
-                } else {
-                    if (!dbService.checkIfMovieExists(movie.getId())) {
-                        dbService.insertMovieToFavourite(movie.getId(),
-                                movie.getTitle(),
-                                movie.getVoteAverage().floatValue(),
-                                movie.getVoteCount(),
-                                movie.getOverview(),
-                                movie.getReleaseDate(),
-                                movie.getPosterPath());
+            public void onFavouriteClick(final TVEntity mov) {
+                if (mov instanceof Movie) {
+                    final Movie movie = (Movie) mov;
+                    final DBMovieService dbService = DBMovieService.getInstance();
+                    if (dbService.checkIfIsFavourite(movie.getId())) {
+                        new AlertDialog.Builder(MoviesListActivity.this)
+                                .setMessage(R.string.delete_from_watched)
+                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dbService.deleteFromDb(movie.getId());
+                                        Snackbar.make(MoviesListActivity.this.findViewById(R.id.recyclerview), "Deleted from favourite", Snackbar.LENGTH_LONG).show();
+                                        mRecyclerView.getAdapter().notifyDataSetChanged();
+                                    }
+                                })
+                                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dbService.cancelFavourite(movie.getId());
+                                        Snackbar.make(MoviesListActivity.this.findViewById(R.id.recyclerview), "Deleted from favourite", Snackbar.LENGTH_LONG).show();
+                                        mRecyclerView.getAdapter().notifyDataSetChanged();
+                                    }
+                                }).create()
+                                .show();
                     } else {
-                        dbService.setFavourite(movie.getId());
+                        if (!dbService.checkIfExists(movie.getId())) {
+                            dbService.insertMovieToFavourite(movie.getId(),
+                                    movie.getTitle(),
+                                    movie.getVoteAverage().floatValue(),
+                                    movie.getVoteCount(),
+                                    movie.getOverview(),
+                                    movie.getReleaseDate(),
+                                    movie.getPosterPath());
+                        } else {
+                            dbService.setFavourite(movie.getId());
+                        }
+                        Snackbar.make(MoviesListActivity.this.findViewById(R.id.recyclerview), "Added to favourite", Snackbar.LENGTH_LONG).show();
+                        mRecyclerView.getAdapter().notifyDataSetChanged();
                     }
-                    Snackbar.make(MoviesListActivity.this.findViewById(R.id.recyclerview), "Added to favourite", Snackbar.LENGTH_LONG).show();
-                    mRecyclerView.getAdapter().notifyDataSetChanged();
-                }
 
+                }else if (mov instanceof TVShow){}
             }
         }), new MyMovieListWrapper.OnEndReachListener() {
             @Override

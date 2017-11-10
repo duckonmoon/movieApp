@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.arch.lifecycle.ViewModelProviders
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Point
@@ -14,6 +15,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Gravity
@@ -32,6 +34,7 @@ import movies.test.softserve.movies.entity.TVShow
 import movies.test.softserve.movies.event.OnFullTVShowGetListener
 import movies.test.softserve.movies.event.OnInfoUpdatedListener
 import movies.test.softserve.movies.repository.TVShowsRepository
+import movies.test.softserve.movies.service.DBMovieService
 import movies.test.softserve.movies.viewmodel.FullTVSeriesViewModel
 
 class TVShowDetailsActivity : AppCompatActivity() {
@@ -100,10 +103,29 @@ class TVShowDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_movie_details)
         setSupportActionBar(toolbar)
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            val dbService = DBMovieService.getInstance()
+            if (!dbService.checkIfIsFavourite(viewModel.tvShow!!.id)) {
+                if (!dbService.checkIfExists(viewModel.tvShow!!.id)) {
+                    dbService.insertTVShowToFavourite(viewModel.tvShow!!.id,
+                            viewModel.tvShow!!.title,
+                            viewModel.tvShow!!.voteAverage!!.toFloat(),
+                            viewModel.tvShow!!.voteCount!!,
+                            viewModel.tvShow!!.overview,
+                            viewModel.tvShow!!.posterPath)
+                } else {
+                    dbService.setFavourite(viewModel.tvShow!!.id)
+                }
+                fab.setImageResource(R.drawable.ic_stars_black_24dp)
+                Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show()
+                watched.setImageResource(R.mipmap.checked)
+            } else {
+                dbService.cancelFavourite(viewModel.tvShow!!.id)
+                fab.setImageResource(R.drawable.ic_star_border_black_24dp)
+                Snackbar.make(view, "Removed to favourite", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show()
+            }
         }
-
     }
 
     private fun getIntentInfo() {
@@ -116,6 +138,39 @@ class TVShowDetailsActivity : AppCompatActivity() {
             tvShow.posterPath = intent.extras[POSTER_PATH] as String
             tvShow.overview = intent.extras[OVERVIEW] as String
             viewModel.tvShow = tvShow
+
+        }
+        watched.setImageResource(if (DBMovieService.getInstance().checkIfExists(viewModel.tvShow!!.id)) R.mipmap.checked else R.mipmap.not_checked)
+        watched.setOnClickListener {
+            if (!DBMovieService.getInstance().checkIfExists(viewModel.tvShow!!.id)) {
+                watched.setImageResource(R.mipmap.checked)
+                DBMovieService.getInstance().addTVShowToDb(viewModel.tvShow!!.id,
+                        viewModel.tvShow!!.title,
+                        viewModel.tvShow!!.voteAverage!!.toFloat(),
+                        viewModel.tvShow!!.voteCount!!,
+                        viewModel.tvShow!!.overview,
+                        viewModel.tvShow!!.posterPath
+                )
+                Snackbar.make(findViewById(R.id.nested_scroll_view), "Added to watched", Snackbar.LENGTH_SHORT).show()
+            } else {
+
+                if (DBMovieService.getInstance().checkIfIsFavourite(viewModel.tvShow!!.id)) {
+                    Snackbar.make(findViewById(R.id.nested_scroll_view), "It's favourite, u cant do this", Snackbar.LENGTH_SHORT).show()
+                } else {
+                    val builder = AlertDialog.Builder(this@TVShowDetailsActivity)
+                    builder.setMessage(R.string.confirm)
+                            .setPositiveButton(R.string.yes) { _, _ ->
+                                DBMovieService.getInstance().deleteFromDb(viewModel.tvShow!!.id)
+                                watched.setImageResource(R.mipmap.not_checked)
+                                Snackbar.make(findViewById(R.id.nested_scroll_view), "Marked as unwatched", Snackbar.LENGTH_SHORT).show()
+                            }
+                            .setNegativeButton(R.string.no) { _, _ -> }
+                    builder.create().show()
+                }
+            }
+        }
+        if (DBMovieService.getInstance().checkIfIsFavourite(viewModel.tvShow!!.id)) {
+            fab.setImageResource(R.drawable.ic_stars_black_24dp)
         }
     }
 

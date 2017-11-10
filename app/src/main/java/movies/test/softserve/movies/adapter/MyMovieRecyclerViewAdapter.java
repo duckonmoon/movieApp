@@ -13,17 +13,18 @@ import java.util.List;
 
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.entity.Movie;
+import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.viewholder.MainViewHolder;
 
 public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolder> {
 
-    private List<Movie> movies;
+    private List<? extends TVEntity> movies;
     private OnMovieSelect event;
     private OnFavouriteClick favouriteClick;
 
 
-    public MyMovieRecyclerViewAdapter(List<Movie> items, @NonNull OnMovieSelect onMovieSelect, @NonNull OnFavouriteClick onFavouriteClick) {
+    public MyMovieRecyclerViewAdapter(List<? extends TVEntity> items, @NonNull OnMovieSelect onMovieSelect, @NonNull OnFavouriteClick onFavouriteClick) {
         movies = items;
         event = onMovieSelect;
         favouriteClick = onFavouriteClick;
@@ -52,7 +53,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHol
                 event.OnMovieSelected(movies.get(position));
             }
         });
-        holder.mFavourite.setImageResource(DBMovieService.getInstance().checkIfMovieIsFavourite(movies.get(position).getId()) ? R.drawable.ic_stary_black_24dp : R.drawable.ic_star_border_black_24dp);
+        holder.mFavourite.setImageResource(DBMovieService.getInstance().checkIfIsFavourite(movies.get(position).getId()) ? R.drawable.ic_stary_black_24dp : R.drawable.ic_star_border_black_24dp);
         holder.mFavourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,17 +72,17 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHol
         return movies.size();
     }
 
-    public void setMovies(List<Movie> movies) {
+    public void setMovies(List<? extends TVEntity> movies) {
         this.movies = movies;
     }
 
 
 
     public interface OnMovieSelect {
-        void OnMovieSelected(Movie movie);
+        void OnMovieSelected(TVEntity movie);
     }
 
     public interface OnFavouriteClick {
-        void onFavouriteClick(Movie movie);
+        void onFavouriteClick(TVEntity movie);
     }
 }

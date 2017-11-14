@@ -21,10 +21,10 @@
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         app:srcCompat="@drawable/video" />
     <!--D49385"-->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="@string/movies"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
@@ -34,4 +34,26 @@
         android:layout_height="wrap_content"
         android:text="@string/created_by_duckonmoon" />
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="20dp"
+            android:paddingBottom="3dp"
+            android:src="@mipmap/point_holderf_round" />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_weight="10"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="50" />
+    </LinearLayout>
 </LinearLayout>

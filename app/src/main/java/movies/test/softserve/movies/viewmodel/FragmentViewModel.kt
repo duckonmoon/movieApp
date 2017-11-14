@@ -1,7 +1,7 @@
 package movies.test.softserve.movies.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import android.view.MenuItem
+import movies.test.softserve.movies.SearchFragment
 import movies.test.softserve.movies.fragment.GenreFragment
 import movies.test.softserve.movies.fragment.MovieFragment
 import movies.test.softserve.movies.fragment.TVShowFragment
@@ -15,4 +15,5 @@ class FragmentViewModel : ViewModel() {
     var watchedFragment: WatchedFragment? = null
     var genresFragment: GenreFragment? = null
     var tvShowFragment: TVShowFragment? = null
+    var searchFragment: SearchFragment? = null
 }

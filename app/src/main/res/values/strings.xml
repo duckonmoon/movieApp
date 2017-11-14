@@ -120,4 +120,5 @@
     <string name="tvshows">TVShows</string>
     <string name="title_activity_season_info">SeasonInfoActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="search">Search</string>
 </resources>

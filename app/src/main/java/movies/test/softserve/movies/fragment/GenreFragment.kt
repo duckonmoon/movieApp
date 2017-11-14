@@ -1,6 +1,5 @@
 package movies.test.softserve.movies.fragment
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,21 +11,15 @@ import android.view.ViewGroup
 import movies.test.softserve.movies.R
 import movies.test.softserve.movies.activity.SearchActivity
 import movies.test.softserve.movies.adapter.ViewAdapter
+import movies.test.softserve.movies.controller.MainController
 import movies.test.softserve.movies.entity.Genre
 import movies.test.softserve.movies.event.OnListOfGenresGetListener
 import movies.test.softserve.movies.service.MovieService
-import movies.test.softserve.movies.viewmodel.GenresViewModel
 
 class GenreFragment : Fragment() {
 
     private var mRecyclerView: RecyclerView? = null
-    private var viewModel: GenresViewModel = GenresViewModel()
     private var onListOfGenresGetListener: OnListOfGenresGetListener? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(GenresViewModel::class.java)
-    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -35,7 +28,7 @@ class GenreFragment : Fragment() {
         if (view is RecyclerView) {
             val context = view.getContext()
             view.layoutManager = LinearLayoutManager(context)
-            view.adapter = ViewAdapter(viewModel.genres, onItemClickListener = object : ViewAdapter.OnItemClickListener {
+            view.adapter = ViewAdapter(MainController.getInstance().genres, onItemClickListener = object : ViewAdapter.OnItemClickListener {
                 override fun onItemClick(genre: Genre) {
                     val intent = Intent(activity, SearchActivity::class.java)
                     intent.putExtra(SearchActivity.SEARCH_PARAM, SearchActivity.GENRES)
@@ -54,15 +47,15 @@ class GenreFragment : Fragment() {
         if (onListOfGenresGetListener == null) {
             onListOfGenresGetListener = object : OnListOfGenresGetListener {
                 override fun onListOfGenresGet(genres: List<Genre>?) {
-                    if (viewModel.genres.size > 0) {
+                    if (MainController.getInstance().genres.size > 0) {
                         return
                     } else {
-                        viewModel.genres.addAll(genres!!)
+                        MainController.getInstance().genres.addAll(genres!!)
                         mRecyclerView!!.adapter.notifyDataSetChanged()
                     }
                 }
             }
-            if (viewModel.genres.size < 1){
+            if (MainController.getInstance().genres.size < 1){
                 MovieService.getInstance().tryToGetAllGenres()
             }
         }

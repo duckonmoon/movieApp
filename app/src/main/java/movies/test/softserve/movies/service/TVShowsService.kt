@@ -1,5 +1,6 @@
 package movies.test.softserve.movies.service
 
+import android.net.Uri
 import movies.test.softserve.movies.entity.*
 import retrofit2.Call
 import retrofit2.http.*
@@ -19,8 +20,11 @@ interface TVShowsService {
                    @Path("tv_id") tvID: Int,
                    @Query("api_key") apiKey: String,
                    @Query("guest_session_id") guestSessionId: String,
-                   @Body value: Rating) : Call<Code>
+                   @Body value: Rating): Call<Code>
 
     @GET("3/tv/{tv_id}/season/{season_number}/videos")
-    fun getVideos(@Path("tv_id") tvID: Int, @Path("season_number") season_number: Int, @Query("api_key") apiKey: String) : Call<VideoContainer>
+    fun getVideos(@Path("tv_id") tvID: Int, @Path("season_number") season_number: Int, @Query("api_key") apiKey: String): Call<VideoContainer>
+
+    @GET("3/search/tv")
+    fun getTVShowByKeyword(@Query("api_key") apiKey: String, @Query("query") uri: Uri, @Query("page") page: Int): Call<TVPage>
 }

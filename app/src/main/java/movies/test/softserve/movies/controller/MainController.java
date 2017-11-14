@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import movies.test.softserve.movies.entity.Genre;
 import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.event.AddedItemsEvent;
@@ -22,6 +23,7 @@ import movies.test.softserve.movies.service.MovieService;
 
 public class MainController extends Application implements Observer {
     private List<Movie> movies;
+    private List<Genre> genres = new ArrayList<>();
     private Integer page;
     private MoviesRepository moviesRepository;
     private AddedItemsEvent eventListener;
@@ -105,4 +107,11 @@ public class MainController extends Application implements Observer {
         return guestSession;
     }
 
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
+    }
 }

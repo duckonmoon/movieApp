@@ -1,10 +1,9 @@
 package movies.test.softserve.movies.service;
 
-import java.util.List;
+import android.net.Uri;
 
 import movies.test.softserve.movies.entity.Code;
 import movies.test.softserve.movies.entity.FullMovie;
-import movies.test.softserve.movies.entity.Genre;
 import movies.test.softserve.movies.entity.GenresContainer;
 import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.Page;
@@ -76,5 +75,8 @@ public interface MoviesService {
 
     @GET("3/genre/movie/list")
     Call<GenresContainer> getAllGenres(@Query("api_key") String apiKey);
+
+    @GET("3/search/movie")
+    Call<Page> getMovieByKeyword(@Query("api_key") String apiKey, @Query("query") Uri uri, @Query("page") Integer page);
 
 }

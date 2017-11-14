@@ -1,9 +1,11 @@
 package movies.test.softserve.movies.repository;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +17,6 @@ import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.Rating;
 import movies.test.softserve.movies.entity.TVPage;
 import movies.test.softserve.movies.entity.TVShow;
-import movies.test.softserve.movies.entity.Video;
 import movies.test.softserve.movies.entity.VideoContainer;
 import movies.test.softserve.movies.event.OnFullTVShowGetListener;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
@@ -156,6 +157,10 @@ public class TVShowsRepository {
         });
     }
 
+    public void getTVShowByKeyword(@NonNull String query,@NonNull Integer page,@NonNull Callback<TVPage> callback){
+        Call<TVPage> call = service.getTVShowByKeyword(Constants.API_KEY, Uri.parse(query.trim()), page);
+        call.enqueue(callback);
+    }
 
 
 

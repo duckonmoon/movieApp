@@ -20,7 +20,10 @@
             android:icon="@drawable/ic_voicemail_black_24dp"
             android:title="@string/genres"/>
         <item
-
+            android:id="@+id/search"
+            android:title="@string/search"
+            android:icon="@drawable/ic_search_black_24dp"/>
+        <item
             android:title="@string/tv_shows">
             <menu>
                 <item android:id="@+id/tv_shows"

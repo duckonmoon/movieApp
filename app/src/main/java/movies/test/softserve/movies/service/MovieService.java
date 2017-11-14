@@ -1,9 +1,11 @@
 package movies.test.softserve.movies.service;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -201,6 +203,11 @@ public class MovieService {
                 Log.e("Smth went wrong", t.getMessage());
             }
         });
+    }
+
+    public void getMovieByKeyword(@NonNull String query,@NonNull Integer page,@NonNull Callback<Page> callback){
+        Call<Page> call = service.getMovieByKeyword(Constants.API_KEY, Uri.parse(query.trim()),page);
+        call.enqueue(callback);
     }
 
 

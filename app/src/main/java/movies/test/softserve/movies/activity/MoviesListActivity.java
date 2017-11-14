@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import movies.test.softserve.movies.R;
+import movies.test.softserve.movies.SearchFragment;
 import movies.test.softserve.movies.adapter.MyMovieListWrapper;
 import movies.test.softserve.movies.adapter.MyMovieRecyclerViewAdapter;
 import movies.test.softserve.movies.controller.MainController;
@@ -87,7 +88,8 @@ public class MoviesListActivity extends AppCompatActivity
                             intent.putExtra(MovieDetailsActivity.VOTE_AVERAGE, movie.getVoteAverage());
                             intent.putExtra(MovieDetailsActivity.OVERVIEW, movie.getOverview());
                             MoviesListActivity.this.startActivity(intent);
-                        } else if (mov instanceof TVShow){}
+                        } else if (mov instanceof TVShow) {
+                        }
                     }
                 }, new MyMovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
@@ -129,7 +131,8 @@ public class MoviesListActivity extends AppCompatActivity
                         mRecyclerView.getAdapter().notifyDataSetChanged();
                     }
 
-                }else if (mov instanceof TVShow){}
+                } else if (mov instanceof TVShow) {
+                }
             }
         }), new MyMovieListWrapper.OnEndReachListener() {
             @Override
@@ -236,15 +239,20 @@ public class MoviesListActivity extends AppCompatActivity
             }
             transaction.replace(R.id.constraint_layout, viewModel.getWatchedFragment());
         } else if (id == R.id.genres) {
-            if (viewModel.getGenresFragment() == null){
+            if (viewModel.getGenresFragment() == null) {
                 viewModel.setGenresFragment(new GenreFragment());
             }
-            transaction.replace(R.id.constraint_layout,viewModel.getGenresFragment());
-        } else if (id == R.id.tv_shows){
-            if (viewModel.getTvShowFragment() == null){
+            transaction.replace(R.id.constraint_layout, viewModel.getGenresFragment());
+        } else if (id == R.id.tv_shows) {
+            if (viewModel.getTvShowFragment() == null) {
                 viewModel.setTvShowFragment(new TVShowFragment());
             }
-            transaction.replace(R.id.constraint_layout,viewModel.getTvShowFragment());
+            transaction.replace(R.id.constraint_layout, viewModel.getTvShowFragment());
+        } else if (id == R.id.search) {
+            if (viewModel.getSearchFragment() == null) {
+                viewModel.setSearchFragment(new SearchFragment());
+            }
+            transaction.replace(R.id.constraint_layout, viewModel.getSearchFragment());
         }
         transaction.commit();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

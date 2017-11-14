@@ -216,7 +216,7 @@ class TVShowDetailsActivity : AppCompatActivity() {
     }
 
     private fun getFullInfo(tvShow: FullTVShow){
-        runOnUiThread({
+        runOnUiThread{
             release_date.visibility = View.VISIBLE
             release_date.text = "" + release_date.text + tvShow.firstAirDate
             if (tvShow.homepage != null && tvShow.homepage != ""){
@@ -224,7 +224,7 @@ class TVShowDetailsActivity : AppCompatActivity() {
                 links.setOnClickListener({
                     val webPage = Uri.parse(tvShow.homepage)
                     val webIntent = Intent(Intent.ACTION_VIEW, webPage)
-                    startActivity(webIntent!!)})
+                    startActivity(webIntent)})
             }
             for (i in tvShow.seasons!!.indices){
                 var image = ImageView(this@TVShowDetailsActivity)
@@ -235,7 +235,7 @@ class TVShowDetailsActivity : AppCompatActivity() {
                 image.setPadding(0,20,20,0)
                 genres.addView(image)
             }
-        })
+        }
     }
 
     private fun zoomImageFromThumb(thumbView: View, bitmapDrawable: BitmapDrawable) {
@@ -276,7 +276,7 @@ class TVShowDetailsActivity : AppCompatActivity() {
         expandedImageView.pivotX = 0f
         expandedImageView.pivotY = 0f
 
-        val set = AnimatorSet()
+        var set = AnimatorSet()
         set
                 .play(ObjectAnimator.ofFloat<View>(expandedImageView, View.X, startBounds.left.toFloat(),
                         finalBounds.left.toFloat()))
@@ -303,7 +303,7 @@ class TVShowDetailsActivity : AppCompatActivity() {
                 mCurrentAnimator!!.cancel()
             }
 
-            val set = AnimatorSet()
+            set = AnimatorSet()
             set
                     .play(ObjectAnimator.ofFloat<View>(expandedImageView, View.X, startBounds.left.toFloat()))
                     .with(ObjectAnimator.ofFloat<View>(expandedImageView, View.Y, startBounds.top.toFloat()))

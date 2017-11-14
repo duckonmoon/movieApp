@@ -19,6 +19,7 @@ import movies.test.softserve.movies.entity.TVShow;
 public class DBMovieService {
     private static DBMovieService INSTANCE;
     private SQLiteDatabase database;
+    private RatingService ratingService = RatingService.getInstance();
 
     public static final Integer CONTENT_TYPE_MOVIE = 1;
     public static final Integer CONTENT_TYPE_TVSHOW = 0;
@@ -46,6 +47,7 @@ public class DBMovieService {
         values.put(MovieEntry.COLUMN_NAME_FAVOURITE, 1);
         values.put(MovieEntry.COLUMN_NAME_WATCHED, 1);
         values.put(MovieEntry.COLUMN_NAME_TYPE, CONTENT_TYPE_MOVIE);
+        ratingService.change(voteAverage,RatingService.ADD);
         return database.insert(MovieEntry.TABLE_NAME, null, values);
     }
 
@@ -60,6 +62,7 @@ public class DBMovieService {
         values.put(MovieEntry.COLUMN_NAME_FAVOURITE, 1);
         values.put(MovieEntry.COLUMN_NAME_WATCHED, 1);
         values.put(MovieEntry.COLUMN_NAME_TYPE, CONTENT_TYPE_TVSHOW);
+        ratingService.change(voteAverage,RatingService.ADD);
         return database.insert(MovieEntry.TABLE_NAME, null, values);
     }
 
@@ -75,6 +78,7 @@ public class DBMovieService {
         values.put(MovieEntry.COLUMN_NAME_FAVOURITE, 0);
         values.put(MovieEntry.COLUMN_NAME_WATCHED, 1);
         values.put(MovieEntry.COLUMN_NAME_TYPE, CONTENT_TYPE_MOVIE);
+        ratingService.change(voteAverage,RatingService.ADD);
         return database.insert(MovieEntry.TABLE_NAME, null, values);
     }
 
@@ -89,6 +93,7 @@ public class DBMovieService {
         values.put(MovieEntry.COLUMN_NAME_FAVOURITE, 0);
         values.put(MovieEntry.COLUMN_NAME_WATCHED, 1);
         values.put(MovieEntry.COLUMN_NAME_TYPE, CONTENT_TYPE_TVSHOW);
+        ratingService.change(voteAverage,RatingService.ADD);
         return database.insert(MovieEntry.TABLE_NAME, null, values);
     }
 
@@ -136,6 +141,8 @@ public class DBMovieService {
     }
 
     public boolean deleteFromDb(Integer id) {
+        Movie movie = getMovieByID(id);
+        ratingService.change(movie.getVoteAverage().floatValue(),RatingService.SUB);
         return database.delete(MovieEntry.TABLE_NAME, MovieEntry._ID + " = " + id, null) > 0;
     }
 

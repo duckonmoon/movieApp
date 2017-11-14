@@ -1,4 +1,4 @@
-package movies.test.softserve.movies
+package movies.test.softserve.movies.fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -22,6 +22,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import android.content.Intent
 import android.view.inputmethod.InputMethodManager
+import movies.test.softserve.movies.R
 import movies.test.softserve.movies.activity.MovieDetailsActivity
 import movies.test.softserve.movies.activity.TVShowDetailsActivity
 import movies.test.softserve.movies.entity.*
@@ -35,12 +36,13 @@ class SearchFragment : Fragment() {
 
 
     companion object {
-        val TYPE_TV_SHOW = true
-        val TYPE_MOVIE = false
-        var query: String = ""
-        var page: Int = 1
-        var type: Boolean = false
-        var list: ArrayList<TVEntity> = ArrayList()
+        private val TYPE_TV_SHOW = true
+        private val TYPE_MOVIE = false
+        private var message: String? = null
+        private var query: String = ""
+        private var page: Int = 1
+        private var type: Boolean = false
+        private var list: ArrayList<TVEntity> = ArrayList()
     }
 
 
@@ -69,6 +71,7 @@ class SearchFragment : Fragment() {
                 list.clear()
                 query = editSearchView!!.text.toString()
                 type = switchView!!.isChecked
+                message = null
                 if (type == TYPE_MOVIE) {
                     movieRequest()
                 } else {
@@ -101,7 +104,7 @@ class SearchFragment : Fragment() {
             }, MyMovieRecyclerViewAdapter.OnFavouriteClick { }), { v ->
                 if (v is MyMovieListWrapper.ViewHolder) {
                     v.mProgressBar.visibility = View.GONE
-                    if (list.size > 0) {
+                    if (list.size > 0 && message == null) {
                         v.mProgressBar.visibility = View.VISIBLE
                         if (type == TYPE_MOVIE) {
                             movieRequest()
@@ -121,7 +124,10 @@ class SearchFragment : Fragment() {
             override fun onResponse(call: Call<Page>?, response: Response<Page>?) {
                 if (response!!.body()!!.page == page) {
                     page++
-                    list.addAll(response!!.body()!!.movies)
+                    list.addAll(response.body()!!.movies)
+                    if (response.body()!!.movies.isEmpty()){
+                        message = "Overload"
+                    }
                     mRecyclerView!!.adapter.notifyDataSetChanged()
                 }
             }
@@ -139,6 +145,9 @@ class SearchFragment : Fragment() {
                     page++
                     list.addAll(response.body()!!.results)
                     mRecyclerView!!.adapter.notifyDataSetChanged()
+                    if (response.body()!!.results.isEmpty()){
+                        message = "Overload"
+                    }
                 }
             }
 

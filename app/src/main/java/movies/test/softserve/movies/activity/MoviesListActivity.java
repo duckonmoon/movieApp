@@ -22,9 +22,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import movies.test.softserve.movies.R;
-import movies.test.softserve.movies.SearchFragment;
+import movies.test.softserve.movies.fragment.SearchFragment;
 import movies.test.softserve.movies.adapter.MyMovieListWrapper;
 import movies.test.softserve.movies.adapter.MyMovieRecyclerViewAdapter;
 import movies.test.softserve.movies.controller.MainController;
@@ -37,6 +39,7 @@ import movies.test.softserve.movies.fragment.MovieFragment;
 import movies.test.softserve.movies.fragment.TVShowFragment;
 import movies.test.softserve.movies.fragment.WatchedFragment;
 import movies.test.softserve.movies.service.DBMovieService;
+import movies.test.softserve.movies.service.RatingService;
 import movies.test.softserve.movies.viewholder.MainViewHolder;
 import movies.test.softserve.movies.viewmodel.FragmentViewModel;
 
@@ -168,7 +171,6 @@ public class MoviesListActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
     }
 
 
@@ -190,7 +192,7 @@ public class MoviesListActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (event != null) {
+        if (event == null) {
             event = new AddedItemsEvent() {
                 @Override
                 public void onItemsAdded(final String message) {
@@ -206,8 +208,12 @@ public class MoviesListActivity extends AppCompatActivity
             MainController.getInstance().setAddedItemsEventListener(event);
         }
 
+        navigationMenuStart();
+
         mRecyclerView.getAdapter().notifyDataSetChanged();
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -280,6 +286,45 @@ public class MoviesListActivity extends AppCompatActivity
         switch (item.getItemId()) {
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void navigationMenuStart() {
+        View navigationView = ((NavigationView)findViewById(R.id.nav_view)).getHeaderView(0);
+        ProgressBar progressBar = navigationView.findViewById(R.id.rating_service_rating);
+        ImageView imageView = navigationView.findViewById(R.id.rating_service_image);
+        progressBar.setProgress(RatingService.getInstance().getProgress().intValue());
+        switch (RatingService.getInstance().getLvl()) {
+            case ZERO:
+                imageView.setImageResource(R.mipmap.zero_icom_round);
+                break;
+            case FIRST:
+                imageView.setImageResource(R.mipmap.point_holderf_round);
+                break;
+            case SECOND:
+                imageView.setImageResource(R.mipmap.ic_two_round);
+                break;
+            case THIRD:
+                imageView.setImageResource(R.mipmap.ic_three);
+                break;
+            case FOURTH:
+                imageView.setImageResource(R.mipmap.ic_four);
+                break;
+            case FIFTH:
+                imageView.setImageResource(R.mipmap.ic_five);
+                break;
+            case SIXTH:
+                imageView.setImageResource(R.mipmap.ic_six);
+                break;
+            case SEVENTH:
+                imageView.setImageResource(R.mipmap.ic_seven);
+                break;
+            case EIGHTH:
+                imageView.setImageResource(R.mipmap.ic_eight);
+                break;
+            case NINTH:
+                imageView.setImageResource(R.mipmap.ic_nine);
+                break;
         }
     }
 }

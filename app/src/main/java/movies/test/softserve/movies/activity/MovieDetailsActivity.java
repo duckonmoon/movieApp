@@ -311,7 +311,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         toolbarLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                zoomImageFromThumb(toolbarLayout,mBitmapDrawable);
+                zoomImageFromThumb(toolbarLayout,mBitmapDrawable.getBitmap());
             }
         });
 
@@ -386,13 +386,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
 
-    private void zoomImageFromThumb(final View thumbView, BitmapDrawable bitmapDrawable) {
+    private void zoomImageFromThumb(final View thumbView, Bitmap bitmap) {
         if (mCurrentAnimator != null) {
             mCurrentAnimator.cancel();
         }
 
         final ImageView expandedImageView = findViewById(R.id.expanded_image);
-        expandedImageView.setImageDrawable(bitmapDrawable);
+        expandedImageView.setImageBitmap(bitmap);
 
         final Rect startBounds = new Rect();
         final Rect finalBounds = new Rect();

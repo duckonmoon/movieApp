@@ -33,11 +33,7 @@ class AchievementsFragment : Fragment() {
 
         if (view is RecyclerView) {
             val context = view.getContext()
-            if (mColumnCount <= 1) {
-                view.layoutManager = LinearLayoutManager(context)
-            } else {
-                view.layoutManager = GridLayoutManager(context, mColumnCount)
-            }
+            view.layoutManager = GridLayoutManager(context, mColumnCount)
             view.adapter = MyAchievementsRecyclerViewAdapter(Achievement.getAchievements())
         }
         return view

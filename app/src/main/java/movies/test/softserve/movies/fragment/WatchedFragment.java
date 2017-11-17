@@ -23,6 +23,7 @@ import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.entity.TVShow;
 import movies.test.softserve.movies.service.DBMovieService;
+import movies.test.softserve.movies.service.StartActivityClass;
 
 public class WatchedFragment extends Fragment {
 
@@ -55,26 +56,9 @@ public class WatchedFragment extends Fragment {
                 @Override
                 public void OnMovieSelected(TVEntity mov) {
                     if (mov instanceof Movie) {
-                        Movie movie = (Movie) mov;
-                        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-                        intent.putExtra(MovieDetailsActivity.ID, movie.getId());
-                        intent.putExtra(MovieDetailsActivity.TITLE, movie.getTitle());
-                        intent.putExtra(MovieDetailsActivity.POSTER_PATH, movie.getPosterPath());
-                        intent.putExtra(MovieDetailsActivity.RELEASE_DATE, movie.getReleaseDate());
-                        intent.putExtra(MovieDetailsActivity.VOTE_COUNT, movie.getVoteCount());
-                        intent.putExtra(MovieDetailsActivity.VOTE_AVERAGE, movie.getVoteAverage());
-                        intent.putExtra(MovieDetailsActivity.OVERVIEW, movie.getOverview());
-                        getActivity().startActivity(intent);
+                        StartActivityClass.startMovieDetailsActivity(getActivity(),(Movie) mov);
                     } else if (mov instanceof TVShow){
-                        TVShow tvShow = (TVShow) mov;
-                        Intent intent = new Intent(getActivity(), TVShowDetailsActivity.class);
-                        intent.putExtra(TVShowDetailsActivity.Companion.getID(), tvShow.getId());
-                        intent.putExtra(TVShowDetailsActivity.Companion.getNAME(), tvShow.getTitle());
-                        intent.putExtra(TVShowDetailsActivity.Companion.getPOSTER_PATH(), tvShow.getPosterPath());
-                        intent.putExtra(TVShowDetailsActivity.Companion.getVOTE_COUNT(), tvShow.getVoteCount());
-                        intent.putExtra(TVShowDetailsActivity.Companion.getVOTE_AVERAGE(), tvShow.getVoteAverage());
-                        intent.putExtra(TVShowDetailsActivity.Companion.getOVERVIEW(), tvShow.getOverview());
-                        getActivity().startActivity(intent);
+                        StartActivityClass.startTVShowDetailsActivity(getActivity(),(TVShow) mov);
                     }
                 }
             }, new MyMovieRecyclerViewAdapter.OnFavouriteClick() {

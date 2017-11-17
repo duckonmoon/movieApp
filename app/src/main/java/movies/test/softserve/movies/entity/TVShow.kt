@@ -11,7 +11,7 @@ class TVShow : TVEntity {
     var originalName: String? = null
     @SerializedName("genre_ids")
     @Expose
-    var genreIds: List<Int>? = ArrayList()
+    override var genreIds: List<Int>? = ArrayList()
     @SerializedName("name")
     @Expose
     var name: String? = null

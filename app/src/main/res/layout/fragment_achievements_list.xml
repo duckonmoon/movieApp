@@ -2,7 +2,7 @@
 <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_gravity="center"
+    android:layout_gravity="center_horizontal"
     android:background="@color/main_background"
     android:paddingTop="@dimen/top_margin"
     android:id="@+id/list"

@@ -199,7 +199,7 @@ class TVShowDetailsActivity : AppCompatActivity() {
                 .with(this)
                 .load("https://image.tmdb.org/t/p/w500" + viewModel.tvShow!!.posterPath)
                 .into(object : Target {
-                    override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
+                    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom) {
                         mBitmapDrawable = BitmapDrawable(resources, bitmap)
                         mBitmapDrawable!!.gravity = Gravity.NO_GRAVITY
                         toolbar_layout.background = mBitmapDrawable

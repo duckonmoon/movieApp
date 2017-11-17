@@ -3,12 +3,15 @@ package movies.test.softserve.movies.service;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import movies.test.softserve.movies.controller.MainController;
+import movies.test.softserve.movies.db.entity.MovieDbEntities.GenreEntry;
 import movies.test.softserve.movies.db.entity.MovieDbEntities.MovieEntry;
+import movies.test.softserve.movies.entity.Genre;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.TVShow;
 
@@ -35,7 +38,7 @@ public class DBMovieService {
         database = MainController.getInstance().getDatabase();
     }
 
-    public long insertMovieToFavourite(Integer id, String title, float voteAverage, int voteCount, String overview, String releaseDate, String posterpath) {
+    public long insertMovieToFavourite(Integer id, String title, float voteAverage, int voteCount, String overview, String releaseDate, String posterpath, List<Integer> genres) {
         ContentValues values = new ContentValues();
         values.put(MovieEntry._ID, id);
         values.put(MovieEntry.COLUMN_NAME_TITLE, title);
@@ -48,6 +51,7 @@ public class DBMovieService {
         values.put(MovieEntry.COLUMN_NAME_WATCHED, 1);
         values.put(MovieEntry.COLUMN_NAME_TYPE, CONTENT_TYPE_MOVIE);
         ratingService.change(voteAverage,RatingService.ADD);
+        insertGenresIfNotExists(id,genres);
         return database.insert(MovieEntry.TABLE_NAME, null, values);
     }
 
@@ -66,7 +70,7 @@ public class DBMovieService {
         return database.insert(MovieEntry.TABLE_NAME, null, values);
     }
 
-    public long addMovieToDb(Integer id, String title, float voteAverage, int voteCount, String overview, String releaseDate, String posterpath) {
+    public long addMovieToDb(Integer id, String title, float voteAverage, int voteCount, String overview, String releaseDate, String posterpath,List<Integer> genres) {
         ContentValues values = new ContentValues();
         values.put(MovieEntry._ID, id);
         values.put(MovieEntry.COLUMN_NAME_TITLE, title);
@@ -79,6 +83,7 @@ public class DBMovieService {
         values.put(MovieEntry.COLUMN_NAME_WATCHED, 1);
         values.put(MovieEntry.COLUMN_NAME_TYPE, CONTENT_TYPE_MOVIE);
         ratingService.change(voteAverage,RatingService.ADD);
+        insertGenresIfNotExists(id,genres);
         return database.insert(MovieEntry.TABLE_NAME, null, values);
     }
 
@@ -147,6 +152,7 @@ public class DBMovieService {
     public boolean deleteFromDb(Integer id) {
         Movie movie = getMovieByID(id);
         ratingService.change(movie.getVoteAverage().floatValue(),RatingService.SUB);
+        database.delete(GenreEntry.TABLE_NAME, GenreEntry.COLUMN_NAME_MOVIE_ID + " = " + id, null);
         return database.delete(MovieEntry.TABLE_NAME, MovieEntry._ID + " = " + id, null) > 0;
     }
 
@@ -219,6 +225,7 @@ public class DBMovieService {
             movie.setReleaseDate(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_RELEASE_DATE)));
             movie.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
             movie.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
+            movie.setGenreIds(getMovieGenres(movie.getId()));
             movieArrayList.add(movie);
         }
         cursor.close();
@@ -398,4 +405,46 @@ public class DBMovieService {
         cursor.close();
         return size;
     }
+
+    public int getMoviesSizeWithGenre(Integer genre){
+        Cursor cursor = database.rawQuery("SELECT count(*) FROM " + MovieEntry.TABLE_NAME + ", " + GenreEntry.TABLE_NAME
+                + " WHERE " +  MovieEntry.COLUMN_NAME_TYPE + " = " +  CONTENT_TYPE_MOVIE
+                + " AND " + GenreEntry.TABLE_NAME + "." + GenreEntry._ID + " = " +  genre
+                + " AND " + MovieEntry.TABLE_NAME + "." + MovieEntry._ID + " = " + GenreEntry.COLUMN_NAME_MOVIE_ID, null);
+        cursor.moveToFirst();
+        int size = cursor.getInt(0);
+        cursor.close();
+        return size;
+    }
+
+    private void insertGenresIfNotExists(Integer id_movie,List<Integer> genres) {
+        for (Integer genre:
+             genres) {
+            ContentValues cv = new ContentValues();
+            cv.put(GenreEntry._ID, genre);
+            cv.put(GenreEntry.COLUMN_NAME_MOVIE_ID, id_movie);
+            long i = database.insert(GenreEntry.TABLE_NAME,null,cv);
+            Log.w("SQL", "" + i);
+        }
+    }
+
+    private List<Integer> getMovieGenres(Integer id) {
+        ArrayList<Integer> genres = new ArrayList<>();
+        String[] projection = { GenreEntry._ID};
+        Cursor cursor = database.query(
+                GenreEntry.TABLE_NAME,
+                projection,
+                GenreEntry.COLUMN_NAME_MOVIE_ID + " = " + id,
+                null,
+                null,
+                null,
+                null
+        );
+        while (cursor.moveToNext()){
+            genres.add(cursor.getColumnIndexOrThrow(GenreEntry._ID));
+        }
+        cursor.close();
+        return genres;
+    }
+
 }

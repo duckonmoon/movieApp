@@ -52,7 +52,7 @@ public class AchievementService {
     }
 
     private boolean getMovieAchievement(Achievement achievement) {
-        return false;
+        return service.getMoviesSizeWithGenre(achievement.getGenre()) >= achievement.getNumber();
     }
 
 }

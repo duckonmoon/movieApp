@@ -21,8 +21,12 @@ public final class MovieDbEntities {
         public static final String COLUMN_NAME_OVERVIEW = "overview";
         public static final String COLUMN_NAME_WATCHED = "watched";
         public static final String COLUMN_NAME_FAVOURITE = "favourite";
-        //TODO add tvShows and movies
         public static final String COLUMN_NAME_TYPE = "type";
+    }
+
+    public static class GenreEntry implements BaseColumns {
+        public static final String TABLE_NAME = "genre";
+        public static final String COLUMN_NAME_MOVIE_ID = "movie_id";
     }
 
 }

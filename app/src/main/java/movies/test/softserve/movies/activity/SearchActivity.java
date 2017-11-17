@@ -20,6 +20,7 @@ import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.entity.TVShow;
 import movies.test.softserve.movies.event.OnListOfMoviesGetListener;
 import movies.test.softserve.movies.service.MovieService;
+import movies.test.softserve.movies.service.StartActivityClass;
 import movies.test.softserve.movies.viewholder.MainViewHolder;
 import movies.test.softserve.movies.viewmodel.PageViewModel;
 
@@ -54,18 +55,7 @@ public class SearchActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(new MyMovieListWrapper(new MyMovieRecyclerViewAdapter(mPageViewModel.getList(), new MyMovieRecyclerViewAdapter.OnMovieSelect() {
             @Override
             public void OnMovieSelected(TVEntity mov) {
-                if (mov instanceof Movie) {
-                    Movie movie = (Movie) mov;
-                    Intent intent = new Intent(SearchActivity.this, MovieDetailsActivity.class);
-                    intent.putExtra(MovieDetailsActivity.ID, movie.getId());
-                    intent.putExtra(MovieDetailsActivity.TITLE, movie.getTitle());
-                    intent.putExtra(MovieDetailsActivity.POSTER_PATH, movie.getPosterPath());
-                    intent.putExtra(MovieDetailsActivity.RELEASE_DATE, movie.getReleaseDate());
-                    intent.putExtra(MovieDetailsActivity.VOTE_COUNT, movie.getVoteCount());
-                    intent.putExtra(MovieDetailsActivity.VOTE_AVERAGE, movie.getVoteAverage());
-                    intent.putExtra(MovieDetailsActivity.OVERVIEW, movie.getOverview());
-                    startActivity(intent);
-                } else if (mov instanceof TVShow){}
+                StartActivityClass.startMovieDetailsActivity(SearchActivity.this,(Movie) mov);
             }
         }, new MyMovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override

@@ -16,7 +16,8 @@ class Achievement private constructor(var resourceId: Int, var title: String?, v
             achievements.add(Achievement(R.mipmap.bat_girl, "Movie God", "Watch 1000 movies", TVType.MOVIE, null, 1000))
             achievements.add(Achievement(R.mipmap.unicorn, "Unicorn", "Watch 5 TV Shows", TVType.TV_SHOW, null, 5))
             achievements.add(Achievement(R.mipmap.ice_cream, "TV Show Addicted", "Watch 20 TV Shows", TVType.TV_SHOW, null, 20))
-            achievements.add(Achievement(R.mipmap.gunter, "Is it even possible?", "Watch 100 TV Shows", TVType.TV_SHOW, null, 100))
+            achievements.add(Achievement(R.mipmap.pickachu, "Is it even possible?", "Watch 100 TV Shows", TVType.TV_SHOW, null, 100))
+            achievements.add(Achievement(R.mipmap.horror_movie, "Horror Lover","Watch 5 horror movies",TVType.MOVIE,27,5))
             return achievements
         }
     }

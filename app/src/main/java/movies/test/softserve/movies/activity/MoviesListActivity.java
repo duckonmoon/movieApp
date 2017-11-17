@@ -41,6 +41,7 @@ import movies.test.softserve.movies.fragment.TVShowFragment;
 import movies.test.softserve.movies.fragment.WatchedFragment;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.RatingService;
+import movies.test.softserve.movies.service.StartActivityClass;
 import movies.test.softserve.movies.viewholder.MainViewHolder;
 import movies.test.softserve.movies.viewmodel.FragmentViewModel;
 
@@ -83,19 +84,7 @@ public class MoviesListActivity extends AppCompatActivity
                 new MyMovieRecyclerViewAdapter.OnMovieSelect() {
                     @Override
                     public void OnMovieSelected(TVEntity mov) {
-                        if (mov instanceof Movie) {
-                            Movie movie = (Movie) mov;
-                            Intent intent = new Intent(MoviesListActivity.this, MovieDetailsActivity.class);
-                            intent.putExtra(MovieDetailsActivity.ID, movie.getId());
-                            intent.putExtra(MovieDetailsActivity.TITLE, movie.getTitle());
-                            intent.putExtra(MovieDetailsActivity.POSTER_PATH, movie.getPosterPath());
-                            intent.putExtra(MovieDetailsActivity.RELEASE_DATE, movie.getReleaseDate());
-                            intent.putExtra(MovieDetailsActivity.VOTE_COUNT, movie.getVoteCount());
-                            intent.putExtra(MovieDetailsActivity.VOTE_AVERAGE, movie.getVoteAverage());
-                            intent.putExtra(MovieDetailsActivity.OVERVIEW, movie.getOverview());
-                            MoviesListActivity.this.startActivity(intent);
-                        } else if (mov instanceof TVShow) {
-                        }
+                        StartActivityClass.startMovieDetailsActivity(MoviesListActivity.this,(Movie) mov);
                     }
                 }, new MyMovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
@@ -129,7 +118,8 @@ public class MoviesListActivity extends AppCompatActivity
                                     movie.getVoteCount(),
                                     movie.getOverview(),
                                     movie.getReleaseDate(),
-                                    movie.getPosterPath());
+                                    movie.getPosterPath(),
+                                    movie.getGenreIds());
                         } else {
                             dbService.setFavourite(movie.getId());
                         }

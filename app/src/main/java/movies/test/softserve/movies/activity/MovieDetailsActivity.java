@@ -58,6 +58,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     public static final String VOTE_COUNT = "vote count";
     public static final String POSTER_PATH = "poster path";
     public static final String OVERVIEW = "overview";
+    public static final String GENRES = "genres";
 
     private MovieService service;
     private DBMovieService dbService;
@@ -153,7 +154,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
                             viewModel.getMovie().getVoteCount(),
                             viewModel.getMovie().getOverview(),
                             viewModel.getMovie().getReleaseDate(),
-                            viewModel.getMovie().getPosterPath()
+                            viewModel.getMovie().getPosterPath(),
+                            viewModel.getMovie().getGenreIds()
                     );
                     Snackbar.make(findViewById(R.id.nested_scroll_view), "Added to watched", Snackbar.LENGTH_SHORT).show();
                 } else {
@@ -283,7 +285,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
                                 viewModel.getMovie().getVoteCount(),
                                 viewModel.getMovie().getOverview(),
                                 viewModel.getMovie().getReleaseDate(),
-                                viewModel.getMovie().getPosterPath());
+                                viewModel.getMovie().getPosterPath(),
+                                viewModel.getMovie().getGenreIds());
                     } else {
                         dbService.setFavourite(viewModel.getMovie().getId());
                     }
@@ -329,6 +332,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             movie.setVoteCount(bundle.getInt(VOTE_COUNT));
             movie.setPosterPath(bundle.getString(POSTER_PATH));
             movie.setOverview(bundle.getString(OVERVIEW));
+            movie.setGenreIds(bundle.getIntegerArrayList(GENRES));
             viewModel.setMovie(movie);
             Picasso
                     .with(this)

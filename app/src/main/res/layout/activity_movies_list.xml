@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/constraint_layout"
+    android:layout_gravity="center_horizontal"
     tools:context="movies.test.softserve.movies.activity.MoviesListActivity"
     tools:layout_editor_absoluteY="81dp"
     tools:layout_editor_absoluteX="0dp">

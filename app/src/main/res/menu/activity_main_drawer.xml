@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/explore"
+            android:checked="true"
             android:icon="@drawable/ic_explore_black_24dp"
-            android:title="@string/explore"
-            android:checked="true"/>
+            android:title="@string/explore" />
         <item
             android:id="@+id/favourite"
             android:icon="@drawable/ic_star_black_24dp"
@@ -14,23 +16,31 @@
         <item
             android:id="@+id/watched"
             android:icon="@drawable/ic_done_all_black_24dp"
-            android:title="@string/watched"/>
+            android:title="@string/watched" />
         <item
             android:id="@+id/genres"
             android:icon="@drawable/ic_voicemail_black_24dp"
-            android:title="@string/genres"/>
+            android:title="@string/genres" />
         <item
             android:id="@+id/search"
-            android:title="@string/search"
-            android:icon="@drawable/ic_search_black_24dp"/>
-        <item
-            android:title="@string/tv_shows">
-            <menu>
-                <item android:id="@+id/tv_shows"
-                    android:title="@string/explore"
-                    android:icon="@drawable/ic_weekend_black_24dp"/>
-            </menu>
-
-        </item>
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="@string/search" />
     </group>
+    <item android:title="@string/tvshows">
+        <menu>
+            <group
+                android:id="@+id/group2"
+                android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/tv_shows"
+                    android:icon="@drawable/ic_weekend_black_24dp"
+                    android:title="@string/explore" />
+                <item
+                    android:id="@+id/achievements"
+                    android:icon="@drawable/ic_search_black_24dp"
+                    android:title="@string/achievements" />
+            </group>
+        </menu>
+    </item>
 </menu>

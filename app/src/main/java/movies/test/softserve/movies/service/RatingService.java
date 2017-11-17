@@ -2,8 +2,12 @@ package movies.test.softserve.movies.service;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.view.ViewDebug;
 
 import org.jetbrains.annotations.Contract;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import movies.test.softserve.movies.controller.MainController;
 
@@ -17,6 +21,7 @@ public class RatingService {
     private Levels lvl;
     private Float progress;
     private MainController controller;
+    private List<OnRatingChangeListener> listeners = new ArrayList<>();
 
     private final static String MAIN_SHARED_PREF = "main.shared.pref";
     private final static String RATING = "rating";
@@ -85,6 +90,10 @@ public class RatingService {
 
     private void save() {
         controller.getSharedPreferences(MAIN_SHARED_PREF, Context.MODE_PRIVATE).edit().putFloat(RATING, rating).apply();
+        for (OnRatingChangeListener listener:
+                listeners) {
+            listener.onRatingChange(lvl,rating);
+        }
     }
 
     private void reset() {
@@ -108,4 +117,15 @@ public class RatingService {
         return 15 - rate;
     }
 
+    public void addOnRatingChangeListener(OnRatingChangeListener listener){
+        listeners.add(listener);
+    }
+
+    public void removeOnRatingChangeListener(OnRatingChangeListener listener){
+        listeners.remove(listener);
+    }
+
+    public interface OnRatingChangeListener{
+        void onRatingChange(Levels lvl, Float rating);
+    }
 }

@@ -112,10 +112,12 @@ public class DBMovieService {
                 null,
                 null
         );
-        while (cursor.moveToNext()) {
+        if (cursor.moveToNext()) {
             cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry._ID));
+            cursor.close();
             return true;
         }
+        cursor.close();
         return false;
     }
 
@@ -133,10 +135,12 @@ public class DBMovieService {
                 null,
                 null
         );
-        while (cursor.moveToNext()) {
+        if (cursor.moveToNext()) {
             cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry._ID));
+            cursor.close();
             return true;
         }
+        cursor.close();
         return false;
     }
 
@@ -180,6 +184,7 @@ public class DBMovieService {
             movie.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
             movieArrayList.add(movie);
         }
+        cursor.close();
         return movieArrayList;
     }
 
@@ -216,6 +221,7 @@ public class DBMovieService {
             movie.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
             movieArrayList.add(movie);
         }
+        cursor.close();
         return movieArrayList;
 
     }
@@ -251,6 +257,7 @@ public class DBMovieService {
             movie.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
             movie.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
         }
+        cursor.close();
         return movie;
     }
 
@@ -287,6 +294,7 @@ public class DBMovieService {
             movie.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
             movieArrayList.add(movie);
         }
+        cursor.close();
         return movieArrayList;
     }
 
@@ -322,6 +330,7 @@ public class DBMovieService {
             tvShow.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
             movieArrayList.add(tvShow);
         }
+        cursor.close();
         return movieArrayList;
 
     }
@@ -356,6 +365,7 @@ public class DBMovieService {
             tvShow.setName(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
             tvShow.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
         }
+        cursor.close();
         return tvShow;
     }
 
@@ -371,5 +381,21 @@ public class DBMovieService {
         ContentValues cv = new ContentValues();
         cv.put(MovieEntry.COLUMN_NAME_FAVOURITE, 0);
         database.update(MovieEntry.TABLE_NAME,cv,MovieEntry._ID+ "= " + id, null);
+    }
+
+    public int getMoviesSize(){
+        Cursor cursor = database.rawQuery("SELECT count(*) FROM " + MovieEntry.TABLE_NAME + " WHERE " +  MovieEntry.COLUMN_NAME_TYPE + " = " +  CONTENT_TYPE_MOVIE, null);
+        cursor.moveToFirst();
+        int size = cursor.getInt(0);
+        cursor.close();
+        return size;
+    }
+
+    public int getTVShowsSize(){
+        Cursor cursor = database.rawQuery("SELECT count(*) FROM " + MovieEntry.TABLE_NAME + " WHERE " +  MovieEntry.COLUMN_NAME_TYPE + " = " +  CONTENT_TYPE_TVSHOW, null);
+        cursor.moveToFirst();
+        int size = cursor.getInt(0);
+        cursor.close();
+        return size;
     }
 }

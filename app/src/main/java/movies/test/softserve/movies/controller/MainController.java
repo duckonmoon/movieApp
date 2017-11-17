@@ -15,6 +15,7 @@ import movies.test.softserve.movies.event.AddedItemsEvent;
 import movies.test.softserve.movies.event.OnSessionGetListener;
 import movies.test.softserve.movies.repository.MoviesRepository;
 import movies.test.softserve.movies.repository.TVShowsRepository;
+import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.MovieReaderDbHelper;
 import movies.test.softserve.movies.service.MovieService;
 /**
@@ -54,6 +55,7 @@ public class MainController extends Application implements Observer {
         });
         movieService.tryToGetSession();
         TVShowsRepository.getInstance().tryToGetTVShows();
+
     }
 
 

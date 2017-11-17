@@ -29,6 +29,7 @@ public class MainViewHolder extends RecyclerView.ViewHolder{
         mViewGroup = itemView.findViewById(R.id.card_of_list);
     }
 
+
     @Override
     public String toString() {
         return super.toString();

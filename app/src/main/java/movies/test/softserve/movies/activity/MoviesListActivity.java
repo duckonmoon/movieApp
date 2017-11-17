@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import movies.test.softserve.movies.fragment.AchievementsFragment;
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.fragment.SearchFragment;
 import movies.test.softserve.movies.adapter.MyMovieListWrapper;
@@ -55,6 +56,8 @@ public class MoviesListActivity extends AppCompatActivity
     private FragmentViewModel viewModel;
 
     private String errorMessage;
+
+    private RatingService.OnRatingChangeListener onRatingChangeListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,11 +211,20 @@ public class MoviesListActivity extends AppCompatActivity
             MainController.getInstance().setAddedItemsEventListener(event);
         }
 
+        if (onRatingChangeListener == null) {
+            onRatingChangeListener = new RatingService.OnRatingChangeListener() {
+                @Override
+                public void onRatingChange(RatingService.Levels lvl, Float rating) {
+                    navigationMenuStart();
+                }
+            };
+            RatingService.getInstance().addOnRatingChangeListener(onRatingChangeListener);
+        }
+
         navigationMenuStart();
 
         mRecyclerView.getAdapter().notifyDataSetChanged();
     }
-
 
 
     @Override
@@ -259,6 +271,11 @@ public class MoviesListActivity extends AppCompatActivity
                 viewModel.setSearchFragment(new SearchFragment());
             }
             transaction.replace(R.id.constraint_layout, viewModel.getSearchFragment());
+        } else if (id == R.id.achievements){
+            if (viewModel.getAchievementsFragment() == null){
+                viewModel.setAchievementsFragment(new AchievementsFragment());
+            }
+            transaction.replace(R.id.constraint_layout, viewModel.getAchievementsFragment());
         }
         transaction.commit();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -271,6 +288,11 @@ public class MoviesListActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         MainController.getInstance().removeAddedItemsEventListener();
+        if (onRatingChangeListener != null) {
+            RatingService.getInstance().removeOnRatingChangeListener(onRatingChangeListener);
+            onRatingChangeListener = null;
+        }
+
         event = null;
     }
 
@@ -290,7 +312,7 @@ public class MoviesListActivity extends AppCompatActivity
     }
 
     private void navigationMenuStart() {
-        View navigationView = ((NavigationView)findViewById(R.id.nav_view)).getHeaderView(0);
+        View navigationView = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
         ProgressBar progressBar = navigationView.findViewById(R.id.rating_service_rating);
         ImageView imageView = navigationView.findViewById(R.id.rating_service_image);
         progressBar.setProgress(RatingService.getInstance().getProgress().intValue());

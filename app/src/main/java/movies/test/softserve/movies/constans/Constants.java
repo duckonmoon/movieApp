@@ -5,6 +5,12 @@ package movies.test.softserve.movies.constans;
  */
 //Constants
 public interface Constants {
+    enum TVType {
+        MOVIE,
+        TV_SHOW
+    }
+
+
     String API_KEY = //"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4ZGE3N2U3MjdmMGRiYmUzMGQ0MWU3ZGVkNTliYjM4MiIsInN1YiI6IjU5ZTllN2I1OTI1MTQxMGM2NzAxMDU3MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TdkCcob3COeKQD3wDwOOLUXeUr81ZsPz1EpiZ86AJqs";
             "8da77e727f0dbbe30d41e7ded59bb382";
     String CONTENT_TYPE = "application/json;charset=utf-8";

@@ -26,9 +26,7 @@ class ViewAdapter(private val mValues: List<Genre>,private val onItemClickListen
         }
     }
 
-    override fun getItemCount(): Int {
-        return mValues.size
-    }
+    override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val mIdView: TextView = mView.findViewById(R.id.id)

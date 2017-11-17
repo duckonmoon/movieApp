@@ -49,7 +49,7 @@ public class MovieFragment extends Fragment {
             Context context = view.getContext();
             mRecyclerView = (RecyclerView) view;
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            List< TVEntity > listOfMovies =  new ArrayList<>();
+            List<TVEntity> listOfMovies = new ArrayList<>();
             listOfMovies.addAll(DBMovieService.getInstance().getFavouriteMovies());
             listOfMovies.addAll(DBMovieService.getInstance().getFavouriteTVShows());
             mRecyclerView.setAdapter(new MyMovieRecyclerViewAdapter(listOfMovies, new MyMovieRecyclerViewAdapter.OnMovieSelect() {
@@ -115,11 +115,12 @@ public class MovieFragment extends Fragment {
     }
 
     private void setAdapter() {
-        List< TVEntity > listOfMovies =  new ArrayList<>();
+        List<TVEntity> listOfMovies = new ArrayList<>();
         listOfMovies.addAll(DBMovieService.getInstance().getFavouriteMovies());
         listOfMovies.addAll(DBMovieService.getInstance().getFavouriteTVShows());
         ((MyMovieRecyclerViewAdapter) mRecyclerView.getAdapter()).setMovies(listOfMovies);
         mRecyclerView.getAdapter().notifyDataSetChanged();
+
 
     }
 

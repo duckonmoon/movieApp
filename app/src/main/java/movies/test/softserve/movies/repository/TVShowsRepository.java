@@ -46,7 +46,7 @@ public class TVShowsRepository {
     private List<OnFullTVShowGetListener> onFullTVShowGetListeners;
     private List<OnInfoUpdatedListener> onInfoUpdatedList;
 
-    private TVShowsRepository(){
+    private TVShowsRepository() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://api.themoviedb.org/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -72,17 +72,17 @@ public class TVShowsRepository {
     }
 
 
-    public void tryToGetTVShows(){
-        Call<TVPage> call = service.getTopRatedTVShows(Constants.API_KEY,page);
+    public void tryToGetTVShows() {
+        Call<TVPage> call = service.getTopRatedTVShows(Constants.API_KEY, page);
         call.enqueue(new Callback<TVPage>() {
             @Override
             public void onResponse(Call<TVPage> call, Response<TVPage> response) {
-                if (response.body()!=null){
-                    Log.w("Success",response.body().toString());
+                if (response.body() != null) {
+                    Log.w("Success", response.body().toString());
                     tvShows.addAll(response.body().getResults());
                     page++;
-                    for (OnListOfTVShowsGetListener listener:
-                         listOfTVShowsGetListeners) {
+                    for (OnListOfTVShowsGetListener listener :
+                            listOfTVShowsGetListeners) {
                         listener.onListOfTVShowsGet(response.body().getResults());
                     }
                 }
@@ -95,15 +95,15 @@ public class TVShowsRepository {
         });
     }
 
-    public void trytoGetFullTVShow(Integer id){
-        Call<FullTVShow> call = service.getTVShow(id,Constants.API_KEY);
+    public void trytoGetFullTVShow(Integer id) {
+        Call<FullTVShow> call = service.getTVShow(id, Constants.API_KEY);
         call.enqueue(new Callback<FullTVShow>() {
             @Override
             public void onResponse(Call<FullTVShow> call, Response<FullTVShow> response) {
-                Log.w("Success",response.body().toString());
-                if (response.body()!=null){
-                    for (OnFullTVShowGetListener listener:
-                         onFullTVShowGetListeners) {
+                Log.w("Success", response.body().toString());
+                if (response.body() != null) {
+                    for (OnFullTVShowGetListener listener :
+                            onFullTVShowGetListeners) {
                         listener.onFullTVShowGet(response.body());
                     }
                 }
@@ -126,8 +126,8 @@ public class TVShowsRepository {
                 public void onResponse(Call<Code> call, Response<Code> response) {
                     Log.d("Success", response.body().getStatusMessage());
                     for (OnInfoUpdatedListener listener
-                            : onInfoUpdatedList){
-                        listener.OnInfoUpdated(value/2);
+                            : onInfoUpdatedList) {
+                        listener.OnInfoUpdated(value / 2);
                     }
                 }
 
@@ -142,8 +142,8 @@ public class TVShowsRepository {
         }
     }
 
-    public void getVideo(Integer tv_id,Integer season_number){
-        Call<VideoContainer> call = service.getVideos(tv_id,season_number,Constants.API_KEY);
+    public void getVideo(Integer tv_id, Integer season_number) {
+        Call<VideoContainer> call = service.getVideos(tv_id, season_number, Constants.API_KEY);
         call.enqueue(new Callback<VideoContainer>() {
             @Override
             public void onResponse(Call<VideoContainer> call, Response<VideoContainer> response) {
@@ -157,30 +157,29 @@ public class TVShowsRepository {
         });
     }
 
-    public void getTVShowByKeyword(@NonNull String query,@NonNull Integer page,@NonNull Callback<TVPage> callback){
+    public void getTVShowByKeyword(@NonNull String query, @NonNull Integer page, @NonNull Callback<TVPage> callback) {
         Call<TVPage> call = service.getTVShowByKeyword(Constants.API_KEY, Uri.parse(query.trim()), page);
         call.enqueue(callback);
     }
-
 
 
     public List<TVShow> getTvShows() {
         return tvShows;
     }
 
-    public void addOnListOfTVShowsGetListener(OnListOfTVShowsGetListener listener){
+    public void addOnListOfTVShowsGetListener(OnListOfTVShowsGetListener listener) {
         listOfTVShowsGetListeners.add(listener);
     }
 
-    public void removeOnListOfTVShowsGetListener(OnListOfTVShowsGetListener listener){
+    public void removeOnListOfTVShowsGetListener(OnListOfTVShowsGetListener listener) {
         listOfTVShowsGetListeners.remove(listener);
     }
 
-    public void addOnFullTVShowGetListeners(OnFullTVShowGetListener listener){
+    public void addOnFullTVShowGetListeners(OnFullTVShowGetListener listener) {
         onFullTVShowGetListeners.add(listener);
     }
 
-    public void removeOnFullTVShowGetListeners(OnFullTVShowGetListener listener){
+    public void removeOnFullTVShowGetListeners(OnFullTVShowGetListener listener) {
         onFullTVShowGetListeners.remove(listener);
     }
 

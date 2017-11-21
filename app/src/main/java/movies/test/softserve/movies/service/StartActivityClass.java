@@ -33,12 +33,12 @@ public class StartActivityClass {
 
     public static void startTVShowDetailsActivity(Activity activity, TVShow tvShow) {
         Intent intent = new Intent(activity, TVShowDetailsActivity.class);
-        intent.putExtra(TVShowDetailsActivity.Companion.getID(), tvShow.getId());
-        intent.putExtra(TVShowDetailsActivity.Companion.getNAME(), tvShow.getTitle());
-        intent.putExtra(TVShowDetailsActivity.Companion.getPOSTER_PATH(), tvShow.getPosterPath());
-        intent.putExtra(TVShowDetailsActivity.Companion.getVOTE_COUNT(), tvShow.getVoteCount());
-        intent.putExtra(TVShowDetailsActivity.Companion.getVOTE_AVERAGE(), tvShow.getVoteAverage());
-        intent.putExtra(TVShowDetailsActivity.Companion.getOVERVIEW(), tvShow.getOverview());
+        intent.putExtra(TVShowDetailsActivity.ID, tvShow.getId());
+        intent.putExtra(TVShowDetailsActivity.NAME, tvShow.getTitle());
+        intent.putExtra(TVShowDetailsActivity.POSTER_PATH, tvShow.getPosterPath());
+        intent.putExtra(TVShowDetailsActivity.VOTE_COUNT, tvShow.getVoteCount());
+        intent.putExtra(TVShowDetailsActivity.VOTE_AVERAGE, tvShow.getVoteAverage());
+        intent.putExtra(TVShowDetailsActivity.OVERVIEW, tvShow.getOverview());
         activity.startActivity(intent);
     }
 }

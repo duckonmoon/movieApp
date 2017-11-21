@@ -1,7 +1,6 @@
 package movies.test.softserve.movies.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -16,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import movies.test.softserve.movies.R;
-import movies.test.softserve.movies.activity.MovieDetailsActivity;
-import movies.test.softserve.movies.activity.TVShowDetailsActivity;
 import movies.test.softserve.movies.adapter.MyMovieRecyclerViewAdapter;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.TVEntity;

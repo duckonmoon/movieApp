@@ -8,6 +8,5 @@ import movies.test.softserve.movies.entity.Movie
  * Created by rkrit on 02.11.17.
  */
 class FullMovieViewModel : ViewModel() {
-    var movie: Movie? = null
     var fullMovie: FullMovie? = null
 }

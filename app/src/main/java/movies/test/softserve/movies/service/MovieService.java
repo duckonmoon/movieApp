@@ -133,7 +133,7 @@ public class MovieService {
     }
 
 
-    public void getMovieByGenreCompany(Integer genre, Integer productionCompany, Integer page){
+    public void getMovieByGenreCompany(final Integer genre, final Integer productionCompany, final Integer page){
         Call<Page> call = service.discoverMovie(Constants.API_KEY,
                 null,
                 null,
@@ -181,6 +181,7 @@ public class MovieService {
             @Override
             public void onFailure(Call<Page> call, Throwable t) {
                 Log.e("Smth went wrong", t.getMessage());
+                getMovieByGenreCompany(genre,productionCompany,page);
             }
         });
 

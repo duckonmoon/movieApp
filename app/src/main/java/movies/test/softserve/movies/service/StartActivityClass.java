@@ -2,12 +2,16 @@ package movies.test.softserve.movies.service;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 
 import java.util.ArrayList;
 
 import movies.test.softserve.movies.activity.MovieDetailsActivity;
+import movies.test.softserve.movies.activity.SearchActivity;
 import movies.test.softserve.movies.activity.TVShowDetailsActivity;
+import movies.test.softserve.movies.entity.Genre;
 import movies.test.softserve.movies.entity.Movie;
+import movies.test.softserve.movies.entity.ProductionCompany;
 import movies.test.softserve.movies.entity.TVShow;
 
 /**
@@ -40,5 +44,27 @@ public class StartActivityClass {
         intent.putExtra(TVShowDetailsActivity.VOTE_AVERAGE, tvShow.getVoteAverage());
         intent.putExtra(TVShowDetailsActivity.OVERVIEW, tvShow.getOverview());
         activity.startActivity(intent);
+    }
+
+    public static void startActivitySearch(Activity activity, Genre genre){
+        Intent intent = new Intent(activity,SearchActivity.class);
+        intent.putExtra(SearchActivity.SEARCH_PARAM,SearchActivity.GENRES);
+        intent.putExtra(SearchActivity.ID,genre.getId());
+        intent.putExtra(SearchActivity.NAME,genre.getName());
+        activity.startActivity(intent);
+    }
+
+    public static void startActivitySearch(Activity activity, ProductionCompany company){
+        Intent intent = new Intent(activity,SearchActivity.class);
+        intent.putExtra(SearchActivity.SEARCH_PARAM,SearchActivity.COMPANIES);
+        intent.putExtra(SearchActivity.ID,company.getId());
+        intent.putExtra(SearchActivity.NAME,company.getName());
+        activity.startActivity(intent);
+    }
+
+    public static void startWebIntent(Activity activity,String homepage){
+        Uri webPage = Uri.parse(homepage);
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, webPage);
+        activity.startActivity(webIntent);
     }
 }

@@ -8,6 +8,5 @@ import movies.test.softserve.movies.entity.TVShow
  * Created by rkrit on 08.11.17.
  */
 class FullTVSeriesViewModel : ViewModel() {
-    var tvShow :TVShow? = null
     var fullTVShow : FullTVShow? = null
 }

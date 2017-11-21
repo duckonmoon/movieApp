@@ -14,7 +14,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -36,9 +35,6 @@ import com.facebook.share.widget.ShareDialog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
-
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.entity.FullTVShow;
 import movies.test.softserve.movies.entity.Season;
@@ -46,6 +42,7 @@ import movies.test.softserve.movies.entity.TVShow;
 import movies.test.softserve.movies.event.OnFullTVShowGetListener;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.repository.TVShowsRepository;
+import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.viewmodel.FullTVSeriesViewModel;
 
@@ -61,7 +58,11 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     public final static String POSTER_PATH = "poster path";
     public final static String OVERVIEW = "overview";
 
+    private TVShow tvShow;
     private FullTVSeriesViewModel viewModel;
+
+    private DBHelperService helperService = new DBHelperService();
+    private DBMovieService dbService = DBMovieService.getInstance();
 
     private Animator mCurrentAnimator;
     private BitmapDrawable mBitmapDrawable;
@@ -80,6 +81,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private ImageView share;
     private TextView links;
     private LinearLayout seasons;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,7 +112,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 };
                 TVShowsRepository repository = TVShowsRepository.getInstance();
                 repository.addOnFullTVShowGetListeners(listenerW);
-                repository.trytoGetFullTVShow(viewModel.getTvShow().getId());
+                repository.trytoGetFullTVShow(tvShow.getId());
             }
         }
     }
@@ -163,7 +165,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
     private void useIntentInfo() {
         toolbarLayout = findViewById(R.id.toolbar_layout);
-        toolbarLayout.setTitle(viewModel.getTvShow().getName());
+        toolbarLayout.setTitle(tvShow.getName());
         ratingBar = findViewById(R.id.ratingBar);
         toolbarLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,7 +173,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 zoomImageFromThumb(v, mBitmapDrawable.getBitmap());
             }
         });
-        ratingBar.setRating(viewModel.getTvShow().getVoteAverage().floatValue() / 2);
+        ratingBar.setRating(tvShow.getVoteAverage().floatValue() / 2);
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(final RatingBar ratingBar, float rating, boolean fromUser) {
@@ -184,22 +186,22 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                         }
                     };
                     TVShowsRepository.getInstance().addOnInfoUpdatedListener(onInfoUpdatedListener);
-                    TVShowsRepository.getInstance().rateTVShow(viewModel.getTvShow().getId(), rating * 2);
+                    TVShowsRepository.getInstance().rateTVShow(tvShow.getId(), rating * 2);
                 }
             }
         });
 
 
-        voteCountView.setText("" + (((float) Math.round(viewModel.getTvShow().getVoteAverage() * 10)) / 10) + "/" + viewModel.getTvShow().getVoteCount());
-        overviewView.setText(viewModel.getTvShow().getOverview());
+        voteCountView.setText("" + (((float) Math.round(tvShow.getVoteAverage() * 10)) / 10) + "/" + tvShow.getVoteCount());
+        overviewView.setText(tvShow.getOverview());
         releaseDateView.setVisibility(View.GONE);
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
-                        .setQuote(viewModel.getTvShow().getName() + "     \r\nPlot: " + viewModel.getTvShow().
+                        .setQuote(tvShow.getName() + "     \r\nPlot: " + tvShow.
                                 getOverview())
-                        .setContentUrl(Uri.parse("https://image.tmdb.org/t/p/w500" + viewModel.getTvShow().
+                        .setContentUrl(Uri.parse("https://image.tmdb.org/t/p/w500" + tvShow.
                                 getPosterPath()))
                         .build();
                 ShareDialog.show(TVShowDetailsActivity.this, shareLinkContent);
@@ -207,7 +209,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         });
         Picasso
                 .with(this)
-                .load("https://image.tmdb.org/t/p/w500" + viewModel.getTvShow().getPosterPath())
+                .load("https://image.tmdb.org/t/p/w500" + tvShow.getPosterPath())
                 .into(new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -229,41 +231,33 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     }
 
     private void getIntentInfo() {
-        if (getIntent() != null && viewModel.getTvShow() == null) {
-            TVShow tvShow = new TVShow();
+        if (getIntent() != null && tvShow == null) {
+            tvShow = new TVShow();
             tvShow.setId(getIntent().getExtras().getInt(ID));
             tvShow.setName(getIntent().getExtras().getString(NAME));
             tvShow.setVoteAverage(getIntent().getExtras().getDouble(VOTE_AVERAGE));
             tvShow.setVoteCount(getIntent().getExtras().getInt(VOTE_COUNT));
             tvShow.setPosterPath(getIntent().getExtras().getString(POSTER_PATH));
             tvShow.setOverview(getIntent().getExtras().getString(OVERVIEW));
-            viewModel.setTvShow(tvShow);
         }
-        watched.setImageResource((DBMovieService.getInstance().checkIfExists(viewModel.getTvShow().getId())) ? R.mipmap.checked : R.mipmap.not_checked);
+        watched.setImageResource((dbService.checkIfExists(tvShow.getId())) ? R.mipmap.checked : R.mipmap.not_checked);
         watched.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!DBMovieService.getInstance().checkIfExists(viewModel.getTvShow().getId())) {
-                    watched.setImageResource(R.mipmap.checked);
-                    DBMovieService.getInstance().addTVShowToDb(viewModel.getTvShow().getId(),
-                            viewModel.getTvShow().getTitle(),
-                            viewModel.getTvShow().getVoteAverage().floatValue(),
-                            viewModel.getTvShow().getVoteCount(),
-                            viewModel.getTvShow().getOverview(),
-                            viewModel.getTvShow().getPosterPath()
-                    );
-                    Snackbar.make(findViewById(R.id.nested_scroll_view), "Added to watched", Snackbar.LENGTH_SHORT).show();
-                } else {
-
-                    if (DBMovieService.getInstance().checkIfIsFavourite(viewModel.getTvShow().getId())) {
+                switch (helperService.toDoWithWatched(tvShow)) {
+                    case WATCHED:
+                        Snackbar.make(findViewById(R.id.nested_scroll_view), "Added to watched", Snackbar.LENGTH_SHORT).show();
+                        break;
+                    case FAVOURITE:
                         Snackbar.make(findViewById(R.id.nested_scroll_view), "It's favourite, u cant do this", Snackbar.LENGTH_SHORT).show();
-                    } else {
+                        break;
+                    case CANCELED:
                         AlertDialog.Builder builder = new AlertDialog.Builder(TVShowDetailsActivity.this);
                         builder.setMessage(getString(R.string.confirm))
                                 .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        DBMovieService.getInstance().deleteFromDb(viewModel.getTvShow().getId());
+                                        dbService.deleteFromDb(tvShow.getId());
                                         watched.setImageResource(R.mipmap.not_checked);
                                         Snackbar.make(findViewById(R.id.nested_scroll_view), "Marked as unwatched", Snackbar.LENGTH_SHORT).show();
                                     }
@@ -273,11 +267,12 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                             }
                         });
                         builder.create().show();
-                    }
+                        break;
+
                 }
             }
         });
-        if (DBMovieService.getInstance().checkIfIsFavourite(viewModel.getTvShow().getId())) {
+        if (dbService.checkIfIsFavourite(tvShow.getId())) {
             fab.setImageResource(R.drawable.ic_stars_black_24dp);
         }
     }
@@ -297,26 +292,14 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBMovieService dbService = DBMovieService.getInstance();
-                if (!dbService.checkIfIsFavourite(viewModel.getTvShow().getId())) {
-                    if (!dbService.checkIfExists(viewModel.getTvShow().getId())) {
-                        dbService.insertTVShowToFavourite(viewModel.getTvShow().getId(),
-                                viewModel.getTvShow().getTitle(),
-                                viewModel.getTvShow().getVoteAverage().floatValue(),
-                                viewModel.getTvShow().getVoteCount(),
-                                viewModel.getTvShow().getOverview(),
-                                viewModel.getTvShow().getPosterPath());
-                    } else {
-                        dbService.setFavourite(viewModel.getTvShow().getId());
-                    }
+                if (helperService.toDoWithFavourite(tvShow)) {
                     fab.setImageResource(R.drawable.ic_stars_black_24dp);
-                    Snackbar.make(v, "Added to favourite", Snackbar.LENGTH_LONG)
+                    Snackbar.make(v, "Added to favourite", Snackbar.LENGTH_SHORT)
                             .setAction("Action", null).show();
                     watched.setImageResource(R.mipmap.checked);
                 } else {
-                    dbService.cancelFavourite(viewModel.getTvShow().getId());
                     fab.setImageResource(R.drawable.ic_star_border_black_24dp);
-                    Snackbar.make(v, "Removed to favourite", Snackbar.LENGTH_LONG)
+                    Snackbar.make(v, "Removed to favourite", Snackbar.LENGTH_SHORT)
                             .setAction("Action", null).show();
                 }
             }

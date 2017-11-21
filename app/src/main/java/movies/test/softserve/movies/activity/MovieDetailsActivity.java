@@ -42,11 +42,16 @@ import com.squareup.picasso.Target;
 
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.entity.FullMovie;
+import movies.test.softserve.movies.entity.Genre;
 import movies.test.softserve.movies.entity.Movie;
+import movies.test.softserve.movies.entity.ProductionCompany;
+import movies.test.softserve.movies.entity.ProductionCountry;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnMovieInformationGet;
+import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.MovieService;
+import movies.test.softserve.movies.service.StartActivityClass;
 import movies.test.softserve.movies.viewmodel.FullMovieViewModel;
 
 public class MovieDetailsActivity extends AppCompatActivity {
@@ -60,8 +65,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
     public static final String OVERVIEW = "overview";
     public static final String GENRES = "genres";
 
-    private MovieService service;
-    private DBMovieService dbService;
+    private MovieService service = MovieService.getInstance();
+    private DBMovieService dbService = DBMovieService.getInstance();
+    private DBHelperService helperService = new DBHelperService();
 
     private Toolbar toolbar;
     private CollapsingToolbarLayout toolbarLayout;
@@ -78,6 +84,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private ImageView watched;
 
     private FullMovieViewModel viewModel;
+    private Movie movie;
+
 
     private OnMovieInformationGet listener;
     private OnInfoUpdatedListener infoListener;
@@ -92,7 +100,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
         viewModel = ViewModelProviders.of(this).get(FullMovieViewModel.class);
-        dbService = DBMovieService.getInstance();
         initView();
         getIntentInfo();
         useIntentInfo();
@@ -109,26 +116,26 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     Snackbar.make(findViewById(R.id.nested_scroll_view), "Your rating saved", Snackbar.LENGTH_LONG).show();
                 }
             };
-            MovieService.getInstance().addOnInfoUpdatedListener(infoListener);
+            service.addOnInfoUpdatedListener(infoListener);
         }
         getFullInfo();
     }
 
     private void useIntentInfo() {
-        getSupportActionBar().setTitle(viewModel.getMovie().getTitle());
-        overViewView.setText(viewModel.getMovie().getOverview());
-        ratingBar.setRating(viewModel.getMovie().getVoteAverage().floatValue() / 2);
+        getSupportActionBar().setTitle(movie.getTitle());
+        overViewView.setText(movie.getOverview());
+        ratingBar.setRating(movie.getVoteAverage().floatValue() / 2);
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 if (fromUser) {
-                    MovieService.getInstance().rateMovie(viewModel.getMovie().getId(), rating * 2);
+                    service.rateMovie(movie.getId(), rating * 2);
                 }
             }
         });
-        releaseDateView.setText(releaseDateView.getText().toString() + viewModel.getMovie().getReleaseDate());
-        voteCountView.setText("" + ((float) Math.round(viewModel.getMovie().getVoteAverage() * 10)) / 10 + "/" + viewModel.getMovie().getVoteCount());
-        if (dbService.checkIfIsFavourite(viewModel.getMovie().getId())) {
+        releaseDateView.setText(releaseDateView.getText().toString() + movie.getReleaseDate());
+        voteCountView.setText("" + ((float) Math.round(movie.getVoteAverage() * 10)) / 10 + "/" + movie.getVoteCount());
+        if (dbService.checkIfIsFavourite(movie.getId())) {
             fab.setImageResource(R.drawable.ic_stars_black_24dp);
         }
 
@@ -136,38 +143,30 @@ public class MovieDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
-                        .setQuote(viewModel.getMovie().getTitle() + "     \r\nPlot: " + viewModel.getMovie().getOverview())
-                        .setContentUrl(Uri.parse("https://image.tmdb.org/t/p/w500" + viewModel.getMovie().getPosterPath()))
+                        .setQuote(movie.getTitle() + "     \r\nPlot: " + movie.getOverview())
+                        .setContentUrl(Uri.parse("https://image.tmdb.org/t/p/w500" + movie.getPosterPath()))
                         .build();
                 ShareDialog.show(MovieDetailsActivity.this, shareLinkContent);
             }
         });
-        watched.setImageResource(DBMovieService.getInstance().checkIfExists(viewModel.getMovie().getId()) ? R.mipmap.checked : R.mipmap.not_checked);
+        watched.setImageResource(dbService.checkIfExists(movie.getId()) ? R.mipmap.checked : R.mipmap.not_checked);
         watched.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!DBMovieService.getInstance().checkIfExists(viewModel.getMovie().getId())) {
-                    watched.setImageResource(R.mipmap.checked);
-                    DBMovieService.getInstance().addMovieToDb(viewModel.getMovie().getId(),
-                            viewModel.getMovie().getTitle(),
-                            viewModel.getMovie().getVoteAverage().floatValue(),
-                            viewModel.getMovie().getVoteCount(),
-                            viewModel.getMovie().getOverview(),
-                            viewModel.getMovie().getReleaseDate(),
-                            viewModel.getMovie().getPosterPath(),
-                            viewModel.getMovie().getGenreIds()
-                    );
-                    Snackbar.make(findViewById(R.id.nested_scroll_view), "Added to watched", Snackbar.LENGTH_SHORT).show();
-                } else {
-
-                    if (DBMovieService.getInstance().checkIfIsFavourite(viewModel.getMovie().getId())) {
+                switch (helperService.toDoWithWatched(movie)) {
+                    case WATCHED:
+                        watched.setImageResource(R.mipmap.checked);
+                        Snackbar.make(findViewById(R.id.nested_scroll_view), "Added to watched", Snackbar.LENGTH_SHORT).show();
+                        break;
+                    case FAVOURITE:
                         Snackbar.make(findViewById(R.id.nested_scroll_view), "It's favourite, u cant do this", Snackbar.LENGTH_SHORT).show();
-                    } else {
+                        break;
+                    case CANCELED:
                         AlertDialog.Builder builder = new AlertDialog.Builder(MovieDetailsActivity.this);
                         builder.setMessage(R.string.confirm)
                                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        DBMovieService.getInstance().deleteFromDb(viewModel.getMovie().getId());
+                                        dbService.deleteFromDb(movie.getId());
                                         watched.setImageResource(R.mipmap.not_checked);
                                         Snackbar.make(findViewById(R.id.nested_scroll_view), "Marked as unwatched", Snackbar.LENGTH_SHORT).show();
                                     }
@@ -177,7 +176,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                                     }
                                 });
                         builder.create().show();
-                    }
+                        break;
                 }
             }
         });
@@ -186,7 +185,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private void getFullInfo() {
         if (listener == null) {
             if (viewModel.getFullMovie() == null) {
-                service = MovieService.getInstance();
                 listener = new OnMovieInformationGet() {
                     @Override
                     public void onMovieGet(FullMovie movie) {
@@ -195,7 +193,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     }
                 };
                 service.addListener(listener);
-                service.tryToGetMovie(viewModel.getMovie().getId());
+                service.tryToGetMovie(movie.getId());
             } else {
                 addGenresCountriesCompanies();
             }
@@ -203,65 +201,52 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     public void addGenresCountriesCompanies() {
-        for (int i = 0; i < viewModel.getFullMovie().getGenres().size(); i++) {
+        final FullMovie fullMovie = viewModel.getFullMovie();
+        for (int i = 0; i < fullMovie.getGenres().size(); i++) {
+            final Genre genre = fullMovie.getGenres().get(i);
             Button button = new Button(MovieDetailsActivity.this);
             button.setTextColor(ContextCompat.getColor(MovieDetailsActivity.this, R.color.main_app_color));
             button.setBackgroundColor(Color.TRANSPARENT);
-            button.setText(viewModel.getFullMovie().getGenres().get(i).getName());
-            final int finalI = i;
+            button.setText(genre.getName());
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Snackbar.make(findViewById(R.id.nested_scroll_view), "Isn't ready :)", Snackbar.LENGTH_LONG).show();
-                    Intent intent = new Intent(MovieDetailsActivity.this,SearchActivity.class);
-                    intent.putExtra(SearchActivity.SEARCH_PARAM,SearchActivity.GENRES);
-                    intent.putExtra(SearchActivity.ID,viewModel.getFullMovie().getGenres().get(finalI).getId());
-                    intent.putExtra(SearchActivity.NAME,viewModel.getFullMovie().getGenres().get(finalI).getName());
-                    startActivity(intent);
+                    StartActivityClass.startActivitySearch(MovieDetailsActivity.this, genre);
                 }
             });
             genres.addView(button);
         }
-        for (int i = 0; i < viewModel.getFullMovie().getProductionCountries().size(); i++) {
+        for (int i = 0; i < fullMovie.getProductionCountries().size(); i++) {
+            ProductionCountry country = fullMovie.getProductionCountries().get(i);
             Button button = new Button(MovieDetailsActivity.this);
             button.setTextColor(ContextCompat.getColor(MovieDetailsActivity.this, R.color.main_app_color));
             button.setBackgroundColor(Color.TRANSPARENT);
-            button.setText(viewModel.getFullMovie().getProductionCountries().get(i).getName());
+            button.setText(country.getName());
             button.setPadding(0, 0, 50, 0);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
             countries.addView(button);
         }
-        for (int i = 0; i < viewModel.getFullMovie().getProductionCompanies().size(); i++) {
+        for (int i = 0; i < fullMovie.getProductionCompanies().size(); i++) {
+            final ProductionCompany company = fullMovie.getProductionCompanies().get(i);
             Button button = new Button(MovieDetailsActivity.this);
             button.setTextColor(ContextCompat.getColor(MovieDetailsActivity.this, R.color.main_app_color));
             button.setBackgroundColor(Color.TRANSPARENT);
-            button.setText(viewModel.getFullMovie().getProductionCompanies().get(i).getName());
+            button.setText(company.getName());
             button.setPadding(0, 0, 50, 0);
-            final int finalI = i;
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MovieDetailsActivity.this,SearchActivity.class);
-                    intent.putExtra(SearchActivity.SEARCH_PARAM,SearchActivity.GENRES);
-                    intent.putExtra(SearchActivity.ID,viewModel.getFullMovie().getProductionCompanies().get(finalI).getId());
-                    intent.putExtra(SearchActivity.NAME,viewModel.getFullMovie().getProductionCompanies().get(finalI).getName());
-                    startActivity(intent);
+                    StartActivityClass.startActivitySearch(MovieDetailsActivity.this, company);
                 }
             });
             companies.addView(button);
         }
-        if (viewModel.getFullMovie().getHomepage() != null && !viewModel.getFullMovie().getHomepage().equals("")) {
-            links.setText(getString(R.string.homepage) + viewModel.getFullMovie().getHomepage());
+        if (fullMovie.getHomepage() != null && !fullMovie.getHomepage().equals("")) {
+            links.setText(getString(R.string.homepage) + fullMovie.getHomepage());
             links.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Uri webPage = Uri.parse(viewModel.getFullMovie().getHomepage());
-                    Intent webIntent = new Intent(Intent.ACTION_VIEW, webPage);
-                    startActivity(webIntent);
+                    StartActivityClass.startWebIntent(MovieDetailsActivity.this, fullMovie.getHomepage());
                 }
             });
         }
@@ -277,25 +262,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!dbService.checkIfIsFavourite(viewModel.getMovie().getId())) {
-                    if (!dbService.checkIfExists(viewModel.getMovie().getId())) {
-                        dbService.insertMovieToFavourite(viewModel.getMovie().getId(),
-                                viewModel.getMovie().getTitle(),
-                                viewModel.getMovie().getVoteAverage().floatValue(),
-                                viewModel.getMovie().getVoteCount(),
-                                viewModel.getMovie().getOverview(),
-                                viewModel.getMovie().getReleaseDate(),
-                                viewModel.getMovie().getPosterPath(),
-                                viewModel.getMovie().getGenreIds());
-                    } else {
-                        dbService.setFavourite(viewModel.getMovie().getId());
-                    }
+                if (helperService.toDoWithFavourite(movie)) {
                     fab.setImageResource(R.drawable.ic_stars_black_24dp);
                     Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                     watched.setImageResource(R.mipmap.checked);
                 } else {
-                    dbService.cancelFavourite(viewModel.getMovie().getId());
                     fab.setImageResource(R.drawable.ic_star_border_black_24dp);
                     Snackbar.make(view, "Removed to favourite", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
@@ -314,7 +286,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         toolbarLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                zoomImageFromThumb(toolbarLayout,mBitmapDrawable.getBitmap());
+                zoomImageFromThumb(toolbarLayout, mBitmapDrawable.getBitmap());
             }
         });
 
@@ -323,7 +295,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private void getIntentInfo() {
         Intent intent = getIntent();
         if (intent != null) {
-            Movie movie = new Movie();
+            movie = new Movie();
             Bundle bundle = intent.getExtras();
             movie.setId(bundle.getInt(ID));
             movie.setTitle(bundle.getString(TITLE));
@@ -333,10 +305,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
             movie.setPosterPath(bundle.getString(POSTER_PATH));
             movie.setOverview(bundle.getString(OVERVIEW));
             movie.setGenreIds(bundle.getIntegerArrayList(GENRES));
-            viewModel.setMovie(movie);
             Picasso
                     .with(this)
-                    .load("https://image.tmdb.org/t/p/w500" + viewModel.getMovie().getPosterPath())
+                    .load("https://image.tmdb.org/t/p/w500" + movie.getPosterPath())
                     .into(new Target() {
                         @Override
                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -362,33 +333,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if (listener != null) {
-            MovieService.getInstance().removeListener(listener);
+            service.removeListener(listener);
+            listener = null;
         }
         if (infoListener != null) {
-            MovieService.getInstance().removeOnInfoUpdatedListener(infoListener);
+            service.removeOnInfoUpdatedListener(infoListener);
+            infoListener = null;
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_movie_details, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
 
     private void zoomImageFromThumb(final View thumbView, Bitmap bitmap) {
         if (mCurrentAnimator != null) {

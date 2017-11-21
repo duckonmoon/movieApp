@@ -1,8 +1,11 @@
 package movies.test.softserve.movies.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +22,8 @@ import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.entity.TVShow;
 import movies.test.softserve.movies.event.OnListOfMoviesGetListener;
+import movies.test.softserve.movies.service.DBHelperService;
+import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.service.StartActivityClass;
 import movies.test.softserve.movies.viewholder.MainViewHolder;
@@ -39,6 +44,10 @@ public class SearchActivity extends AppCompatActivity {
 
     PageViewModel mPageViewModel;
 
+    DBHelperService helperService = new DBHelperService();
+    MovieService movieService = MovieService.getInstance();
+    DBMovieService dbService = DBMovieService.getInstance();
+
     OnListOfMoviesGetListener onListOfMoviesGetListener;
 
     @Override
@@ -55,22 +64,35 @@ public class SearchActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(new MyMovieListWrapper(new MyMovieRecyclerViewAdapter(mPageViewModel.getList(), new MyMovieRecyclerViewAdapter.OnMovieSelect() {
             @Override
             public void OnMovieSelected(TVEntity mov) {
-                StartActivityClass.startMovieDetailsActivity(SearchActivity.this,(Movie) mov);
+                StartActivityClass.startMovieDetailsActivity(SearchActivity.this, (Movie) mov);
             }
         }, new MyMovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
-            public void onFavouriteClick(TVEntity movie) {
-
+            public void onFavouriteClick(final TVEntity movie) {
+                if (movie instanceof Movie){
+                    if (helperService.toDoWithFavourite((Movie)movie)){
+                        Snackbar.make(mRecyclerView,"Added to favourite",Snackbar.LENGTH_SHORT);
+                    }else{
+                        buildAlertDialog(movie);
+                    }
+                } else {
+                    if (helperService.toDoWithFavourite((TVShow)movie)){
+                        Snackbar.make(mRecyclerView,"Added to favourite",Snackbar.LENGTH_SHORT);
+                    } else{
+                        buildAlertDialog(movie);
+                    }
+                }
+                mRecyclerView.getAdapter().notifyDataSetChanged();
             }
         }), new MyMovieListWrapper.OnEndReachListener() {
             @Override
             public void onEndReach(MainViewHolder mainViewHolder) {
                 switch (getIntent().getStringExtra(SEARCH_PARAM)) {
                     case GENRES:
-                        MovieService.getInstance().getMovieByGenreCompany(id, null, mPageViewModel.getPage());
+                        movieService.getMovieByGenreCompany(id, null, mPageViewModel.getPage());
                         break;
                     case COMPANIES:
-                        MovieService.getInstance().getMovieByGenreCompany(null, id, mPageViewModel.getPage());
+                        movieService.getMovieByGenreCompany(null, id, mPageViewModel.getPage());
                         break;
                     case COUNTRIES:
                         break;
@@ -92,16 +114,14 @@ public class SearchActivity extends AppCompatActivity {
             onListOfMoviesGetListener = new OnListOfMoviesGetListener() {
                 @Override
                 public void onListOfMoviesGetListener(@NotNull List<? extends Movie> movies) {
-                    if (movies.size()>0) {
+                    if (movies.size() > 0) {
                         mPageViewModel.getList().addAll(movies);
                         mPageViewModel.setPage(mPageViewModel.getPage() + 1);
-
                     }
-
                     mRecyclerView.getAdapter().notifyDataSetChanged();
                 }
             };
-            MovieService.getInstance().addOnListOfMoviesGetListener(onListOfMoviesGetListener);
+            movieService.addOnListOfMoviesGetListener(onListOfMoviesGetListener);
             Intent intent = getIntent();
             id = intent.getIntExtra(ID, -1);
         }
@@ -112,7 +132,30 @@ public class SearchActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if (onListOfMoviesGetListener != null) {
-            MovieService.getInstance().removeOnListOfMoviesGetListener(onListOfMoviesGetListener);
+            movieService.removeOnListOfMoviesGetListener(onListOfMoviesGetListener);
+            onListOfMoviesGetListener = null;
         }
+    }
+
+    private void buildAlertDialog(final TVEntity movie){
+        new AlertDialog.Builder(SearchActivity.this)
+                .setMessage(R.string.delete_from_watched)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dbService.deleteFromDb(movie.getId());
+                        Snackbar.make(mRecyclerView, "Deleted from favourite",
+                                Snackbar.LENGTH_LONG).show();
+                        mRecyclerView.getAdapter().notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dbService.cancelFavourite(movie.getId());
+                        Snackbar.make(mRecyclerView, "Deleted from favourite",
+                                Snackbar.LENGTH_LONG).show();
+                        mRecyclerView.getAdapter().notifyDataSetChanged();
+                    }
+                }).create()
+                .show();
     }
 }

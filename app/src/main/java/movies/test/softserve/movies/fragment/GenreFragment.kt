@@ -30,6 +30,7 @@ class GenreFragment : Fragment() {
             view.layoutManager = LinearLayoutManager(context)
             view.adapter = ViewAdapter(MainController.getInstance().genres, onItemClickListener = object : ViewAdapter.OnItemClickListener {
                 override fun onItemClick(genre: Genre) {
+
                     val intent = Intent(activity, SearchActivity::class.java)
                     intent.putExtra(SearchActivity.SEARCH_PARAM, SearchActivity.GENRES)
                     intent.putExtra(SearchActivity.ID, genre.id)

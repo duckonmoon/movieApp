@@ -10,13 +10,11 @@ import java.util.Observer;
 
 import movies.test.softserve.movies.entity.Genre;
 import movies.test.softserve.movies.entity.GuestSession;
-import movies.test.softserve.movies.entity.Movie;
+import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.event.AddedItemsEvent;
 import movies.test.softserve.movies.event.OnSessionGetListener;
 import movies.test.softserve.movies.repository.MoviesRepository;
 import movies.test.softserve.movies.repository.TVShowsRepository;
-import movies.test.softserve.movies.service.AchievementService;
-import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.MovieReaderDbHelper;
 import movies.test.softserve.movies.service.MovieService;
 /**
@@ -24,7 +22,7 @@ import movies.test.softserve.movies.service.MovieService;
  */
 
 public class MainController extends Application implements Observer {
-    private List<Movie> movies;
+    private List<TVEntity> movies;
     private List<Genre> genres = new ArrayList<>();
     private Integer page;
     private MoviesRepository moviesRepository;
@@ -86,7 +84,7 @@ public class MainController extends Application implements Observer {
         eventListener = null;
     }
 
-    public List<Movie> getMovies() {
+    public List<TVEntity> getMovies() {
         return movies;
     }
 

@@ -24,9 +24,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
@@ -43,9 +40,9 @@ import com.squareup.picasso.Target;
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.entity.FullMovie;
 import movies.test.softserve.movies.entity.Genre;
-import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.ProductionCompany;
 import movies.test.softserve.movies.entity.ProductionCountry;
+import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnMovieInformationGet;
 import movies.test.softserve.movies.service.DBHelperService;
@@ -84,7 +81,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private ImageView watched;
 
     private FullMovieViewModel viewModel;
-    private Movie movie;
+    private TVEntity movie;
 
 
     private OnMovieInformationGet listener;
@@ -286,7 +283,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         toolbarLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                zoomImageFromThumb(toolbarLayout, mBitmapDrawable.getBitmap());
+                if (mBitmapDrawable != null) {
+                    zoomImageFromThumb(toolbarLayout, mBitmapDrawable.getBitmap());
+                }
             }
         });
 
@@ -295,7 +294,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private void getIntentInfo() {
         Intent intent = getIntent();
         if (intent != null) {
-            movie = new Movie();
+            movie = new TVEntity();
             Bundle bundle = intent.getExtras();
             movie.setId(bundle.getInt(ID));
             movie.setTitle(bundle.getString(TITLE));

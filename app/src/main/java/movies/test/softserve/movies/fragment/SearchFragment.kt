@@ -19,10 +19,7 @@ import movies.test.softserve.movies.adapter.MovieListWrapper
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter
 import movies.test.softserve.movies.entity.*
 import movies.test.softserve.movies.repository.TVShowsRepository
-import movies.test.softserve.movies.service.DBHelperService
-import movies.test.softserve.movies.service.DBMovieService
-import movies.test.softserve.movies.service.MovieService
-import movies.test.softserve.movies.service.StartActivityClass
+import movies.test.softserve.movies.service.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -83,29 +80,16 @@ class SearchFragment : Fragment() {
 
         view.list.layoutManager = LinearLayoutManager(context)
         view.list.adapter = MovieListWrapper(MovieRecyclerViewAdapter(list, MovieRecyclerViewAdapter.OnMovieSelect { mov ->
-            if (mov is Movie) {
-                StartActivityClass.startMovieDetailsActivity(activity, mov)
-            } else if (mov is TVShow) {
-                StartActivityClass.startTVShowDetailsActivity(activity, mov)
-            }
+            StartActivityClass.startDetailsActivity(activity,mov)
         }, MovieRecyclerViewAdapter.OnFavouriteClick { movie ->
-            if (movie is Movie) {
                 if (helperService.toDoWithFavourite(movie)) {
                     Snackbar.make(view.list, "Added to favourite", Snackbar.LENGTH_SHORT)
                             .show()
                 } else {
                     buildAlertDialog(movie, view.list)
                 }
-            } else {
-                if (helperService.toDoWithFavourite(movie as TVShow)) {
-                    Snackbar.make(view.list, "Added to favourite", Snackbar.LENGTH_SHORT)
-                            .show()
-                } else {
-                    buildAlertDialog(movie, view.list)
-                }
-            }
             view.list.adapter.notifyDataSetChanged()
-        }), { v ->
+    }), { v ->
             if (v is MovieListWrapper.ViewHolder) {
                 v.mProgressBar.visibility = View.GONE
                 if (list.size > 0 && message == null) {
@@ -127,7 +111,7 @@ class SearchFragment : Fragment() {
             override fun onResponse(call: Call<Page>?, response: Response<Page>?) {
                 if (response!!.body()!!.page == page) {
                     page++
-                    list.addAll(response.body()!!.movies)
+                    list.addAll(Mapper.mapFromMovieToTVEntity(response.body()!!.movies))
                     if (response.body()!!.movies.isEmpty()) {
                         message = "Overload"
                     }
@@ -146,7 +130,7 @@ class SearchFragment : Fragment() {
             override fun onResponse(call: Call<TVPage>?, response: Response<TVPage>?) {
                 if (response!!.body()!!.page == page) {
                     page++
-                    list.addAll(response.body()!!.results)
+                    list.addAll(Mapper.mapFromTVShowToTVEntity(response.body()!!.results))
                     mRecyclerView!!.adapter.notifyDataSetChanged()
                     if (response.body()!!.results.isEmpty()) {
                         message = "Overload"

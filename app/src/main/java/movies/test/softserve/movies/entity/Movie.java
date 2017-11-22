@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 
-public class Movie implements TVEntity{
+public class Movie implements ITV {
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;

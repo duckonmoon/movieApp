@@ -12,19 +12,18 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import movies.test.softserve.movies.R;
-import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.viewholder.MainViewHolder;
 
 public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolder> {
 
-    private List<? extends TVEntity> movies;
+    private List<TVEntity> movies;
     private OnMovieSelect event;
     private OnFavouriteClick favouriteClick;
 
 
-    public MovieRecyclerViewAdapter(List<? extends TVEntity> items, @NonNull OnMovieSelect onMovieSelect, @NonNull OnFavouriteClick onFavouriteClick) {
+    public MovieRecyclerViewAdapter(List<TVEntity> items, @NonNull OnMovieSelect onMovieSelect, @NonNull OnFavouriteClick onFavouriteClick) {
         movies = items;
         event = onMovieSelect;
         favouriteClick = onFavouriteClick;
@@ -73,7 +72,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolde
         return movies.size();
     }
 
-    public void setMovies(List<? extends TVEntity> movies) {
+    public void setMovies(List<TVEntity> movies) {
         this.movies = movies;
     }
 

@@ -12,9 +12,7 @@ import android.view.ViewGroup
 import movies.test.softserve.movies.R
 import movies.test.softserve.movies.adapter.MovieListWrapper
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter
-import movies.test.softserve.movies.entity.Movie
 import movies.test.softserve.movies.entity.TVEntity
-import movies.test.softserve.movies.entity.TVShow
 import movies.test.softserve.movies.event.OnListOfTVShowsGetListener
 import movies.test.softserve.movies.repository.TVShowsRepository
 import movies.test.softserve.movies.service.DBHelperService
@@ -36,24 +34,16 @@ class TVShowFragment : Fragment() {
         view.layoutManager = LinearLayoutManager(view.context)
         view.adapter = MovieListWrapper(MovieRecyclerViewAdapter(repository.tvShows,
                 MovieRecyclerViewAdapter.OnMovieSelect { mov ->
-                    StartActivityClass.startTVShowDetailsActivity(activity, mov as TVShow)
+                    StartActivityClass.startDetailsActivity(activity, mov)
                 }, MovieRecyclerViewAdapter.OnFavouriteClick { movie ->
-            if (movie is Movie) {
-                if (helperService.toDoWithFavourite(movie)) {
-                    Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT)
-                            .show()
-                } else {
-                    buildAlertDialog(movie)
-                }
-            } else {
-                if (helperService.toDoWithFavourite(movie as TVShow)) {
-                    Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT)
-                            .show()
 
-                } else {
-                    buildAlertDialog(movie)
-                }
+            if (helperService.toDoWithFavourite(movie)) {
+                Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT)
+                        .show()
+            } else {
+                buildAlertDialog(movie)
             }
+
             view.adapter.notifyDataSetChanged()
         }),
                 MovieListWrapper.OnEndReachListener { repository.tryToGetTVShows() })
@@ -65,7 +55,7 @@ class TVShowFragment : Fragment() {
         mRecyclerView!!.adapter.notifyDataSetChanged()
         if (listener == null) {
             listener = object : OnListOfTVShowsGetListener {
-                override fun onListOfTVShowsGet(tvShows: List<TVShow>) {
+                override fun onListOfTVShowsGet() {
                     mRecyclerView!!.adapter.notifyDataSetChanged()
                 }
             }

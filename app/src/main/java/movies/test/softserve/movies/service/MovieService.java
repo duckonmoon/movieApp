@@ -172,7 +172,7 @@ public class MovieService {
                 for (OnListOfMoviesGetListener listener:
                      onListOfMoviesGetListeners) {
                     if (response.body()!=null && response.body().getMovies().size()>0) {
-                        listener.onListOfMoviesGetListener(response.body().getMovies());
+                        listener.onListOfMoviesGetListener(Mapper.mapFromMovieToTVEntity(response.body().getMovies()));
                     }
                 }
                 Log.w("i am here" , "" + response.body());

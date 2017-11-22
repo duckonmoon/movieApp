@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.fragment.AchievementsFragment;
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.fragment.SearchFragment;
@@ -31,7 +32,7 @@ import movies.test.softserve.movies.adapter.MovieListWrapper;
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
 import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.entity.Movie;
-import movies.test.softserve.movies.entity.TVEntity;
+import movies.test.softserve.movies.entity.ITV;
 import movies.test.softserve.movies.event.AddedItemsEvent;
 import movies.test.softserve.movies.fragment.GenreFragment;
 import movies.test.softserve.movies.fragment.MovieFragment;
@@ -88,12 +89,12 @@ public class MoviesListActivity extends AppCompatActivity
                 new MovieRecyclerViewAdapter.OnMovieSelect() {
                     @Override
                     public void OnMovieSelected(TVEntity mov) {
-                        StartActivityClass.startMovieDetailsActivity(MoviesListActivity.this, (Movie) mov);
+                        StartActivityClass.startDetailsActivity(MoviesListActivity.this, mov);
                     }
                 }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
             public void onFavouriteClick(final TVEntity mov) {
-                if (helperService.toDoWithFavourite((Movie) mov)) {
+                if (helperService.toDoWithFavourite(mov)) {
                     Snackbar.make(mRecyclerView, "Added to favourite",
                             Snackbar.LENGTH_LONG).show();
                     mRecyclerView.getAdapter().notifyDataSetChanged();

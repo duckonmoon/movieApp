@@ -18,12 +18,11 @@ import java.util.List;
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.adapter.MovieListWrapper;
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
-import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.TVEntity;
-import movies.test.softserve.movies.entity.TVShow;
 import movies.test.softserve.movies.event.OnListOfMoviesGetListener;
 import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
+import movies.test.softserve.movies.service.Mapper;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.service.StartActivityClass;
 import movies.test.softserve.movies.viewholder.MainViewHolder;
@@ -64,26 +63,18 @@ public class SearchActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(new MovieListWrapper(new MovieRecyclerViewAdapter(mPageViewModel.getList(), new MovieRecyclerViewAdapter.OnMovieSelect() {
             @Override
             public void OnMovieSelected(TVEntity mov) {
-                StartActivityClass.startMovieDetailsActivity(SearchActivity.this, (Movie) mov);
+                StartActivityClass.startDetailsActivity(SearchActivity.this, mov);
             }
         }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
             public void onFavouriteClick(final TVEntity movie) {
-                if (movie instanceof Movie){
-                    if (helperService.toDoWithFavourite((Movie)movie)){
-                        Snackbar.make(mRecyclerView,"Added to favourite",Snackbar.LENGTH_SHORT)
-                                .show();
-                    }else{
-                        buildAlertDialog(movie);
-                    }
+                if (helperService.toDoWithFavourite(movie)) {
+                    Snackbar.make(mRecyclerView, "Added to favourite", Snackbar.LENGTH_SHORT)
+                            .show();
                 } else {
-                    if (helperService.toDoWithFavourite((TVShow)movie)){
-                        Snackbar.make(mRecyclerView,"Added to favourite",Snackbar.LENGTH_SHORT)
-                                .show();
-                    } else{
-                        buildAlertDialog(movie);
-                    }
+                    buildAlertDialog(movie);
                 }
+
                 mRecyclerView.getAdapter().notifyDataSetChanged();
             }
         }), new MovieListWrapper.OnEndReachListener() {
@@ -115,7 +106,7 @@ public class SearchActivity extends AppCompatActivity {
         if (onListOfMoviesGetListener == null) {
             onListOfMoviesGetListener = new OnListOfMoviesGetListener() {
                 @Override
-                public void onListOfMoviesGetListener(@NotNull List<? extends Movie> movies) {
+                public void onListOfMoviesGetListener(@NotNull List<? extends TVEntity> movies) {
                     if (movies.size() > 0) {
                         mPageViewModel.getList().addAll(movies);
                         mPageViewModel.setPage(mPageViewModel.getPage() + 1);
@@ -139,7 +130,7 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
-    private void buildAlertDialog(final TVEntity movie){
+    private void buildAlertDialog(final TVEntity movie) {
         new AlertDialog.Builder(SearchActivity.this)
                 .setMessage(R.string.delete_from_watched)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {

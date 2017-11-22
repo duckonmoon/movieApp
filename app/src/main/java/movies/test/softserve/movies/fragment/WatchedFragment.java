@@ -17,9 +17,7 @@ import java.util.List;
 
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
-import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.TVEntity;
-import movies.test.softserve.movies.entity.TVShow;
 import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.StartActivityClass;
@@ -56,33 +54,21 @@ public class WatchedFragment extends Fragment {
         mRecyclerView.setAdapter(new MovieRecyclerViewAdapter(listOfMovies, new MovieRecyclerViewAdapter.OnMovieSelect() {
             @Override
             public void OnMovieSelected(TVEntity mov) {
-                if (mov instanceof Movie) {
-                    StartActivityClass.startMovieDetailsActivity(getActivity(), (Movie) mov);
-                } else if (mov instanceof TVShow) {
-                    StartActivityClass.startTVShowDetailsActivity(getActivity(), (TVShow) mov);
-                }
+                StartActivityClass.startDetailsActivity(getActivity(), mov);
             }
         }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
             public void onFavouriteClick(TVEntity movie) {
-                if (movie instanceof Movie) {
-                    if (helperService.toDoWithFavourite((Movie) movie)) {
-                        Snackbar.make(mRecyclerView, "Added to favourite", Snackbar.LENGTH_SHORT)
-                                .show();
-                    } else {
-                        Snackbar.make(mRecyclerView, "Removed from favourite", Snackbar.LENGTH_SHORT)
-                                .show();
-                    }
+                if (helperService.toDoWithFavourite(movie)) {
+                    Snackbar.make(mRecyclerView, "Added to favourite", Snackbar.LENGTH_SHORT)
+                            .show();
                 } else {
-                    if (helperService.toDoWithFavourite((TVShow) movie)) {
-                        Snackbar.make(mRecyclerView, "Added to favourite", Snackbar.LENGTH_SHORT)
-                                .show();
-                    } else {
-                        Snackbar.make(mRecyclerView, "Removed from favourite", Snackbar.LENGTH_SHORT)
-                                .show();
-                    }
+                    Snackbar.make(mRecyclerView, "Removed from favourite", Snackbar.LENGTH_SHORT)
+                            .show();
+
+
+                    mRecyclerView.getAdapter().notifyDataSetChanged();
                 }
-                mRecyclerView.getAdapter().notifyDataSetChanged();
             }
         }));
         return view;

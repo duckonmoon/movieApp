@@ -6,7 +6,7 @@ import java.util.ArrayList
  * Created by rkrit on 10.11.17.
  */
 
-interface TVEntity {
+interface ITV {
     val id: Int?
     val posterPath: String?
     val voteAverage: Double?

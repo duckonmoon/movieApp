@@ -5,12 +5,15 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 
 import movies.test.softserve.movies.constans.Constants;
 import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.Page;
+import movies.test.softserve.movies.entity.TVEntity;
+import movies.test.softserve.movies.service.Mapper;
 import movies.test.softserve.movies.service.MoviesService;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -29,7 +32,7 @@ public class MoviesRepository extends Observable {
     private static MoviesRepository INSTANCE = null;
 
     private MoviesService service;
-    private List<Movie> movieList;
+    private List<TVEntity> movieList;
     private int numberOfRequests;
     private String message;
 
@@ -81,7 +84,7 @@ public class MoviesRepository extends Observable {
         call.enqueue(new Callback<Page>() {
             @Override
             public void onResponse(Call<Page> call, Response<Page> response) {
-                movieList = response.body().getMovies();
+                movieList = Mapper.mapFromMovieToTVEntity(response.body().getMovies());
                 MoviesRepository.this.setChanged();
                 MoviesRepository.this.notifyObservers();
             }
@@ -101,7 +104,7 @@ public class MoviesRepository extends Observable {
             call.enqueue(new Callback<Page>() {
                 @Override
                 public void onResponse(Call<Page> call, Response<Page> response) {
-                    movieList = response.body().getMovies();
+                    movieList = Mapper.mapFromMovieToTVEntity(response.body().getMovies());
                     MoviesRepository.this.setChanged();
                     MoviesRepository.this.notifyObservers();
                 }
@@ -124,7 +127,7 @@ public class MoviesRepository extends Observable {
         return message;
     }
 
-    public List<Movie> getMovieList() {
+    public List<TVEntity> getMovieList() {
         return movieList;
     }
 }

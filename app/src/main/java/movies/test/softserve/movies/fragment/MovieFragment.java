@@ -16,9 +16,7 @@ import java.util.List;
 
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
-import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.TVEntity;
-import movies.test.softserve.movies.entity.TVShow;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.StartActivityClass;
 
@@ -54,11 +52,7 @@ public class MovieFragment extends Fragment {
         mRecyclerView.setAdapter(new MovieRecyclerViewAdapter(listOfMovies, new MovieRecyclerViewAdapter.OnMovieSelect() {
             @Override
             public void OnMovieSelected(TVEntity mov) {
-                if (mov instanceof Movie) {
-                    StartActivityClass.startMovieDetailsActivity(getActivity(), (Movie) mov);
-                } else {
-                    StartActivityClass.startTVShowDetailsActivity(getActivity(), (TVShow) mov);
-                }
+                StartActivityClass.startDetailsActivity(getActivity(), mov);
             }
         }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override

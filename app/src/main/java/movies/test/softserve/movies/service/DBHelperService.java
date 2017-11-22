@@ -1,7 +1,6 @@
 package movies.test.softserve.movies.service;
 
-import movies.test.softserve.movies.entity.Movie;
-import movies.test.softserve.movies.entity.TVShow;
+import movies.test.softserve.movies.entity.TVEntity;
 
 /**
  * Created by rkrit on 21.11.17.
@@ -21,17 +20,26 @@ public class DBHelperService {
     }
 
 
-    public boolean toDoWithFavourite(Movie movie) {
+    public boolean toDoWithFavourite(TVEntity movie) {
         if (!service.checkIfIsFavourite(movie.getId())) {
             if (!service.checkIfExists(movie.getId())) {
-                service.insertMovieToFavourite(movie.getId(),
-                        movie.getTitle(),
-                        movie.getVoteAverage().floatValue(),
-                        movie.getVoteCount(),
-                        movie.getOverview(),
-                        movie.getReleaseDate(),
-                        movie.getPosterPath(),
-                        movie.getGenreIds());
+                if (movie.getType() == TVEntity.TYPE.MOVIE) {
+                    service.insertMovieToFavourite(movie.getId(),
+                            movie.getTitle(),
+                            movie.getVoteAverage().floatValue(),
+                            movie.getVoteCount(),
+                            movie.getOverview(),
+                            movie.getReleaseDate(),
+                            movie.getPosterPath(),
+                            movie.getGenreIds());
+                } else {
+                    service.insertTVShowToFavourite(movie.getId(),
+                            movie.getTitle(),
+                            movie.getVoteAverage().floatValue(),
+                            movie.getVoteCount(),
+                            movie.getOverview(),
+                            movie.getPosterPath());
+                }
             } else {
                 service.setFavourite(movie.getId());
             }
@@ -42,58 +50,29 @@ public class DBHelperService {
         }
     }
 
-    public Watched toDoWithWatched(Movie movie) {
+
+    public Watched toDoWithWatched(TVEntity movie) {
         if (!service.checkIfExists(movie.getId())) {
-            service.addMovieToDb(movie.getId(),
-                    movie.getTitle(),
-                    movie.getVoteAverage().floatValue(),
-                    movie.getVoteCount(),
-                    movie.getOverview(),
-                    movie.getReleaseDate(),
-                    movie.getPosterPath(),
-                    movie.getGenreIds()
-            );
+            if (movie.getType() == TVEntity.TYPE.MOVIE) {
+                service.addMovieToDb(movie.getId(),
+                        movie.getTitle(),
+                        movie.getVoteAverage().floatValue(),
+                        movie.getVoteCount(),
+                        movie.getOverview(),
+                        movie.getReleaseDate(),
+                        movie.getPosterPath(),
+                        movie.getGenreIds());
+            } else {
+                service.addTVShowToDb(movie.getId(),
+                        movie.getTitle(),
+                        movie.getVoteAverage().floatValue(),
+                        movie.getVoteCount(),
+                        movie.getOverview(),
+                        movie.getPosterPath());
+            }
             return Watched.WATCHED;
         } else {
             if (service.checkIfIsFavourite(movie.getId())) {
-                return Watched.FAVOURITE;
-            } else {
-                return Watched.CANCELED;
-            }
-        }
-    }
-
-    public boolean toDoWithFavourite(TVShow tvShow) {
-        if (!service.checkIfIsFavourite(tvShow.getId())) {
-            if (!service.checkIfExists(tvShow.getId())) {
-                service.insertTVShowToFavourite(tvShow.getId(),
-                        tvShow.getName(),
-                        tvShow.getVoteAverage().floatValue(),
-                        tvShow.getVoteCount(),
-                        tvShow.getOverview(),
-                        tvShow.getPosterPath());
-            } else {
-                service.setFavourite(tvShow.getId());
-            }
-            return true;
-        } else {
-            service.cancelFavourite(tvShow.getId());
-            return false;
-        }
-    }
-
-    public Watched toDoWithWatched(TVShow tvShow) {
-        if (!service.checkIfExists(tvShow.getId())) {
-            service.addTVShowToDb(tvShow.getId(),
-                    tvShow.getTitle(),
-                    tvShow.getVoteAverage().floatValue(),
-                    tvShow.getVoteCount(),
-                    tvShow.getOverview(),
-                    tvShow.getPosterPath()
-            );
-            return Watched.WATCHED;
-        } else {
-            if (service.checkIfIsFavourite(tvShow.getId())) {
                 return Watched.FAVOURITE;
             } else {
                 return Watched.CANCELED;

@@ -11,9 +11,7 @@ import java.util.List;
 import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.db.entity.MovieDbEntities.GenreEntry;
 import movies.test.softserve.movies.db.entity.MovieDbEntities.MovieEntry;
-import movies.test.softserve.movies.entity.Genre;
-import movies.test.softserve.movies.entity.Movie;
-import movies.test.softserve.movies.entity.TVShow;
+import movies.test.softserve.movies.entity.TVEntity;
 
 /**
  * Created by rkrit on 27.10.17.
@@ -150,14 +148,14 @@ public class DBMovieService {
     }
 
     public boolean deleteFromDb(Integer id) {
-        Movie movie = getMovieByID(id);
+        TVEntity movie = getMovieByID(id);
         ratingService.change(movie.getVoteAverage().floatValue(),RatingService.SUB);
         database.delete(GenreEntry.TABLE_NAME, GenreEntry.COLUMN_NAME_MOVIE_ID + " = " + id, null);
         return database.delete(MovieEntry.TABLE_NAME, MovieEntry._ID + " = " + id, null) > 0;
     }
 
-    public List<Movie> getAllMovies() {
-        ArrayList<Movie> movieArrayList = new ArrayList<>();
+    public List<TVEntity> getAllMovies() {
+        ArrayList<TVEntity> movieArrayList = new ArrayList<>();
         String[] projection = {
                 MovieEntry._ID,
                 MovieEntry.COLUMN_NAME_VOTE_COUNT,
@@ -180,7 +178,7 @@ public class DBMovieService {
                 null
         );
         while (cursor.moveToNext()) {
-            Movie movie = new Movie();
+            TVEntity movie = new TVEntity();
             movie.setId(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry._ID)));
             movie.setVoteCount(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_COUNT)));
             movie.setPosterPath(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_IMAGE)));
@@ -194,8 +192,8 @@ public class DBMovieService {
         return movieArrayList;
     }
 
-    public List<Movie> getFavouriteMovies() {
-        ArrayList<Movie> movieArrayList = new ArrayList<>();
+    public List<TVEntity> getFavouriteMovies() {
+        ArrayList<TVEntity> movieArrayList = new ArrayList<>();
         String[] projection = {
                 MovieEntry._ID,
                 MovieEntry.COLUMN_NAME_VOTE_COUNT,
@@ -217,7 +215,7 @@ public class DBMovieService {
                 null
         );
         while (cursor.moveToNext()) {
-            Movie movie = new Movie();
+            TVEntity movie = new TVEntity();
             movie.setId(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry._ID)));
             movie.setVoteCount(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_COUNT)));
             movie.setPosterPath(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_IMAGE)));
@@ -233,7 +231,7 @@ public class DBMovieService {
 
     }
 
-    public Movie getMovieByID(Integer id) {
+    public TVEntity getMovieByID(Integer id) {
         String[] projection = {
                 MovieEntry._ID,
                 MovieEntry.COLUMN_NAME_VOTE_COUNT,
@@ -254,7 +252,7 @@ public class DBMovieService {
                 null,
                 null
         );
-        Movie movie = new Movie();
+        TVEntity movie = new TVEntity();
         if (cursor.moveToNext()) {
             movie.setId(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry._ID)));
             movie.setVoteCount(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_COUNT)));
@@ -268,8 +266,8 @@ public class DBMovieService {
         return movie;
     }
 
-    public List<TVShow> getAllTVShows() {
-        ArrayList<TVShow> movieArrayList = new ArrayList<>();
+    public List<TVEntity> getAllTVShows() {
+        ArrayList<TVEntity> movieArrayList = new ArrayList<>();
         String[] projection = {
                 MovieEntry._ID,
                 MovieEntry.COLUMN_NAME_VOTE_COUNT,
@@ -292,12 +290,12 @@ public class DBMovieService {
                 null
         );
         while (cursor.moveToNext()) {
-            TVShow movie = new TVShow();
+            TVEntity movie = new TVEntity();
             movie.setId(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry._ID)));
             movie.setVoteCount(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_COUNT)));
             movie.setPosterPath(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_IMAGE)));
             movie.setOverview(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_OVERVIEW)));
-            movie.setName(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
+            movie.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
             movie.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
             movieArrayList.add(movie);
         }
@@ -305,8 +303,8 @@ public class DBMovieService {
         return movieArrayList;
     }
 
-    public List<TVShow> getFavouriteTVShows() {
-        ArrayList<TVShow> movieArrayList = new ArrayList<>();
+    public List<TVEntity> getFavouriteTVShows() {
+        ArrayList<TVEntity> movieArrayList = new ArrayList<>();
         String[] projection = {
                 MovieEntry._ID,
                 MovieEntry.COLUMN_NAME_VOTE_COUNT,
@@ -328,12 +326,12 @@ public class DBMovieService {
                 null
         );
         while (cursor.moveToNext()) {
-            TVShow tvShow = new TVShow();
+            TVEntity tvShow = new TVEntity();
             tvShow.setId(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry._ID)));
             tvShow.setVoteCount(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_COUNT)));
             tvShow.setPosterPath(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_IMAGE)));
             tvShow.setOverview(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_OVERVIEW)));
-            tvShow.setName(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
+            tvShow.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
             tvShow.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
             movieArrayList.add(tvShow);
         }
@@ -342,7 +340,7 @@ public class DBMovieService {
 
     }
 
-    public TVShow getFavouriteTVShowByID(Integer id) {
+    public TVEntity getFavouriteTVShowByID(Integer id) {
         String[] projection = {
                 MovieEntry._ID,
                 MovieEntry.COLUMN_NAME_VOTE_COUNT,
@@ -363,13 +361,13 @@ public class DBMovieService {
                 null,
                 null
         );
-        TVShow tvShow = new TVShow();
+        TVEntity tvShow = new TVEntity();
         if (cursor.moveToNext()) {
             tvShow.setId(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry._ID)));
             tvShow.setVoteCount(cursor.getInt(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_COUNT)));
             tvShow.setPosterPath(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_IMAGE)));
             tvShow.setOverview(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_OVERVIEW)));
-            tvShow.setName(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
+            tvShow.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
             tvShow.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
         }
         cursor.close();

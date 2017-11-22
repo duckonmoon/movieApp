@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +14,13 @@ import movies.test.softserve.movies.entity.Code;
 import movies.test.softserve.movies.entity.FullTVShow;
 import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.Rating;
+import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.entity.TVPage;
-import movies.test.softserve.movies.entity.TVShow;
 import movies.test.softserve.movies.entity.VideoContainer;
 import movies.test.softserve.movies.event.OnFullTVShowGetListener;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnListOfTVShowsGetListener;
+import movies.test.softserve.movies.service.Mapper;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.service.TVShowsService;
 import retrofit2.Call;
@@ -38,7 +38,7 @@ public class TVShowsRepository {
     private static TVShowsRepository INSTANCE;
 
     private int page = 1;
-    private List<TVShow> tvShows;
+    private List<TVEntity> tvShows;
 
     private TVShowsService service;
 
@@ -79,11 +79,11 @@ public class TVShowsRepository {
             public void onResponse(Call<TVPage> call, Response<TVPage> response) {
                 if (response.body() != null) {
                     Log.w("Success", response.body().toString());
-                    tvShows.addAll(response.body().getResults());
+                    tvShows.addAll(Mapper.mapFromTVShowToTVEntity(response.body().getResults()));
                     page++;
                     for (OnListOfTVShowsGetListener listener :
                             listOfTVShowsGetListeners) {
-                        listener.onListOfTVShowsGet(response.body().getResults());
+                        listener.onListOfTVShowsGet();
                     }
                 }
             }
@@ -100,7 +100,6 @@ public class TVShowsRepository {
         call.enqueue(new Callback<FullTVShow>() {
             @Override
             public void onResponse(Call<FullTVShow> call, Response<FullTVShow> response) {
-                Log.w("Success", response.body().toString());
                 if (response.body() != null) {
                     for (OnFullTVShowGetListener listener :
                             onFullTVShowGetListeners) {
@@ -163,7 +162,7 @@ public class TVShowsRepository {
     }
 
 
-    public List<TVShow> getTvShows() {
+    public List<TVEntity> getTvShows() {
         return tvShows;
     }
 

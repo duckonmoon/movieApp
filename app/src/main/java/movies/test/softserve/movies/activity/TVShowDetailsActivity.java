@@ -38,7 +38,7 @@ import com.squareup.picasso.Target;
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.entity.FullTVShow;
 import movies.test.softserve.movies.entity.Season;
-import movies.test.softserve.movies.entity.TVShow;
+import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.event.OnFullTVShowGetListener;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.repository.TVShowsRepository;
@@ -58,7 +58,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     public final static String POSTER_PATH = "poster path";
     public final static String OVERVIEW = "overview";
 
-    private TVShow tvShow;
+    private TVEntity tvShow;
     private FullTVSeriesViewModel viewModel;
 
     private DBHelperService helperService = new DBHelperService();
@@ -165,12 +165,14 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
     private void useIntentInfo() {
         toolbarLayout = findViewById(R.id.toolbar_layout);
-        toolbarLayout.setTitle(tvShow.getName());
+        toolbarLayout.setTitle(tvShow.getTitle());
         ratingBar = findViewById(R.id.ratingBar);
         toolbarLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                zoomImageFromThumb(v, mBitmapDrawable.getBitmap());
+                if (mBitmapDrawable!=null) {
+                    zoomImageFromThumb(v, mBitmapDrawable.getBitmap());
+                }
             }
         });
         ratingBar.setRating(tvShow.getVoteAverage().floatValue() / 2);
@@ -199,7 +201,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
-                        .setQuote(tvShow.getName() + "     \r\nPlot: " + tvShow.
+                        .setQuote(tvShow.getTitle() + "     \r\nPlot: " + tvShow.
                                 getOverview())
                         .setContentUrl(Uri.parse("https://image.tmdb.org/t/p/w500" + tvShow.
                                 getPosterPath()))
@@ -232,9 +234,9 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
     private void getIntentInfo() {
         if (getIntent() != null && tvShow == null) {
-            tvShow = new TVShow();
+            tvShow = new TVEntity();
             tvShow.setId(getIntent().getExtras().getInt(ID));
-            tvShow.setName(getIntent().getExtras().getString(NAME));
+            tvShow.setTitle(getIntent().getExtras().getString(NAME));
             tvShow.setVoteAverage(getIntent().getExtras().getDouble(VOTE_AVERAGE));
             tvShow.setVoteCount(getIntent().getExtras().getInt(VOTE_COUNT));
             tvShow.setPosterPath(getIntent().getExtras().getString(POSTER_PATH));
@@ -246,6 +248,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 switch (helperService.toDoWithWatched(tvShow)) {
                     case WATCHED:
+                        watched.setImageResource(R.mipmap.checked);
                         Snackbar.make(findViewById(R.id.nested_scroll_view), "Added to watched", Snackbar.LENGTH_SHORT).show();
                         break;
                     case FAVOURITE:

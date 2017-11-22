@@ -51,12 +51,7 @@ import movies.test.softserve.movies.viewmodel.FullTVSeriesViewModel;
  */
 
 public class TVShowDetailsActivity extends AppCompatActivity {
-    public final static String ID = "id";
-    public final static String NAME = "name";
-    public final static String VOTE_AVERAGE = "vote average";
-    public final static String VOTE_COUNT = "vote count";
-    public final static String POSTER_PATH = "poster path";
-    public final static String OVERVIEW = "overview";
+    public static final String TV_ENTITY = "tv entity";
 
     private TVEntity tvShow;
     private FullTVSeriesViewModel viewModel;
@@ -234,13 +229,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
     private void getIntentInfo() {
         if (getIntent() != null && tvShow == null) {
-            tvShow = new TVEntity();
-            tvShow.setId(getIntent().getExtras().getInt(ID));
-            tvShow.setTitle(getIntent().getExtras().getString(NAME));
-            tvShow.setVoteAverage(getIntent().getExtras().getDouble(VOTE_AVERAGE));
-            tvShow.setVoteCount(getIntent().getExtras().getInt(VOTE_COUNT));
-            tvShow.setPosterPath(getIntent().getExtras().getString(POSTER_PATH));
-            tvShow.setOverview(getIntent().getExtras().getString(OVERVIEW));
+            tvShow = (TVEntity) getIntent().getExtras().getSerializable(TV_ENTITY);
         }
         watched.setImageResource((dbService.checkIfExists(tvShow.getId())) ? R.mipmap.checked : R.mipmap.not_checked);
         watched.setOnClickListener(new View.OnClickListener() {

@@ -186,6 +186,7 @@ public class DBMovieService {
             movie.setReleaseDate(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_RELEASE_DATE)));
             movie.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
             movie.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
+            movie.setType(TVEntity.TYPE.MOVIE);
             movieArrayList.add(movie);
         }
         cursor.close();
@@ -224,6 +225,7 @@ public class DBMovieService {
             movie.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
             movie.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
             movie.setGenreIds(getMovieGenres(movie.getId()));
+            movie.setType(TVEntity.TYPE.MOVIE);
             movieArrayList.add(movie);
         }
         cursor.close();
@@ -261,6 +263,7 @@ public class DBMovieService {
             movie.setReleaseDate(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_RELEASE_DATE)));
             movie.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
             movie.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
+            movie.setType(TVEntity.TYPE.MOVIE);
         }
         cursor.close();
         return movie;
@@ -297,6 +300,7 @@ public class DBMovieService {
             movie.setOverview(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_OVERVIEW)));
             movie.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
             movie.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
+            movie.setType(TVEntity.TYPE.TV_SHOW);
             movieArrayList.add(movie);
         }
         cursor.close();
@@ -333,6 +337,7 @@ public class DBMovieService {
             tvShow.setOverview(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_OVERVIEW)));
             tvShow.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
             tvShow.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
+            tvShow.setType(TVEntity.TYPE.TV_SHOW);
             movieArrayList.add(tvShow);
         }
         cursor.close();
@@ -369,6 +374,7 @@ public class DBMovieService {
             tvShow.setOverview(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_OVERVIEW)));
             tvShow.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_TITLE)));
             tvShow.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
+            tvShow.setType(TVEntity.TYPE.TV_SHOW);
         }
         cursor.close();
         return tvShow;

@@ -53,14 +53,7 @@ import movies.test.softserve.movies.viewmodel.FullMovieViewModel;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
-    public static final String ID = "id";
-    public static final String TITLE = "title";
-    public static final String RELEASE_DATE = "release date";
-    public static final String VOTE_AVERAGE = "vote average";
-    public static final String VOTE_COUNT = "vote count";
-    public static final String POSTER_PATH = "poster path";
-    public static final String OVERVIEW = "overview";
-    public static final String GENRES = "genres";
+    public static final String TV_ENTITY = "tv entity";
 
     private MovieService service = MovieService.getInstance();
     private DBMovieService dbService = DBMovieService.getInstance();
@@ -294,16 +287,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private void getIntentInfo() {
         Intent intent = getIntent();
         if (intent != null) {
-            movie = new TVEntity();
-            Bundle bundle = intent.getExtras();
-            movie.setId(bundle.getInt(ID));
-            movie.setTitle(bundle.getString(TITLE));
-            movie.setReleaseDate(bundle.getString(RELEASE_DATE));
-            movie.setVoteAverage(bundle.getDouble(VOTE_AVERAGE));
-            movie.setVoteCount(bundle.getInt(VOTE_COUNT));
-            movie.setPosterPath(bundle.getString(POSTER_PATH));
-            movie.setOverview(bundle.getString(OVERVIEW));
-            movie.setGenreIds(bundle.getIntegerArrayList(GENRES));
+            movie = (TVEntity) intent.getExtras().getSerializable(TV_ENTITY);
             Picasso
                     .with(this)
                     .load("https://image.tmdb.org/t/p/w500" + movie.getPosterPath())

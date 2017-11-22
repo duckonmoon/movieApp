@@ -24,23 +24,11 @@ public class StartActivityClass {
     public static void startDetailsActivity(Activity activity, TVEntity movie){
         if (movie.getType() == TVEntity.TYPE.MOVIE){
             Intent intent = new Intent(activity, MovieDetailsActivity.class);
-            intent.putExtra(MovieDetailsActivity.ID, movie.getId());
-            intent.putExtra(MovieDetailsActivity.TITLE, movie.getTitle());
-            intent.putExtra(MovieDetailsActivity.POSTER_PATH, movie.getPosterPath());
-            intent.putExtra(MovieDetailsActivity.RELEASE_DATE, movie.getReleaseDate());
-            intent.putExtra(MovieDetailsActivity.VOTE_COUNT, movie.getVoteCount());
-            intent.putExtra(MovieDetailsActivity.VOTE_AVERAGE, movie.getVoteAverage());
-            intent.putExtra(MovieDetailsActivity.OVERVIEW, movie.getOverview());
-            intent.putExtra(MovieDetailsActivity.GENRES, (ArrayList) movie.getGenreIds());
+            intent.putExtra(MovieDetailsActivity.TV_ENTITY,movie);
             activity.startActivity(intent);
         } else {
             Intent intent = new Intent(activity, TVShowDetailsActivity.class);
-            intent.putExtra(TVShowDetailsActivity.ID, movie.getId());
-            intent.putExtra(TVShowDetailsActivity.NAME, movie.getTitle());
-            intent.putExtra(TVShowDetailsActivity.POSTER_PATH, movie.getPosterPath());
-            intent.putExtra(TVShowDetailsActivity.VOTE_COUNT, movie.getVoteCount());
-            intent.putExtra(TVShowDetailsActivity.VOTE_AVERAGE, movie.getVoteAverage());
-            intent.putExtra(TVShowDetailsActivity.OVERVIEW, movie.getOverview());
+            intent.putExtra(TVShowDetailsActivity.TV_ENTITY,movie);
             activity.startActivity(intent);
         }
     }

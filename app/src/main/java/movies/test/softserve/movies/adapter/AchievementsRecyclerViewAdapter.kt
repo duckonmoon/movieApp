@@ -11,7 +11,7 @@ import movies.test.softserve.movies.R
 import movies.test.softserve.movies.entity.Achievement
 import movies.test.softserve.movies.service.AchievementService
 
-class MyAchievementsRecyclerViewAdapter(private val mValues: List<Achievement>) : RecyclerView.Adapter<MyAchievementsRecyclerViewAdapter.ViewHolder>() {
+class AchievementsRecyclerViewAdapter(private val mValues: List<Achievement>) : RecyclerView.Adapter<AchievementsRecyclerViewAdapter.ViewHolder>() {
 
     companion object {
         val VISIBLE = 1f
@@ -31,23 +31,17 @@ class MyAchievementsRecyclerViewAdapter(private val mValues: List<Achievement>) 
         holder.mImageView.setImageResource(mValues[position].resourceId)
 
 
-        if (AchievementService().getAchievementStatus(mValues[position])){
+        if (AchievementService().getAchievementStatus(mValues[position])) {
             holder.mImageView.alpha = VISIBLE
-        }else{
+        } else {
             holder.mImageView.alpha = INVISIBLE
-        }
-
-
-
-        holder.mView.setOnClickListener {
-
         }
     }
 
     override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mImageView : ImageView = mView.findViewById(R.id.imageV)
+        val mImageView: ImageView = mView.findViewById(R.id.imageV)
         val mIdView: TextView = mView.findViewById<View>(R.id.id) as TextView
         val mContentView: TextView = mView.findViewById<View>(R.id.content) as TextView
         var mItem: Achievement? = null

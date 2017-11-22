@@ -16,8 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import movies.test.softserve.movies.R;
-import movies.test.softserve.movies.adapter.MyMovieListWrapper;
-import movies.test.softserve.movies.adapter.MyMovieRecyclerViewAdapter;
+import movies.test.softserve.movies.adapter.MovieListWrapper;
+import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.entity.TVShow;
@@ -61,30 +61,32 @@ public class SearchActivity extends AppCompatActivity {
         mPageViewModel = ViewModelProviders.of(this).get(PageViewModel.class);
         mRecyclerView = findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(new MyMovieListWrapper(new MyMovieRecyclerViewAdapter(mPageViewModel.getList(), new MyMovieRecyclerViewAdapter.OnMovieSelect() {
+        mRecyclerView.setAdapter(new MovieListWrapper(new MovieRecyclerViewAdapter(mPageViewModel.getList(), new MovieRecyclerViewAdapter.OnMovieSelect() {
             @Override
             public void OnMovieSelected(TVEntity mov) {
                 StartActivityClass.startMovieDetailsActivity(SearchActivity.this, (Movie) mov);
             }
-        }, new MyMovieRecyclerViewAdapter.OnFavouriteClick() {
+        }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
             public void onFavouriteClick(final TVEntity movie) {
                 if (movie instanceof Movie){
                     if (helperService.toDoWithFavourite((Movie)movie)){
-                        Snackbar.make(mRecyclerView,"Added to favourite",Snackbar.LENGTH_SHORT);
+                        Snackbar.make(mRecyclerView,"Added to favourite",Snackbar.LENGTH_SHORT)
+                                .show();
                     }else{
                         buildAlertDialog(movie);
                     }
                 } else {
                     if (helperService.toDoWithFavourite((TVShow)movie)){
-                        Snackbar.make(mRecyclerView,"Added to favourite",Snackbar.LENGTH_SHORT);
+                        Snackbar.make(mRecyclerView,"Added to favourite",Snackbar.LENGTH_SHORT)
+                                .show();
                     } else{
                         buildAlertDialog(movie);
                     }
                 }
                 mRecyclerView.getAdapter().notifyDataSetChanged();
             }
-        }), new MyMovieListWrapper.OnEndReachListener() {
+        }), new MovieListWrapper.OnEndReachListener() {
             @Override
             public void onEndReach(MainViewHolder mainViewHolder) {
                 switch (getIntent().getStringExtra(SEARCH_PARAM)) {

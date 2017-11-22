@@ -2,7 +2,6 @@ package movies.test.softserve.movies.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
@@ -28,12 +27,11 @@ import android.widget.ProgressBar;
 import movies.test.softserve.movies.fragment.AchievementsFragment;
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.fragment.SearchFragment;
-import movies.test.softserve.movies.adapter.MyMovieListWrapper;
-import movies.test.softserve.movies.adapter.MyMovieRecyclerViewAdapter;
+import movies.test.softserve.movies.adapter.MovieListWrapper;
+import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
 import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.TVEntity;
-import movies.test.softserve.movies.entity.TVShow;
 import movies.test.softserve.movies.event.AddedItemsEvent;
 import movies.test.softserve.movies.fragment.GenreFragment;
 import movies.test.softserve.movies.fragment.MovieFragment;
@@ -41,7 +39,6 @@ import movies.test.softserve.movies.fragment.TVShowFragment;
 import movies.test.softserve.movies.fragment.WatchedFragment;
 import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
-import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.service.RatingService;
 import movies.test.softserve.movies.service.StartActivityClass;
 import movies.test.softserve.movies.viewholder.MainViewHolder;
@@ -87,13 +84,13 @@ public class MoviesListActivity extends AppCompatActivity
         mRecyclerView = findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mRecyclerView.setAdapter(new MyMovieListWrapper(new MyMovieRecyclerViewAdapter(mainController.getMovies(),
-                new MyMovieRecyclerViewAdapter.OnMovieSelect() {
+        mRecyclerView.setAdapter(new MovieListWrapper(new MovieRecyclerViewAdapter(mainController.getMovies(),
+                new MovieRecyclerViewAdapter.OnMovieSelect() {
                     @Override
                     public void OnMovieSelected(TVEntity mov) {
                         StartActivityClass.startMovieDetailsActivity(MoviesListActivity.this, (Movie) mov);
                     }
-                }, new MyMovieRecyclerViewAdapter.OnFavouriteClick() {
+                }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
             public void onFavouriteClick(final TVEntity mov) {
                 if (helperService.toDoWithFavourite((Movie) mov)) {
@@ -122,10 +119,10 @@ public class MoviesListActivity extends AppCompatActivity
                             .show();
                 }
             }
-        }), new MyMovieListWrapper.OnEndReachListener() {
+        }), new MovieListWrapper.OnEndReachListener() {
             @Override
             public void onEndReach(MainViewHolder mholder) {
-                final MyMovieListWrapper.ViewHolder holder = (MyMovieListWrapper.ViewHolder) mholder;
+                final MovieListWrapper.ViewHolder holder = (MovieListWrapper.ViewHolder) mholder;
                 if (errorMessage == null) {
                     mainController.requestMore();
                 } else {

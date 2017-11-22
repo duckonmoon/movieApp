@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import movies.test.softserve.movies.R;
-import movies.test.softserve.movies.adapter.MyMovieRecyclerViewAdapter;
+import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.entity.TVShow;
@@ -28,6 +28,8 @@ public class MovieFragment extends Fragment {
     private static final String BUNDLE_RECYCLER_LAYOUT = "fragment.recycler.layout";
 
     private RecyclerView mRecyclerView;
+
+    private DBMovieService dbService = DBMovieService.getInstance();
 
     public MovieFragment() {
 
@@ -43,29 +45,27 @@ public class MovieFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
 
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            mRecyclerView = (RecyclerView) view;
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            List<TVEntity> listOfMovies = new ArrayList<>();
-            listOfMovies.addAll(DBMovieService.getInstance().getFavouriteMovies());
-            listOfMovies.addAll(DBMovieService.getInstance().getFavouriteTVShows());
-            mRecyclerView.setAdapter(new MyMovieRecyclerViewAdapter(listOfMovies, new MyMovieRecyclerViewAdapter.OnMovieSelect() {
-                @Override
-                public void OnMovieSelected(TVEntity mov) {
-                    if (mov instanceof Movie) {
-                        StartActivityClass.startMovieDetailsActivity(getActivity(),(Movie) mov);
-                    } else if (mov instanceof TVShow) {
-                        StartActivityClass.startTVShowDetailsActivity(getActivity(),(TVShow) mov);
-                    }
+        Context context = view.getContext();
+        mRecyclerView = (RecyclerView) view;
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        List<TVEntity> listOfMovies = new ArrayList<>();
+        listOfMovies.addAll(dbService.getFavouriteMovies());
+        listOfMovies.addAll(dbService.getFavouriteTVShows());
+        mRecyclerView.setAdapter(new MovieRecyclerViewAdapter(listOfMovies, new MovieRecyclerViewAdapter.OnMovieSelect() {
+            @Override
+            public void OnMovieSelected(TVEntity mov) {
+                if (mov instanceof Movie) {
+                    StartActivityClass.startMovieDetailsActivity(getActivity(), (Movie) mov);
+                } else {
+                    StartActivityClass.startTVShowDetailsActivity(getActivity(), (TVShow) mov);
                 }
-            }, new MyMovieRecyclerViewAdapter.OnFavouriteClick() {
-                @Override
-                public void onFavouriteClick(TVEntity movie) {
+            }
+        }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
+            @Override
+            public void onFavouriteClick(TVEntity movie) {
 
-                }
-            }));
-        }
+            }
+        }));
         return view;
     }
 
@@ -97,9 +97,9 @@ public class MovieFragment extends Fragment {
 
     private void setAdapter() {
         List<TVEntity> listOfMovies = new ArrayList<>();
-        listOfMovies.addAll(DBMovieService.getInstance().getFavouriteMovies());
-        listOfMovies.addAll(DBMovieService.getInstance().getFavouriteTVShows());
-        ((MyMovieRecyclerViewAdapter) mRecyclerView.getAdapter()).setMovies(listOfMovies);
+        listOfMovies.addAll(dbService.getFavouriteMovies());
+        listOfMovies.addAll(dbService.getFavouriteTVShows());
+        ((MovieRecyclerViewAdapter) mRecyclerView.getAdapter()).setMovies(listOfMovies);
         mRecyclerView.getAdapter().notifyDataSetChanged();
 
 

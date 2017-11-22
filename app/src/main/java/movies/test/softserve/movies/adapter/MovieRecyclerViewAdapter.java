@@ -17,14 +17,14 @@ import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.viewholder.MainViewHolder;
 
-public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolder> {
+public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolder> {
 
     private List<? extends TVEntity> movies;
     private OnMovieSelect event;
     private OnFavouriteClick favouriteClick;
 
 
-    public MyMovieRecyclerViewAdapter(List<? extends TVEntity> items, @NonNull OnMovieSelect onMovieSelect, @NonNull OnFavouriteClick onFavouriteClick) {
+    public MovieRecyclerViewAdapter(List<? extends TVEntity> items, @NonNull OnMovieSelect onMovieSelect, @NonNull OnFavouriteClick onFavouriteClick) {
         movies = items;
         event = onMovieSelect;
         favouriteClick = onFavouriteClick;
@@ -60,6 +60,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHol
                 favouriteClick.onFavouriteClick(movies.get(position));
             }
         });
+        //TODO
         Picasso
                 .with(holder.mImageView.getContext())
                 .load("https://image.tmdb.org/t/p/w500" + movies.get(position)

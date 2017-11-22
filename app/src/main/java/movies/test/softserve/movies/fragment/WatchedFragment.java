@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import movies.test.softserve.movies.R;
-import movies.test.softserve.movies.adapter.MyMovieRecyclerViewAdapter;
+import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.entity.TVShow;
+import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.StartActivityClass;
 
@@ -28,6 +30,9 @@ public class WatchedFragment extends Fragment {
     private static final String BUNDLE_RECYCLER_LAYOUT = "watch.fragment.recycler.layout";
 
     private RecyclerView mRecyclerView;
+
+    private DBMovieService dbService = DBMovieService.getInstance();
+    private DBHelperService helperService = new DBHelperService();
 
     public WatchedFragment() {
     }
@@ -42,29 +47,44 @@ public class WatchedFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_watched_movie_list, container, false);
 
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            mRecyclerView = (RecyclerView) view;
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            List< TVEntity > listOfMovies =  new ArrayList<>();
-            listOfMovies.addAll(DBMovieService.getInstance().getAllMovies());
-            listOfMovies.addAll(DBMovieService.getInstance().getAllTVShows());
-            mRecyclerView.setAdapter(new MyMovieRecyclerViewAdapter(listOfMovies, new MyMovieRecyclerViewAdapter.OnMovieSelect() {
-                @Override
-                public void OnMovieSelected(TVEntity mov) {
-                    if (mov instanceof Movie) {
-                        StartActivityClass.startMovieDetailsActivity(getActivity(),(Movie) mov);
-                    } else if (mov instanceof TVShow){
-                        StartActivityClass.startTVShowDetailsActivity(getActivity(),(TVShow) mov);
+        Context context = view.getContext();
+        mRecyclerView = (RecyclerView) view;
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        List<TVEntity> listOfMovies = new ArrayList<>();
+        listOfMovies.addAll(dbService.getAllMovies());
+        listOfMovies.addAll(dbService.getAllTVShows());
+        mRecyclerView.setAdapter(new MovieRecyclerViewAdapter(listOfMovies, new MovieRecyclerViewAdapter.OnMovieSelect() {
+            @Override
+            public void OnMovieSelected(TVEntity mov) {
+                if (mov instanceof Movie) {
+                    StartActivityClass.startMovieDetailsActivity(getActivity(), (Movie) mov);
+                } else if (mov instanceof TVShow) {
+                    StartActivityClass.startTVShowDetailsActivity(getActivity(), (TVShow) mov);
+                }
+            }
+        }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
+            @Override
+            public void onFavouriteClick(TVEntity movie) {
+                if (movie instanceof Movie) {
+                    if (helperService.toDoWithFavourite((Movie) movie)) {
+                        Snackbar.make(mRecyclerView, "Added to favourite", Snackbar.LENGTH_SHORT)
+                                .show();
+                    } else {
+                        Snackbar.make(mRecyclerView, "Removed from favourite", Snackbar.LENGTH_SHORT)
+                                .show();
+                    }
+                } else {
+                    if (helperService.toDoWithFavourite((TVShow) movie)) {
+                        Snackbar.make(mRecyclerView, "Added to favourite", Snackbar.LENGTH_SHORT)
+                                .show();
+                    } else {
+                        Snackbar.make(mRecyclerView, "Removed from favourite", Snackbar.LENGTH_SHORT)
+                                .show();
                     }
                 }
-            }, new MyMovieRecyclerViewAdapter.OnFavouriteClick() {
-                @Override
-                public void onFavouriteClick(TVEntity movie) {
-
-                }
-            }));
-        }
+                mRecyclerView.getAdapter().notifyDataSetChanged();
+            }
+        }));
         return view;
     }
 
@@ -95,10 +115,10 @@ public class WatchedFragment extends Fragment {
     }
 
     private void setAdapter() {
-        List< TVEntity > listOfMovies =  new ArrayList<>();
-        listOfMovies.addAll(DBMovieService.getInstance().getAllMovies());
-        listOfMovies.addAll(DBMovieService.getInstance().getAllTVShows());
-        ((MyMovieRecyclerViewAdapter) mRecyclerView.getAdapter()).setMovies(listOfMovies);
+        List<TVEntity> listOfMovies = new ArrayList<>();
+        listOfMovies.addAll(dbService.getAllMovies());
+        listOfMovies.addAll(dbService.getAllTVShows());
+        ((MovieRecyclerViewAdapter) mRecyclerView.getAdapter()).setMovies(listOfMovies);
         mRecyclerView.getAdapter().notifyDataSetChanged();
 
     }
@@ -108,5 +128,4 @@ public class WatchedFragment extends Fragment {
         super.onResume();
         setAdapter();
     }
-
 }

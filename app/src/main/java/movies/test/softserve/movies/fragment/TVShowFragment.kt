@@ -1,48 +1,62 @@
 package movies.test.softserve.movies.fragment
 
-import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import movies.test.softserve.movies.R
-import movies.test.softserve.movies.activity.TVShowDetailsActivity
-import movies.test.softserve.movies.adapter.MyMovieListWrapper
-import movies.test.softserve.movies.adapter.MyMovieRecyclerViewAdapter
+import movies.test.softserve.movies.adapter.MovieListWrapper
+import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter
+import movies.test.softserve.movies.entity.Movie
+import movies.test.softserve.movies.entity.TVEntity
 import movies.test.softserve.movies.entity.TVShow
 import movies.test.softserve.movies.event.OnListOfTVShowsGetListener
 import movies.test.softserve.movies.repository.TVShowsRepository
+import movies.test.softserve.movies.service.DBHelperService
+import movies.test.softserve.movies.service.DBMovieService
+import movies.test.softserve.movies.service.StartActivityClass
 
 class TVShowFragment : Fragment() {
 
     private var mRecyclerView: RecyclerView? = null
     private var repository: TVShowsRepository = TVShowsRepository.getInstance()
+    private var dbService: DBMovieService = DBMovieService.getInstance()
+    private var helperService: DBHelperService = DBHelperService()
     private var listener: OnListOfTVShowsGetListener? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_tvshow_list, container, false)
-        if (view is RecyclerView) {
-            val context = view.getContext()
-            view.layoutManager = LinearLayoutManager(context)
-            view.adapter = MyMovieListWrapper(MyMovieRecyclerViewAdapter(repository.tvShows,
-                    MyMovieRecyclerViewAdapter.OnMovieSelect { mov ->
-                        val tvShow = mov as TVShow
-                        val intent = Intent(activity, TVShowDetailsActivity::class.java)
-                        intent.putExtra(TVShowDetailsActivity.ID, tvShow.id)
-                        intent.putExtra(TVShowDetailsActivity.NAME, tvShow.title)
-                        intent.putExtra(TVShowDetailsActivity.POSTER_PATH, tvShow.posterPath)
-                        intent.putExtra(TVShowDetailsActivity.VOTE_COUNT, tvShow.voteCount)
-                        intent.putExtra(TVShowDetailsActivity.VOTE_AVERAGE, tvShow.voteAverage)
-                        intent.putExtra(TVShowDetailsActivity.OVERVIEW, tvShow.overview)
-                        startActivity(intent)
-                    }, MyMovieRecyclerViewAdapter.OnFavouriteClick { }),
-                    MyMovieListWrapper.OnEndReachListener { repository.tryToGetTVShows() })
-            mRecyclerView = view
-        }
+        mRecyclerView = view as RecyclerView
+        view.layoutManager = LinearLayoutManager(view.context)
+        view.adapter = MovieListWrapper(MovieRecyclerViewAdapter(repository.tvShows,
+                MovieRecyclerViewAdapter.OnMovieSelect { mov ->
+                    StartActivityClass.startTVShowDetailsActivity(activity, mov as TVShow)
+                }, MovieRecyclerViewAdapter.OnFavouriteClick { movie ->
+            if (movie is Movie) {
+                if (helperService.toDoWithFavourite(movie)) {
+                    Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT)
+                            .show()
+                } else {
+                    buildAlertDialog(movie)
+                }
+            } else {
+                if (helperService.toDoWithFavourite(movie as TVShow)) {
+                    Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT)
+                            .show()
+
+                } else {
+                    buildAlertDialog(movie)
+                }
+            }
+            view.adapter.notifyDataSetChanged()
+        }),
+                MovieListWrapper.OnEndReachListener { repository.tryToGetTVShows() })
         return view
     }
 
@@ -61,7 +75,27 @@ class TVShowFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        repository.removeOnListOfTVShowsGetListener(listener)
-        listener = null
+        if (listener != null) {
+            repository.removeOnListOfTVShowsGetListener(listener)
+            listener = null
+        }
+    }
+
+    private fun buildAlertDialog(movie: TVEntity) {
+        AlertDialog.Builder(activity)
+                .setMessage(R.string.delete_from_watched)
+                .setPositiveButton(R.string.yes) { _, _ ->
+                    dbService.deleteFromDb(movie.id)
+                    Snackbar.make(mRecyclerView!!, "Deleted from favourite",
+                            Snackbar.LENGTH_LONG).show()
+                    mRecyclerView!!.adapter.notifyDataSetChanged()
+                }
+                .setNegativeButton(R.string.no) { _, _ ->
+                    dbService.cancelFavourite(movie.id)
+                    Snackbar.make(mRecyclerView!!, "Deleted from favourite",
+                            Snackbar.LENGTH_LONG).show()
+                    mRecyclerView!!.adapter.notifyDataSetChanged()
+                }.create()
+                .show()
     }
 }

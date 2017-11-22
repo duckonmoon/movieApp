@@ -16,14 +16,14 @@ import movies.test.softserve.movies.viewholder.MainViewHolder;
  * Created by rkrit on 06.11.17.
  */
 
-public class MyMovieListWrapper extends RecyclerView.Adapter<MainViewHolder> {
+public class MovieListWrapper extends RecyclerView.Adapter<MainViewHolder> {
 
-    RecyclerView.Adapter<MainViewHolder> adapter;
-    OnEndReachListener mOnEndReachListener;
+    private RecyclerView.Adapter<MainViewHolder> adapter;
+    private OnEndReachListener mOnEndReachListener;
     private int VIEW_TYPE_CELL = 1;
     private int VIEW_TYPE_FOOTER = 0;
 
-    public MyMovieListWrapper(RecyclerView.Adapter<MainViewHolder> adapter,@NonNull OnEndReachListener onEndReachListener) {
+    public MovieListWrapper(RecyclerView.Adapter<MainViewHolder> adapter, @NonNull OnEndReachListener onEndReachListener) {
         this.adapter = adapter;
         mOnEndReachListener = onEndReachListener;
     }

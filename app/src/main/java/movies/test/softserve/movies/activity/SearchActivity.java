@@ -22,10 +22,8 @@ import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.event.OnListOfMoviesGetListener;
 import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
-import movies.test.softserve.movies.service.Mapper;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.service.StartActivityClass;
-import movies.test.softserve.movies.viewholder.MainViewHolder;
 import movies.test.softserve.movies.viewmodel.PageViewModel;
 
 public class SearchActivity extends AppCompatActivity {
@@ -79,7 +77,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         }), new MovieListWrapper.OnEndReachListener() {
             @Override
-            public void onEndReach(MainViewHolder mainViewHolder) {
+            public MovieListWrapper.State onEndReach() {
                 switch (getIntent().getStringExtra(SEARCH_PARAM)) {
                     case GENRES:
                         movieService.getMovieByGenreCompany(id, null, mPageViewModel.getPage());
@@ -93,6 +91,12 @@ public class SearchActivity extends AppCompatActivity {
                         Log.e("Smth went wrong", "Nothing selected");
                         break;
                 }
+                return MovieListWrapper.State.Loading;
+            }
+
+            @Override
+            public void onEndButtonClick() {
+
             }
         }));
 

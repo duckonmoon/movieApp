@@ -122,8 +122,8 @@ public class MoviesListActivity extends AppCompatActivity
             }
         }), new MovieListWrapper.OnEndReachListener() {
             @Override
-            public void onEndReach(MainViewHolder mholder) {
-                final MovieListWrapper.ViewHolder holder = (MovieListWrapper.ViewHolder) mholder;
+            public MovieListWrapper.State onEndReach() {
+               /* final MovieListWrapper.ViewHolder holder = (MovieListWrapper.ViewHolder) mholder;
                 if (errorMessage == null) {
                     mainController.requestMore();
                 } else {
@@ -137,7 +137,18 @@ public class MoviesListActivity extends AppCompatActivity
                             holder.mProgressBar.setVisibility(View.VISIBLE);
                         }
                     });
-                }
+                }*/
+               if (errorMessage==null){
+                   mainController.requestMore();
+                   return MovieListWrapper.State.Loading;
+               } else{
+                   return MovieListWrapper.State.Failed;
+               }
+            }
+
+            @Override
+            public void onEndButtonClick() {
+                mainController.requestMore();
             }
         }));
         viewModel = ViewModelProviders.of(this).get(FragmentViewModel.class);

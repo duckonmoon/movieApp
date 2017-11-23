@@ -46,7 +46,16 @@ class TVShowFragment : Fragment() {
 
             view.adapter.notifyDataSetChanged()
         }),
-                MovieListWrapper.OnEndReachListener { repository.tryToGetTVShows() })
+                object : MovieListWrapper.OnEndReachListener {
+                    override fun onEndReach(): MovieListWrapper.State {
+                        repository.tryToGetTVShows()
+                        return MovieListWrapper.State.Loading
+                    }
+
+                    override fun onEndButtonClick() {
+
+                    }
+                })
         return view
     }
 

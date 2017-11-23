@@ -15,7 +15,7 @@ import movies.test.softserve.movies.viewholder.MainViewHolder;
 /**
  * Created by rkrit on 06.11.17.
  */
-
+//TODO change wrapper on end reach dont let fragment know about holder
 public class MovieListWrapper extends RecyclerView.Adapter<MainViewHolder> {
 
     private RecyclerView.Adapter<MainViewHolder> adapter;
@@ -42,7 +42,24 @@ public class MovieListWrapper extends RecyclerView.Adapter<MainViewHolder> {
         if (position < adapter.getItemCount()) {
             adapter.onBindViewHolder(holder, position);
         } else {
-            mOnEndReachListener.onEndReach(holder);
+            if (getItemViewType(position) == VIEW_TYPE_FOOTER) {
+                final ViewHolder viewHolder = (ViewHolder) holder;
+                switch (mOnEndReachListener.onEndReach()) {
+                    case Loading:
+                        viewHolder.mProgressBar.setVisibility(View.VISIBLE);
+                        viewHolder.mButton.setVisibility(View.GONE);
+                        break;
+                    case Failed:
+                        viewHolder.bind();
+                        viewHolder.mProgressBar.setVisibility(View.GONE);
+                        viewHolder.mButton.setVisibility(View.VISIBLE);
+                        break;
+                    case end:
+                        viewHolder.mProgressBar.setVisibility(View.GONE);
+                        viewHolder.mButton.setVisibility(View.GONE);
+                        break;
+                }
+            }
         }
     }
 
@@ -62,13 +79,42 @@ public class MovieListWrapper extends RecyclerView.Adapter<MainViewHolder> {
         public ProgressBar mProgressBar;
 
         public ViewHolder(View view) {
-            super(view);
+            super(view, new Delegate() {
+                @Override
+                public void onMovieSelect(int position) {
+
+                }
+
+                @Override
+                public void onFavouriteClick(int position) {
+
+                }
+            });
             mProgressBar = itemView.findViewById(R.id.spinner);
             mButton = itemView.findViewById(R.id.error_button);
+        }
+
+        @Override
+        public void bind() {
+            mButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mButton.setVisibility(View.GONE);
+                    mOnEndReachListener.onEndButtonClick();
+                }
+            });
         }
     }
 
     public interface OnEndReachListener {
-        void onEndReach(MainViewHolder mainViewHolder);
+        State onEndReach();
+        void onEndButtonClick();
+    }
+
+    public enum State{
+        Loading,
+        Failed,
+        end
     }
 }

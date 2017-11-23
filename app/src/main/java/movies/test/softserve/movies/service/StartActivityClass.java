@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 
-import java.util.ArrayList;
-
 import movies.test.softserve.movies.activity.MovieDetailsActivity;
 import movies.test.softserve.movies.activity.SearchActivity;
 import movies.test.softserve.movies.activity.TVShowDetailsActivity;

@@ -80,27 +80,42 @@ class SearchFragment : Fragment() {
 
         view.list.layoutManager = LinearLayoutManager(context)
         view.list.adapter = MovieListWrapper(MovieRecyclerViewAdapter(list, MovieRecyclerViewAdapter.OnMovieSelect { mov ->
-            StartActivityClass.startDetailsActivity(activity,mov)
+            StartActivityClass.startDetailsActivity(activity, mov)
         }, MovieRecyclerViewAdapter.OnFavouriteClick { movie ->
-                if (helperService.toDoWithFavourite(movie)) {
-                    Snackbar.make(view.list, "Added to favourite", Snackbar.LENGTH_SHORT)
-                            .show()
-                } else {
-                    buildAlertDialog(movie, view.list)
-                }
+            if (helperService.toDoWithFavourite(movie)) {
+                Snackbar.make(view.list, "Added to favourite", Snackbar.LENGTH_SHORT)
+                        .show()
+            } else {
+                buildAlertDialog(movie, view.list)
+            }
             view.list.adapter.notifyDataSetChanged()
-    }), { v ->
-            if (v is MovieListWrapper.ViewHolder) {
-                v.mProgressBar.visibility = View.GONE
+        }), object :MovieListWrapper.OnEndReachListener {
+            override fun onEndButtonClick() {
+            }
+
+            override fun onEndReach(): MovieListWrapper.State {
                 if (list.size > 0 && message == null) {
-                    v.mProgressBar.visibility = View.VISIBLE
                     if (type == TYPE_MOVIE) {
                         movieRequest()
+                        return MovieListWrapper.State.Loading
                     } else {
                         tvShowRequest()
+                        return MovieListWrapper.State.Loading
                     }
                 }
+                return MovieListWrapper.State.end
             }
+            /*v.mProgressBar.visibility = View.GONE
+            if (list.size > 0 && message == null) {
+                v.mProgressBar.visibility = View.VISIBLE
+                if (type == TYPE_MOVIE) {
+                    movieRequest()
+                } else {
+                    tvShowRequest()
+                }
+            }*/
+
+
         })
         return view
     }

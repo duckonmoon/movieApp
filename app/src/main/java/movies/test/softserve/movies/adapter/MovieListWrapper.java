@@ -15,8 +15,7 @@ import movies.test.softserve.movies.viewholder.MainViewHolder;
 /**
  * Created by rkrit on 06.11.17.
  */
-//TODO change wrapper on end reach dont let fragment know about holder
-public class MovieListWrapper extends RecyclerView.Adapter<MainViewHolder> {
+public class MovieListWrapper extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private RecyclerView.Adapter<MainViewHolder> adapter;
     private OnEndReachListener mOnEndReachListener;
@@ -29,7 +28,7 @@ public class MovieListWrapper extends RecyclerView.Adapter<MainViewHolder> {
     }
 
     @Override
-    public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_CELL) {
             return adapter.onCreateViewHolder(parent, viewType);
         } else {
@@ -38,19 +37,19 @@ public class MovieListWrapper extends RecyclerView.Adapter<MainViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(MainViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder hold, int position) {
         if (position < adapter.getItemCount()) {
+            MainViewHolder holder = (MainViewHolder) hold;
             adapter.onBindViewHolder(holder, position);
         } else {
             if (getItemViewType(position) == VIEW_TYPE_FOOTER) {
-                final ViewHolder viewHolder = (ViewHolder) holder;
+                final ViewHolder viewHolder = (ViewHolder) hold;
                 switch (mOnEndReachListener.onEndReach()) {
                     case Loading:
                         viewHolder.mProgressBar.setVisibility(View.VISIBLE);
                         viewHolder.mButton.setVisibility(View.GONE);
                         break;
                     case Failed:
-                        viewHolder.bind();
                         viewHolder.mProgressBar.setVisibility(View.GONE);
                         viewHolder.mButton.setVisibility(View.VISIBLE);
                         break;
@@ -74,28 +73,14 @@ public class MovieListWrapper extends RecyclerView.Adapter<MainViewHolder> {
     }
 
 
-    public class ViewHolder extends MainViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public Button mButton;
         public ProgressBar mProgressBar;
 
         public ViewHolder(View view) {
-            super(view, new Delegate() {
-                @Override
-                public void onMovieSelect(int position) {
-
-                }
-
-                @Override
-                public void onFavouriteClick(int position) {
-
-                }
-            });
+            super(view);
             mProgressBar = itemView.findViewById(R.id.spinner);
             mButton = itemView.findViewById(R.id.error_button);
-        }
-
-        @Override
-        public void bind() {
             mButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

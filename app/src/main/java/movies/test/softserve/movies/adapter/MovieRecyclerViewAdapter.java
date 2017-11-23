@@ -37,7 +37,6 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolde
 
     @Override
     public void onBindViewHolder(final MainViewHolder holder, final int position) {
-        holder.bind();
         final TVEntity tvEntity = movies.get(position);
         holder.mTextView.setText("" + (1 + position) + ". " + tvEntity.getTitle() + "\n" + ((float) Math.round(tvEntity.getVoteAverage() * 10)) / 10
                 + "\n" + tvEntity.getVoteCount());

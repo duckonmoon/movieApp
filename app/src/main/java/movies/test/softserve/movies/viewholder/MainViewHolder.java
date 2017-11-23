@@ -1,6 +1,7 @@
 package movies.test.softserve.movies.viewholder;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,7 +15,6 @@ import movies.test.softserve.movies.R;
  */
 
 
-//TODO add listeners
 public class MainViewHolder extends RecyclerView.ViewHolder{
     public TextView mTextView;
     public ImageView mImageView;
@@ -31,15 +31,11 @@ public class MainViewHolder extends RecyclerView.ViewHolder{
 
     public MainViewHolder(View view, final Delegate delegate) {
         super(view);
-        mTextView = itemView.findViewById(R.id.description);
-        mImageView = itemView.findViewById(R.id.movie_image);
-        mRatingBar = itemView.findViewById(R.id.rating);
-        mFavourite = itemView.findViewById(R.id.favourite);
-        mViewGroup = itemView.findViewById(R.id.card_of_list);
-        this.delegate = delegate;
-    }
-
-    public void bind(){
+        mTextView = view.findViewById(R.id.description);
+        mImageView = view.findViewById(R.id.movie_image);
+        mRatingBar = view.findViewById(R.id.rating);
+        mFavourite = view.findViewById(R.id.lit_favourite);
+        mViewGroup = view.findViewById(R.id.card_of_list);
         mFavourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,10 +48,8 @@ public class MainViewHolder extends RecyclerView.ViewHolder{
                 delegate.onMovieSelect(getAdapterPosition());
             }
         });
+        this.delegate = delegate;
     }
-
-
-
 
     @Override
     public String toString() {

@@ -4,14 +4,13 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.service.StartActivityClass;
 import movies.test.softserve.movies.viewmodel.PageViewModel;
-
+//TODO change end
 public class SearchActivity extends AppCompatActivity {
 
     public static final String ID = "search_id";
@@ -35,17 +34,19 @@ public class SearchActivity extends AppCompatActivity {
     public static final String COMPANIES = "companies";
     public static final String COUNTRIES = "countries";
 
-    int id = -1;
+    private int id = -1;
 
-    RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
 
-    PageViewModel mPageViewModel;
+    private PageViewModel mPageViewModel;
 
-    DBHelperService helperService = new DBHelperService();
-    MovieService movieService = MovieService.getInstance();
-    DBMovieService dbService = DBMovieService.getInstance();
 
-    OnListOfMoviesGetListener onListOfMoviesGetListener;
+
+    private DBHelperService helperService = new DBHelperService();
+    private MovieService movieService = MovieService.getInstance();
+    private DBMovieService dbService = DBMovieService.getInstance();
+
+    private OnListOfMoviesGetListener onListOfMoviesGetListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +111,7 @@ public class SearchActivity extends AppCompatActivity {
         if (onListOfMoviesGetListener == null) {
             onListOfMoviesGetListener = new OnListOfMoviesGetListener() {
                 @Override
-                public void onListOfMoviesGetListener(@NotNull List<? extends TVEntity> movies) {
+                public void onListOfMoviesGetListener(@NonNull List<? extends TVEntity> movies) {
                     if (movies.size() > 0) {
                         mPageViewModel.getList().addAll(movies);
                         mPageViewModel.setPage(mPageViewModel.getPage() + 1);

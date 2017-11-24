@@ -24,6 +24,7 @@ import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.service.StartActivityClass;
 import movies.test.softserve.movies.viewmodel.PageViewModel;
+
 //TODO change end
 public class SearchActivity extends AppCompatActivity {
 
@@ -39,7 +40,6 @@ public class SearchActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
 
     private PageViewModel mPageViewModel;
-
 
 
     private DBHelperService helperService = new DBHelperService();

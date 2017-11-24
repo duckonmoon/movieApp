@@ -1,7 +1,6 @@
 package movies.test.softserve.movies.viewholder;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,7 +14,7 @@ import movies.test.softserve.movies.R;
  */
 
 
-public class MainViewHolder extends RecyclerView.ViewHolder{
+public class MainViewHolder extends RecyclerView.ViewHolder {
     public TextView mTextView;
     public ImageView mImageView;
     public RatingBar mRatingBar;
@@ -24,8 +23,9 @@ public class MainViewHolder extends RecyclerView.ViewHolder{
     public Delegate delegate;
 
 
-    public interface Delegate{
+    public interface Delegate {
         void onMovieSelect(int position);
+
         void onFavouriteClick(int position);
     }
 

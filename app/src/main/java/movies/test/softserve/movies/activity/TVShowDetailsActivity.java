@@ -165,7 +165,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         toolbarLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mBitmapDrawable!=null) {
+                if (mBitmapDrawable != null) {
                     zoomImageFromThumb(v, mBitmapDrawable.getBitmap());
                 }
             }

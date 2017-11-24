@@ -17,6 +17,7 @@ import movies.test.softserve.movies.repository.MoviesRepository;
 import movies.test.softserve.movies.repository.TVShowsRepository;
 import movies.test.softserve.movies.service.MovieReaderDbHelper;
 import movies.test.softserve.movies.service.MovieService;
+
 /**
  * Created by rkrit on 25.10.17.
  */
@@ -56,7 +57,6 @@ public class MainController extends Application implements Observer {
         TVShowsRepository.getInstance().tryToGetTVShows();
 
     }
-
 
 
     @Override

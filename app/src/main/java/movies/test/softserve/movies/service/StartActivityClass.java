@@ -19,35 +19,35 @@ public class StartActivityClass {
     private StartActivityClass() {
     }
 
-    public static void startDetailsActivity(Activity activity, TVEntity movie){
-        if (movie.getType() == TVEntity.TYPE.MOVIE){
+    public static void startDetailsActivity(Activity activity, TVEntity movie) {
+        if (movie.getType() == TVEntity.TYPE.MOVIE) {
             Intent intent = new Intent(activity, MovieDetailsActivity.class);
-            intent.putExtra(MovieDetailsActivity.TV_ENTITY,movie);
+            intent.putExtra(MovieDetailsActivity.TV_ENTITY, movie);
             activity.startActivity(intent);
         } else {
             Intent intent = new Intent(activity, TVShowDetailsActivity.class);
-            intent.putExtra(TVShowDetailsActivity.TV_ENTITY,movie);
+            intent.putExtra(TVShowDetailsActivity.TV_ENTITY, movie);
             activity.startActivity(intent);
         }
     }
 
-    public static void startActivitySearch(Activity activity, Genre genre){
-        Intent intent = new Intent(activity,SearchActivity.class);
-        intent.putExtra(SearchActivity.SEARCH_PARAM,SearchActivity.GENRES);
-        intent.putExtra(SearchActivity.ID,genre.getId());
-        intent.putExtra(SearchActivity.NAME,genre.getName());
+    public static void startActivitySearch(Activity activity, Genre genre) {
+        Intent intent = new Intent(activity, SearchActivity.class);
+        intent.putExtra(SearchActivity.SEARCH_PARAM, SearchActivity.GENRES);
+        intent.putExtra(SearchActivity.ID, genre.getId());
+        intent.putExtra(SearchActivity.NAME, genre.getName());
         activity.startActivity(intent);
     }
 
-    public static void startActivitySearch(Activity activity, ProductionCompany company){
-        Intent intent = new Intent(activity,SearchActivity.class);
-        intent.putExtra(SearchActivity.SEARCH_PARAM,SearchActivity.COMPANIES);
-        intent.putExtra(SearchActivity.ID,company.getId());
-        intent.putExtra(SearchActivity.NAME,company.getName());
+    public static void startActivitySearch(Activity activity, ProductionCompany company) {
+        Intent intent = new Intent(activity, SearchActivity.class);
+        intent.putExtra(SearchActivity.SEARCH_PARAM, SearchActivity.COMPANIES);
+        intent.putExtra(SearchActivity.ID, company.getId());
+        intent.putExtra(SearchActivity.NAME, company.getName());
         activity.startActivity(intent);
     }
 
-    public static void startWebIntent(Activity activity,String homepage){
+    public static void startWebIntent(Activity activity, String homepage) {
         Uri webPage = Uri.parse(homepage);
         Intent webIntent = new Intent(Intent.ACTION_VIEW, webPage);
         activity.startActivity(webIntent);

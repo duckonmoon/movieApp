@@ -34,7 +34,6 @@ public class MovieReaderDbHelper extends SQLiteOpenHelper {
                     + MovieEntry.TABLE_NAME + "(" + MovieEntry._ID + "))";
 
 
-
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Movie.db";
 
@@ -47,8 +46,8 @@ public class MovieReaderDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES);
         db.execSQL(SQL_CREATE_GENRES);
-        Log.w("SQL",SQL_CREATE_ENTRIES);
-        Log.w("SQL",SQL_CREATE_GENRES);
+        Log.w("SQL", SQL_CREATE_ENTRIES);
+        Log.w("SQL", SQL_CREATE_GENRES);
     }
 
     @Override

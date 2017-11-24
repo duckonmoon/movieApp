@@ -15,7 +15,7 @@ import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.viewholder.MainViewHolder;
 
-public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolder> implements MainViewHolder.Delegate{
+public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolder> implements MainViewHolder.Delegate {
 
     private List<TVEntity> movies;
     private OnMovieSelect event;
@@ -32,7 +32,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolde
     public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_layout, parent, false);
-        return new MainViewHolder(view,this);
+        return new MainViewHolder(view, this);
     }
 
     @Override

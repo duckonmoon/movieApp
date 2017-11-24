@@ -14,12 +14,13 @@ import movies.test.softserve.movies.entity.TVShow;
  */
 
 public final class Mapper {
-    private Mapper(){}
+    private Mapper() {
+    }
 
-    public static List<TVEntity> mapFromMovieToTVEntity(@NonNull List<? extends Movie> movies){
+    public static List<TVEntity> mapFromMovieToTVEntity(@NonNull List<? extends Movie> movies) {
         List<TVEntity> entities = new ArrayList<>();
-        for (Movie movie:
-             movies) {
+        for (Movie movie :
+                movies) {
             TVEntity tvEntity = new TVEntity.TVEntityBuilder()
                     .setId(movie.getId())
                     .setPosterPath(movie.getPosterPath())
@@ -36,10 +37,10 @@ public final class Mapper {
         return entities;
     }
 
-    public static List<TVEntity> mapFromTVShowToTVEntity(@NonNull List<? extends TVShow> tvShows){
+    public static List<TVEntity> mapFromTVShowToTVEntity(@NonNull List<? extends TVShow> tvShows) {
         List<TVEntity> entities = new ArrayList<>();
-        for (TVShow tvShow:
-                tvShows){
+        for (TVShow tvShow :
+                tvShows) {
             TVEntity tvEntity = new TVEntity.TVEntityBuilder()
                     .setId(tvShow.getId())
                     .setPosterPath(tvShow.getPosterPath())

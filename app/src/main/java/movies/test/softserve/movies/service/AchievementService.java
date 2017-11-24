@@ -15,7 +15,7 @@ public class AchievementService {
     }
 
     public boolean getAchievementStatus(Achievement achievement) {
-        if (achievement.getGenre()!=null){
+        if (achievement.getGenre() != null) {
             switch (achievement.getClazz()) {
                 case MOVIE:
                     return getMovieAchievement(achievement);
@@ -34,7 +34,6 @@ public class AchievementService {
                     return false;
             }
         }
-
 
 
     }

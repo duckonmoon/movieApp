@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import movies.test.softserve.movies.constans.Constants;
 import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.entity.Code;
 import movies.test.softserve.movies.entity.FullMovie;
-import movies.test.softserve.movies.entity.Genre;
 import movies.test.softserve.movies.entity.GenresContainer;
 import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.Page;
@@ -133,7 +131,7 @@ public class MovieService {
     }
 
 
-    public void getMovieByGenreCompany(final Integer genre, final Integer productionCompany, final Integer page){
+    public void getMovieByGenreCompany(final Integer genre, final Integer productionCompany, final Integer page) {
         Call<Page> call = service.discoverMovie(Constants.API_KEY,
                 null,
                 null,
@@ -165,38 +163,38 @@ public class MovieService {
                 null,
                 null,
                 null
-                );
+        );
         call.enqueue(new Callback<Page>() {
             @Override
             public void onResponse(Call<Page> call, Response<Page> response) {
-                for (OnListOfMoviesGetListener listener:
-                     onListOfMoviesGetListeners) {
-                    if (response.body()!=null && response.body().getMovies().size()>0) {
+                for (OnListOfMoviesGetListener listener :
+                        onListOfMoviesGetListeners) {
+                    if (response.body() != null && response.body().getMovies().size() > 0) {
                         listener.onListOfMoviesGetListener(Mapper.mapFromMovieToTVEntity(response.body().getMovies()));
                     }
                 }
-                Log.w("i am here" , "" + response.body());
+                Log.w("i am here", "" + response.body());
             }
 
             @Override
             public void onFailure(Call<Page> call, Throwable t) {
                 Log.e("Smth went wrong", t.getMessage());
-                getMovieByGenreCompany(genre,productionCompany,page);
+                getMovieByGenreCompany(genre, productionCompany, page);
             }
         });
 
     }
 
-    public void tryToGetAllGenres(){
+    public void tryToGetAllGenres() {
         Call<GenresContainer> call = service.getAllGenres(Constants.API_KEY);
         call.enqueue(new Callback<GenresContainer>() {
             @Override
             public void onResponse(Call<GenresContainer> call, Response<GenresContainer> response) {
-                for (OnListOfGenresGetListener listener:
-                     onListOfGenresGetListeners) {
+                for (OnListOfGenresGetListener listener :
+                        onListOfGenresGetListeners) {
                     listener.onListOfGenresGet(response.body().getGenres());
                 }
-                Log.w("Success",response.body().toString());
+                Log.w("Success", response.body().toString());
             }
 
             @Override
@@ -206,8 +204,8 @@ public class MovieService {
         });
     }
 
-    public void getMovieByKeyword(@NonNull String query,@NonNull Integer page,@NonNull Callback<Page> callback){
-        Call<Page> call = service.getMovieByKeyword(Constants.API_KEY, Uri.parse(query.trim()),page);
+    public void getMovieByKeyword(@NonNull String query, @NonNull Integer page, @NonNull Callback<Page> callback) {
+        Call<Page> call = service.getMovieByKeyword(Constants.API_KEY, Uri.parse(query.trim()), page);
         call.enqueue(callback);
     }
 
@@ -233,19 +231,19 @@ public class MovieService {
         onInfoUpdatedList.remove(listener);
     }
 
-    public void addOnListOfMoviesGetListener(@NonNull OnListOfMoviesGetListener listener){
+    public void addOnListOfMoviesGetListener(@NonNull OnListOfMoviesGetListener listener) {
         onListOfMoviesGetListeners.add(listener);
     }
 
-    public void removeOnListOfMoviesGetListener(@NonNull OnListOfMoviesGetListener listener){
+    public void removeOnListOfMoviesGetListener(@NonNull OnListOfMoviesGetListener listener) {
         onListOfMoviesGetListeners.remove(listener);
     }
 
-    public void addOnListOfGenresGetListener(@NonNull OnListOfGenresGetListener listener){
+    public void addOnListOfGenresGetListener(@NonNull OnListOfGenresGetListener listener) {
         onListOfGenresGetListeners.add(listener);
     }
 
-    public void removeOnListOfGenresGetListener(@NonNull OnListOfGenresGetListener listener){
+    public void removeOnListOfGenresGetListener(@NonNull OnListOfGenresGetListener listener) {
         onListOfGenresGetListeners.remove(listener);
     }
 }

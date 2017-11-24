@@ -9,7 +9,7 @@ import movies.test.softserve.movies.R
 import movies.test.softserve.movies.entity.Genre
 
 
-class ViewAdapter(private val mValues: List<Genre>,private val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<ViewAdapter.ViewHolder>() {
+class ViewAdapter(private val mValues: List<Genre>, private val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<ViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -34,7 +34,7 @@ class ViewAdapter(private val mValues: List<Genre>,private val onItemClickListen
 
     }
 
-    interface OnItemClickListener{
+    interface OnItemClickListener {
         fun onItemClick(genre: Genre)
     }
 }

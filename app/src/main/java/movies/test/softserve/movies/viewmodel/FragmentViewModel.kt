@@ -17,5 +17,5 @@ class FragmentViewModel : ViewModel() {
     var genresFragment: GenreFragment? = null
     var tvShowFragment: TVShowFragment? = null
     var searchFragment: SearchFragment? = null
-    var achievementsFragment : AchievementsFragment? = null
+    var achievementsFragment: AchievementsFragment? = null
 }

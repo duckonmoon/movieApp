@@ -94,10 +94,11 @@ public class MovieListWrapper extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public interface OnEndReachListener {
         State onEndReach();
+
         void onEndButtonClick();
     }
 
-    public enum State{
+    public enum State {
         Loading,
         Failed,
         end

@@ -89,7 +89,7 @@ class SearchFragment : Fragment() {
                 buildAlertDialog(movie, view.list)
             }
             view.list.adapter.notifyDataSetChanged()
-        }), object :MovieListWrapper.OnEndReachListener {
+        }), object : MovieListWrapper.OnEndReachListener {
             override fun onEndButtonClick() {
             }
 
@@ -97,25 +97,13 @@ class SearchFragment : Fragment() {
                 if (list.size > 0 && message == null) {
                     if (type == TYPE_MOVIE) {
                         movieRequest()
-                        return MovieListWrapper.State.Loading
                     } else {
                         tvShowRequest()
-                        return MovieListWrapper.State.Loading
                     }
+                    return MovieListWrapper.State.Loading
                 }
                 return MovieListWrapper.State.end
             }
-            /*v.mProgressBar.visibility = View.GONE
-            if (list.size > 0 && message == null) {
-                v.mProgressBar.visibility = View.VISIBLE
-                if (type == TYPE_MOVIE) {
-                    movieRequest()
-                } else {
-                    tvShowRequest()
-                }
-            }*/
-
-
         })
         return view
     }

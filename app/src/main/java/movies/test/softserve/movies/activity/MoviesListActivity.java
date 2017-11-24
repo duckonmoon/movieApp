@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -24,25 +25,22 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import movies.test.softserve.movies.entity.TVEntity;
-import movies.test.softserve.movies.fragment.AchievementsFragment;
 import movies.test.softserve.movies.R;
-import movies.test.softserve.movies.fragment.SearchFragment;
 import movies.test.softserve.movies.adapter.MovieListWrapper;
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
 import movies.test.softserve.movies.controller.MainController;
-import movies.test.softserve.movies.entity.Movie;
-import movies.test.softserve.movies.entity.ITV;
+import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.event.AddedItemsEvent;
+import movies.test.softserve.movies.fragment.AchievementsFragment;
 import movies.test.softserve.movies.fragment.GenreFragment;
 import movies.test.softserve.movies.fragment.MovieFragment;
+import movies.test.softserve.movies.fragment.SearchFragment;
 import movies.test.softserve.movies.fragment.TVShowFragment;
 import movies.test.softserve.movies.fragment.WatchedFragment;
 import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.RatingService;
 import movies.test.softserve.movies.service.StartActivityClass;
-import movies.test.softserve.movies.viewholder.MainViewHolder;
 import movies.test.softserve.movies.viewmodel.FragmentViewModel;
 
 public class MoviesListActivity extends AppCompatActivity
@@ -123,27 +121,12 @@ public class MoviesListActivity extends AppCompatActivity
         }), new MovieListWrapper.OnEndReachListener() {
             @Override
             public MovieListWrapper.State onEndReach() {
-               /* final MovieListWrapper.ViewHolder holder = (MovieListWrapper.ViewHolder) mholder;
                 if (errorMessage == null) {
                     mainController.requestMore();
+                    return MovieListWrapper.State.Loading;
                 } else {
-                    holder.mProgressBar.setVisibility(View.GONE);
-                    holder.mButton.setVisibility(View.VISIBLE);
-                    holder.mButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mainController.requestMore();
-                            holder.mButton.setVisibility(View.GONE);
-                            holder.mProgressBar.setVisibility(View.VISIBLE);
-                        }
-                    });
-                }*/
-               if (errorMessage==null){
-                   mainController.requestMore();
-                   return MovieListWrapper.State.Loading;
-               } else{
-                   return MovieListWrapper.State.Failed;
-               }
+                    return MovieListWrapper.State.Failed;
+                }
             }
 
             @Override
@@ -228,7 +211,7 @@ public class MoviesListActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 

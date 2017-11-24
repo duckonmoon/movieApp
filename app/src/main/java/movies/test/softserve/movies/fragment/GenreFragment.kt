@@ -20,8 +20,8 @@ class GenreFragment : Fragment() {
     private var mRecyclerView: RecyclerView? = null
     private var onListOfGenresGetListener: OnListOfGenresGetListener? = null
 
-    private var mainController : MainController = MainController.getInstance()
-    private var movieService : MovieService = MovieService.getInstance()
+    private var mainController: MainController = MainController.getInstance()
+    private var movieService: MovieService = MovieService.getInstance()
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

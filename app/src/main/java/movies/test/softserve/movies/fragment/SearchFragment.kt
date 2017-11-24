@@ -23,6 +23,7 @@ import movies.test.softserve.movies.service.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.Serializable
 
 
 class SearchFragment : Fragment() {
@@ -32,20 +33,20 @@ class SearchFragment : Fragment() {
     private var dbService: DBMovieService = DBMovieService.getInstance()
     private var helperService: DBHelperService = DBHelperService()
 
-
+    companion object {
+        private val COMPANION: String = "COMPANION"
+        private val TYPE_MOVIE = false
+    }
     private var mRecyclerView: RecyclerView? = null
 
-    //TODO do smth with that
-    companion object {
-        private val TYPE_TV_SHOW = true
-        private val TYPE_MOVIE = false
-        private var message: String? = null
-        private var query: String = ""
-        private var page: Int = 1
-        private var type: Boolean = false
-        private var list: ArrayList<TVEntity> = ArrayList()
-    }
+    private var transfer: Transfer = Transfer()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState!=null){
+            transfer = savedInstanceState.getSerializable(COMPANION) as Transfer
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -66,12 +67,12 @@ class SearchFragment : Fragment() {
                 val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(view!!.windowToken, 0)
             }
-            page = 1
-            list.clear()
-            query = editSearchView.text.toString()
-            type = switchView.isChecked
-            message = null
-            if (type == TYPE_MOVIE) {
+            transfer.page = 1
+            transfer.list.clear()
+            transfer.query = editSearchView.text.toString()
+            transfer.type = switchView.isChecked
+            transfer.message = null
+            if (transfer.type == TYPE_MOVIE) {
                 movieRequest()
             } else {
                 tvShowRequest()
@@ -79,7 +80,7 @@ class SearchFragment : Fragment() {
         }
 
         view.list.layoutManager = LinearLayoutManager(context)
-        view.list.adapter = MovieListWrapper(MovieRecyclerViewAdapter(list, MovieRecyclerViewAdapter.OnMovieSelect { mov ->
+        view.list.adapter = MovieListWrapper(MovieRecyclerViewAdapter(transfer.list, MovieRecyclerViewAdapter.OnMovieSelect { mov ->
             StartActivityClass.startDetailsActivity(activity, mov)
         }, MovieRecyclerViewAdapter.OnFavouriteClick { movie ->
             if (helperService.toDoWithFavourite(movie)) {
@@ -94,8 +95,8 @@ class SearchFragment : Fragment() {
             }
 
             override fun onEndReach(): MovieListWrapper.State {
-                if (list.size > 0 && message == null) {
-                    if (type == TYPE_MOVIE) {
+                if (transfer.list.size > 0 && transfer.message == null) {
+                    if (transfer.type == TYPE_MOVIE) {
                         movieRequest()
                     } else {
                         tvShowRequest()
@@ -110,13 +111,13 @@ class SearchFragment : Fragment() {
 
 
     private fun movieRequest() {
-        service.getMovieByKeyword(query, page, object : Callback<Page> {
+        service.getMovieByKeyword(transfer.query, transfer.page, object : Callback<Page> {
             override fun onResponse(call: Call<Page>?, response: Response<Page>?) {
-                if (response!!.body()!!.page == page) {
-                    page++
-                    list.addAll(Mapper.mapFromMovieToTVEntity(response.body()!!.movies))
+                if (response!!.body()!!.page == transfer.page) {
+                    transfer.page++
+                    transfer.list.addAll(Mapper.mapFromMovieToTVEntity(response.body()!!.movies))
                     if (response.body()!!.movies.isEmpty()) {
-                        message = "Overload"
+                        transfer.message = "Overload"
                     }
                     mRecyclerView!!.adapter.notifyDataSetChanged()
                 }
@@ -129,14 +130,14 @@ class SearchFragment : Fragment() {
     }
 
     private fun tvShowRequest() {
-        repository.getTVShowByKeyword(query, page, object : Callback<TVPage> {
+        repository.getTVShowByKeyword(transfer.query, transfer.page, object : Callback<TVPage> {
             override fun onResponse(call: Call<TVPage>?, response: Response<TVPage>?) {
-                if (response!!.body()!!.page == page) {
-                    page++
-                    list.addAll(Mapper.mapFromTVShowToTVEntity(response.body()!!.results))
+                if (response!!.body()!!.page == transfer.page) {
+                    transfer.page++
+                    transfer.list.addAll(Mapper.mapFromTVShowToTVEntity(response.body()!!.results))
                     mRecyclerView!!.adapter.notifyDataSetChanged()
                     if (response.body()!!.results.isEmpty()) {
-                        message = "Overload"
+                        transfer.message = "Overload"
                     }
                 }
             }
@@ -169,4 +170,20 @@ class SearchFragment : Fragment() {
                 }.create()
                 .show()
     }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState!!.putSerializable(COMPANION, transfer)
+    }
+
+
+}
+
+private class Transfer : Serializable {
+    var message: String? = null
+    var query: String = ""
+    var page: Int = 1
+    var type: Boolean = false
+    var list: ArrayList<TVEntity> = ArrayList()
+
 }

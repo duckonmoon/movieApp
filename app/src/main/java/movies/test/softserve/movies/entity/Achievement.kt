@@ -25,10 +25,6 @@ class Achievement private constructor(var resourceId: Int, var title: String?, v
             achievements.add(Achievement(R.mipmap.ic_crime, "Student", "Watch 5 crime movies", TVType.MOVIE, 80, 5))
             achievements.add(Achievement(R.mipmap.ic_crime1, "Detective", "Watch 25 crime movies", TVType.MOVIE, 80, 25))
             achievements.add(Achievement(R.mipmap.ic_crime2, "Sherlock", "Watch 50 crime movies", TVType.MOVIE, 80, 50))
-            achievements.add(Achievement(R.mipmap.ic_rock, "Master", "Watch 50 cartoons", TVType.MOVIE, 16, 50))
-            achievements.add(Achievement(R.mipmap.ic_rock, "Master", "Watch 50 cartoons", TVType.MOVIE, 16, 50))
-            achievements.add(Achievement(R.mipmap.ic_rock, "Master", "Watch 50 cartoons", TVType.MOVIE, 16, 50))
-            achievements.add(Achievement(R.mipmap.ic_rock, "Master", "Watch 50 cartoons", TVType.MOVIE, 16, 50))
             return achievements
         }
     }

@@ -25,7 +25,6 @@ import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.service.StartActivityClass;
 import movies.test.softserve.movies.viewmodel.PageViewModel;
 
-//TODO change end
 public class SearchActivity extends AppCompatActivity {
 
     public static final String ID = "search_id";

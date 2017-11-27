@@ -38,11 +38,11 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolde
     @Override
     public void onBindViewHolder(final MainViewHolder holder, final int position) {
         final TVEntity tvEntity = movies.get(position);
+        Picasso.with(holder.mImageView.getContext()).cancelRequest(holder.mImageView);
         holder.mTextView.setText("" + (1 + position) + ". " + tvEntity.getTitle() + "\n" + ((float) Math.round(tvEntity.getVoteAverage() * 10)) / 10
                 + "\n" + tvEntity.getVoteCount());
         holder.mRatingBar.setRating(tvEntity.getVoteAverage().floatValue() / 2);
         holder.mFavourite.setImageResource(DBMovieService.getInstance().checkIfIsFavourite(tvEntity.getId()) ? R.drawable.ic_stary_black_24dp : R.drawable.ic_star_border_black_24dp);
-        //TODO
         Picasso
                 .with(holder.mImageView.getContext())
                 .load("https://image.tmdb.org/t/p/w500" + tvEntity

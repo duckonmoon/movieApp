@@ -21,6 +21,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -38,6 +40,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import movies.test.softserve.movies.R;
+import movies.test.softserve.movies.adapter.HorizontalButtonAdapter;
 import movies.test.softserve.movies.entity.FullMovie;
 import movies.test.softserve.movies.entity.Genre;
 import movies.test.softserve.movies.entity.ProductionCompany;
@@ -67,9 +70,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private TextView voteCountView;
     private TextView releaseDateView;
     private TextView links;
-    private LinearLayout genres;
-    private LinearLayout countries;
-    private LinearLayout companies;
+    private RecyclerView genres;
+    private RecyclerView countries;
+    private RecyclerView companies;
     private ImageView share;
     private ImageView watched;
 
@@ -190,47 +193,29 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
     }
 
+    //TODO add budget
     public void addGenresCountriesCompanies() {
         final FullMovie fullMovie = viewModel.getFullMovie();
-        for (int i = 0; i < fullMovie.getGenres().size(); i++) {
-            final Genre genre = fullMovie.getGenres().get(i);
-            Button button = new Button(MovieDetailsActivity.this);
-            button.setTextColor(ContextCompat.getColor(MovieDetailsActivity.this, R.color.main_app_color));
-            button.setBackgroundColor(Color.TRANSPARENT);
-            button.setText(genre.getName());
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Snackbar.make(findViewById(R.id.nested_scroll_view), "Isn't ready :)", Snackbar.LENGTH_LONG).show();
-                    StartActivityClass.startActivitySearch(MovieDetailsActivity.this, genre);
-                }
-            });
-            genres.addView(button);
-        }
-        for (int i = 0; i < fullMovie.getProductionCountries().size(); i++) {
-            ProductionCountry country = fullMovie.getProductionCountries().get(i);
-            Button button = new Button(MovieDetailsActivity.this);
-            button.setTextColor(ContextCompat.getColor(MovieDetailsActivity.this, R.color.main_app_color));
-            button.setBackgroundColor(Color.TRANSPARENT);
-            button.setText(country.getName());
-            button.setPadding(0, 0, 50, 0);
-            countries.addView(button);
-        }
-        for (int i = 0; i < fullMovie.getProductionCompanies().size(); i++) {
-            final ProductionCompany company = fullMovie.getProductionCompanies().get(i);
-            Button button = new Button(MovieDetailsActivity.this);
-            button.setTextColor(ContextCompat.getColor(MovieDetailsActivity.this, R.color.main_app_color));
-            button.setBackgroundColor(Color.TRANSPARENT);
-            button.setText(company.getName());
-            button.setPadding(0, 0, 50, 0);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    StartActivityClass.startActivitySearch(MovieDetailsActivity.this, company);
-                }
-            });
-            companies.addView(button);
-        }
+        genres = findViewById(R.id.genres);
+        countries = findViewById(R.id.countries);
+        companies = findViewById(R.id.companies);
+        genres.setLayoutManager(new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false));
+        genres.setAdapter(new HorizontalButtonAdapter(fullMovie.getGenres(),
+                (i)-> StartActivityClass.startActivitySearch(this, (Genre) i)));
+
+        countries.setLayoutManager(new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false));
+        countries.setAdapter(new HorizontalButtonAdapter(fullMovie.getProductionCountries(),
+                (i) -> {
+                }));
+
+        companies.setLayoutManager(new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false));
+        companies.setAdapter(new HorizontalButtonAdapter(fullMovie.getProductionCompanies(),
+                item -> StartActivityClass.startActivitySearch(this, (ProductionCompany) item)));
+
+
         if (fullMovie.getHomepage() != null && !fullMovie.getHomepage().equals("")) {
             links.setText(getString(R.string.homepage) + fullMovie.getHomepage());
             links.setOnClickListener(new View.OnClickListener() {
@@ -267,9 +252,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         ratingBar = findViewById(R.id.ratingBar);
         voteCountView = findViewById(R.id.vote_count);
         releaseDateView = findViewById(R.id.release_date);
-        genres = findViewById(R.id.genres);
-        countries = findViewById(R.id.countries);
-        companies = findViewById(R.id.companies);
         links = findViewById(R.id.links);
         share = findViewById(R.id.share);
         mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);

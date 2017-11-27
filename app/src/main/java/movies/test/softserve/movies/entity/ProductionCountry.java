@@ -6,7 +6,7 @@ import android.os.Parcelable.Creator;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ProductionCountry implements Parcelable
+public class ProductionCountry implements Parcelable,AdditionalInfo
 {
 
     @SerializedName("iso_3166_1")
@@ -50,6 +50,11 @@ public class ProductionCountry implements Parcelable
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public Integer getId() {
+        return 0;
     }
 
     public void setName(String name) {

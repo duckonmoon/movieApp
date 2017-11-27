@@ -6,7 +6,7 @@ import android.os.Parcelable.Creator;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Genre implements Parcelable
+public class Genre implements Parcelable,AdditionalInfo
 {
 
     @SerializedName("id")

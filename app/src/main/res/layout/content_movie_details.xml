@@ -75,47 +75,30 @@
             android:text="@string/release_date"
             android:textSize="16sp" />
 
-        <HorizontalScrollView
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/top_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:id="@+id/genres">
 
-            <LinearLayout
-                android:id="@+id/genres"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+        </android.support.v7.widget.RecyclerView>
 
-            </LinearLayout>
-        </HorizontalScrollView>
-
-        <HorizontalScrollView
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/top_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:id="@+id/countries">
 
-            <LinearLayout
-                android:id="@+id/countries"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+        </android.support.v7.widget.RecyclerView>
 
-            </LinearLayout>
-        </HorizontalScrollView>
-
-        <HorizontalScrollView
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/top_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:id="@+id/companies">
 
-            <LinearLayout
-                android:id="@+id/companies"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+        </android.support.v7.widget.RecyclerView>
 
-            </LinearLayout>
-        </HorizontalScrollView>
 
         <TextView
             android:id="@+id/links"

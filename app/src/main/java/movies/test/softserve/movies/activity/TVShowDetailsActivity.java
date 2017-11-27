@@ -20,6 +20,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -36,6 +38,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import movies.test.softserve.movies.R;
+import movies.test.softserve.movies.adapter.HorizontalImageAdapter;
 import movies.test.softserve.movies.entity.FullTVShow;
 import movies.test.softserve.movies.entity.Season;
 import movies.test.softserve.movies.entity.TVEntity;
@@ -75,7 +78,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private TextView releaseDateView;
     private ImageView share;
     private TextView links;
-    private LinearLayout seasons;
+    private RecyclerView seasons;
 
 
     @Override
@@ -143,15 +146,11 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                         }
                     });
                 }
-                for (Season i : fullTVShow.getSeasons()) {
-                    ImageView image = new ImageView(TVShowDetailsActivity.this);
-                    Picasso
-                            .with(TVShowDetailsActivity.this)
-                            .load("https://image.tmdb.org/t/p/w500" + i.getPosterPath())
-                            .into(image);
-                    image.setPadding(0, 20, 20, 0);
-                    seasons.addView(image);
-                }
+                seasons.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
+                        LinearLayoutManager.HORIZONTAL, false));
+                seasons.setAdapter(new HorizontalImageAdapter(fullTVShow.getSeasons(),
+                        (image) -> zoomImageFromThumb(image,
+                                ((BitmapDrawable) image.getDrawable()).getBitmap())));
             }
         });
 

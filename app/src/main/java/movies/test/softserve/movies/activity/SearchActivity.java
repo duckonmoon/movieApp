@@ -22,7 +22,7 @@ import movies.test.softserve.movies.event.OnListOfMoviesGetListener;
 import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.MovieService;
-import movies.test.softserve.movies.service.StartActivityClass;
+import movies.test.softserve.movies.util.StartActivityClass;
 import movies.test.softserve.movies.viewmodel.PageViewModel;
 
 public class SearchActivity extends AppCompatActivity {

@@ -20,7 +20,7 @@ import movies.test.softserve.movies.entity.VideoContainer;
 import movies.test.softserve.movies.event.OnFullTVShowGetListener;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnListOfTVShowsGetListener;
-import movies.test.softserve.movies.service.Mapper;
+import movies.test.softserve.movies.util.Mapper;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.service.TVShowsService;
 import retrofit2.Call;

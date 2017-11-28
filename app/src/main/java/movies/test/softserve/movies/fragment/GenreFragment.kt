@@ -13,7 +13,7 @@ import movies.test.softserve.movies.controller.MainController
 import movies.test.softserve.movies.entity.Genre
 import movies.test.softserve.movies.event.OnListOfGenresGetListener
 import movies.test.softserve.movies.service.MovieService
-import movies.test.softserve.movies.service.StartActivityClass
+import movies.test.softserve.movies.util.StartActivityClass
 
 class GenreFragment : Fragment() {
 

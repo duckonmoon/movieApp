@@ -39,8 +39,8 @@ import movies.test.softserve.movies.fragment.TVShowFragment;
 import movies.test.softserve.movies.fragment.WatchedFragment;
 import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
-import movies.test.softserve.movies.service.RatingService;
-import movies.test.softserve.movies.service.StartActivityClass;
+import movies.test.softserve.movies.util.RatingService;
+import movies.test.softserve.movies.util.StartActivityClass;
 import movies.test.softserve.movies.viewmodel.FragmentViewModel;
 
 public class MoviesListActivity extends AppCompatActivity

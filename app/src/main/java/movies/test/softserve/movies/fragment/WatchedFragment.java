@@ -20,7 +20,7 @@ import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
-import movies.test.softserve.movies.service.StartActivityClass;
+import movies.test.softserve.movies.util.StartActivityClass;
 
 public class WatchedFragment extends Fragment {
 

@@ -20,6 +20,8 @@ import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter
 import movies.test.softserve.movies.entity.*
 import movies.test.softserve.movies.repository.TVShowsRepository
 import movies.test.softserve.movies.service.*
+import movies.test.softserve.movies.util.Mapper
+import movies.test.softserve.movies.util.StartActivityClass
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -21,6 +21,7 @@ import movies.test.softserve.movies.event.OnListOfGenresGetListener;
 import movies.test.softserve.movies.event.OnListOfMoviesGetListener;
 import movies.test.softserve.movies.event.OnMovieInformationGet;
 import movies.test.softserve.movies.event.OnSessionGetListener;
+import movies.test.softserve.movies.util.Mapper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

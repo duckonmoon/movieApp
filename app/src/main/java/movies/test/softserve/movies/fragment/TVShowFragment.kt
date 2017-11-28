@@ -17,7 +17,7 @@ import movies.test.softserve.movies.event.OnListOfTVShowsGetListener
 import movies.test.softserve.movies.repository.TVShowsRepository
 import movies.test.softserve.movies.service.DBHelperService
 import movies.test.softserve.movies.service.DBMovieService
-import movies.test.softserve.movies.service.StartActivityClass
+import movies.test.softserve.movies.util.StartActivityClass
 
 class TVShowFragment : Fragment() {
 

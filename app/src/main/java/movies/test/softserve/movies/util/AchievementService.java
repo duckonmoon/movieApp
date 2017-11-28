@@ -1,6 +1,7 @@
-package movies.test.softserve.movies.service;
+package movies.test.softserve.movies.util;
 
 import movies.test.softserve.movies.entity.Achievement;
+import movies.test.softserve.movies.service.DBMovieService;
 
 /**
  * Created by rkrit on 16.11.17.

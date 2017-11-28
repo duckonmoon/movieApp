@@ -11,7 +11,7 @@ import movies.test.softserve.movies.constans.Constants;
 import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.entity.Page;
 import movies.test.softserve.movies.entity.TVEntity;
-import movies.test.softserve.movies.service.Mapper;
+import movies.test.softserve.movies.util.Mapper;
 import movies.test.softserve.movies.service.MoviesService;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;

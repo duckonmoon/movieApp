@@ -12,6 +12,7 @@ import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.db.entity.MovieDbEntities.GenreEntry;
 import movies.test.softserve.movies.db.entity.MovieDbEntities.MovieEntry;
 import movies.test.softserve.movies.entity.TVEntity;
+import movies.test.softserve.movies.util.RatingService;
 
 /**
  * Created by rkrit on 27.10.17.

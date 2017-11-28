@@ -9,7 +9,7 @@ import android.widget.TextView
 import movies.test.softserve.movies.R
 
 import movies.test.softserve.movies.entity.Achievement
-import movies.test.softserve.movies.service.AchievementService
+import movies.test.softserve.movies.util.AchievementService
 
 class AchievementsRecyclerViewAdapter(private val mValues: List<Achievement>) : RecyclerView.Adapter<AchievementsRecyclerViewAdapter.ViewHolder>() {
 

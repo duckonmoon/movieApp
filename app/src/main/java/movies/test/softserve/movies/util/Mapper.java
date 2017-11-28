@@ -1,4 +1,4 @@
-package movies.test.softserve.movies.service;
+package movies.test.softserve.movies.util;
 
 import android.support.annotation.NonNull;
 

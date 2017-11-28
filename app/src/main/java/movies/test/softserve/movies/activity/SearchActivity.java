@@ -46,6 +46,7 @@ public class SearchActivity extends AppCompatActivity {
     private DBMovieService dbService = DBMovieService.getInstance();
 
     private OnListOfMoviesGetListener onListOfMoviesGetListener;
+    private String message = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,20 +79,24 @@ public class SearchActivity extends AppCompatActivity {
         }), new MovieListWrapper.OnEndReachListener() {
             @Override
             public MovieListWrapper.State onEndReach() {
-                switch (getIntent().getStringExtra(SEARCH_PARAM)) {
-                    case GENRES:
-                        movieService.getMovieByGenreCompany(id, null, mPageViewModel.getPage());
-                        break;
-                    case COMPANIES:
-                        movieService.getMovieByGenreCompany(null, id, mPageViewModel.getPage());
-                        break;
-                    case COUNTRIES:
-                        break;
-                    default:
-                        Log.e("Smth went wrong", "Nothing selected");
-                        break;
+                if (message == null) {
+                    switch (getIntent().getStringExtra(SEARCH_PARAM)) {
+                        case GENRES:
+                            movieService.getMovieByGenreCompany(id, null, mPageViewModel.getPage());
+                            break;
+                        case COMPANIES:
+                            movieService.getMovieByGenreCompany(null, id, mPageViewModel.getPage());
+                            break;
+                        case COUNTRIES:
+                            break;
+                        default:
+                            Log.e("Smth went wrong", "Nothing selected");
+                            break;
+                    }
+                    return MovieListWrapper.State.Loading;
+                } else {
+                    return MovieListWrapper.State.end;
                 }
-                return MovieListWrapper.State.Loading;
             }
 
             @Override
@@ -114,6 +119,8 @@ public class SearchActivity extends AppCompatActivity {
                     if (movies.size() > 0) {
                         mPageViewModel.getList().addAll(movies);
                         mPageViewModel.setPage(mPageViewModel.getPage() + 1);
+                    } else {
+                        message = "all";
                     }
                     mRecyclerView.getAdapter().notifyDataSetChanged();
                 }

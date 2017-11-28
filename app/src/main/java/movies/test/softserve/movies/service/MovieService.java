@@ -169,7 +169,7 @@ public class MovieService {
             public void onResponse(Call<Page> call, Response<Page> response) {
                 for (OnListOfMoviesGetListener listener :
                         onListOfMoviesGetListeners) {
-                    if (response.body() != null && response.body().getMovies().size() > 0) {
+                    if (response.body() != null) {
                         listener.onListOfMoviesGetListener(Mapper.mapFromMovieToTVEntity(response.body().getMovies()));
                     }
                 }

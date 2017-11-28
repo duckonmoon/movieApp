@@ -66,6 +66,17 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/budget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/top_margin"
+            android:layout_gravity="center_vertical"
+            android:text="@string/budget"
+            android:textSize="16sp"
+            android:visibility="gone"
+            android:layout_marginBottom="@dimen/standart_small_margin"/>
+
+        <TextView
             android:id="@+id/release_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,7 +90,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/top_margin"
-            android:id="@+id/genres">
+            android:id="@+id/genres"
+            tools:itemCount="0">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -87,7 +99,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/top_margin"
-            android:id="@+id/countries">
+            android:id="@+id/countries"
+            tools:itemCount="0">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -95,7 +108,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/top_margin"
-            android:id="@+id/companies">
+            android:id="@+id/companies"
+            tools:itemCount="0">
 
         </android.support.v7.widget.RecyclerView>
 

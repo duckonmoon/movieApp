@@ -52,6 +52,7 @@ import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.service.StartActivityClass;
+import movies.test.softserve.movies.util.BudgetFormatter;
 import movies.test.softserve.movies.viewmodel.FullMovieViewModel;
 
 public class MovieDetailsActivity extends AppCompatActivity {
@@ -62,7 +63,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private DBMovieService dbService = DBMovieService.getInstance();
     private DBHelperService helperService = new DBHelperService();
 
-    private Toolbar toolbar;
     private CollapsingToolbarLayout toolbarLayout;
     private FloatingActionButton fab;
     private TextView overViewView;
@@ -70,9 +70,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private TextView voteCountView;
     private TextView releaseDateView;
     private TextView links;
-    private RecyclerView genres;
-    private RecyclerView countries;
-    private RecyclerView companies;
     private ImageView share;
     private ImageView watched;
 
@@ -193,16 +190,21 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
     }
 
-    //TODO add budget
+
     public void addGenresCountriesCompanies() {
         final FullMovie fullMovie = viewModel.getFullMovie();
-        genres = findViewById(R.id.genres);
-        countries = findViewById(R.id.countries);
-        companies = findViewById(R.id.companies);
+        TextView budget = findViewById(R.id.budget);
+        RecyclerView genres = findViewById(R.id.genres);
+        RecyclerView countries = findViewById(R.id.countries);
+        RecyclerView companies = findViewById(R.id.companies);
+        if (fullMovie.getBudget() != 0) {
+            budget.setText(getString(R.string.budget) + BudgetFormatter.toMoney(fullMovie.getBudget()) + "$");
+            budget.setVisibility(View.VISIBLE);
+        }
         genres.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false));
         genres.setAdapter(new HorizontalButtonAdapter(fullMovie.getGenres(),
-                (i)-> StartActivityClass.startActivitySearch(this, (Genre) i)));
+                (i) -> StartActivityClass.startActivitySearch(this, (Genre) i)));
 
         countries.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false));
@@ -229,7 +231,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private void initView() {
         overViewView = findViewById(R.id.overview);
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbarLayout = findViewById(R.id.toolbar_layout);
         setSupportActionBar(toolbar);
         watched = findViewById(R.id.watched);

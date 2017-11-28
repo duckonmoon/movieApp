@@ -21,7 +21,7 @@ public class FullMovie implements Parcelable
     private Object belongsToCollection;
     @SerializedName("budget")
     @Expose
-    private Integer budget;
+    private Integer budget = 0;
     @SerializedName("genres")
     @Expose
     private List<Genre> genres = null;

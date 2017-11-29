@@ -35,6 +35,7 @@ public class HorizontalImageAdapter extends RecyclerView.Adapter<HorizontalImage
 
     @Override
     public void onBindViewHolder(HorizontalImageAdapter.ViewHolder holder, int position) {
+        Picasso.with(holder.mImage.getContext()).cancelRequest(holder.mImage);
         Picasso
                 .with(holder.mImage.getContext())
                 .load("https://image.tmdb.org/t/p/w500" + items.get(position).getPosterPath())
@@ -54,9 +55,7 @@ public class HorizontalImageAdapter extends RecyclerView.Adapter<HorizontalImage
         public ViewHolder(View view) {
             super(view);
             mImage = itemView.findViewById(R.id.item_image);
-            mImage.setOnClickListener((v) -> {
-                listener.onClick(mImage);
-            });
+            mImage.setOnClickListener((v) -> listener.onClick(mImage));
         }
     }
 

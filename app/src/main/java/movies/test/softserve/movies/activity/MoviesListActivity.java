@@ -71,19 +71,6 @@ public class MoviesListActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        event = new AddedItemsEvent() {
-            @Override
-            public void onItemsAdded(final String message) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mRecyclerView.getAdapter().notifyDataSetChanged();
-                        errorMessage = message;
-                    }
-                });
-            }
-        };
-        mainController.setAddedItemsEventListener(event);
         setContentView(R.layout.activity_movies);
         mRecyclerView = findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));

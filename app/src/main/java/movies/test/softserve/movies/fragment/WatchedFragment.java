@@ -56,20 +56,18 @@ public class WatchedFragment extends Fragment {
             public void OnMovieSelected(TVEntity mov) {
                 StartActivityClass.startDetailsActivity(getActivity(), mov);
             }
-        }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
-            @Override
-            public void onFavouriteClick(TVEntity movie) {
-                if (helperService.toDoWithFavourite(movie)) {
-                    Snackbar.make(mRecyclerView, "Added to favourite", Snackbar.LENGTH_SHORT)
-                            .show();
-                } else {
-                    Snackbar.make(mRecyclerView, "Removed from favourite", Snackbar.LENGTH_SHORT)
-                            .show();
+        }, movie -> {
+            if (helperService.toDoWithFavourite(movie)) {
+                Snackbar.make(mRecyclerView, "Added to favourite", Snackbar.LENGTH_SHORT)
+                        .show();
+            } else {
+                Snackbar.make(mRecyclerView, "Removed from favourite", Snackbar.LENGTH_SHORT)
+                        .show();
 
 
-                    mRecyclerView.getAdapter().notifyDataSetChanged();
-                }
+
             }
+            mRecyclerView.getAdapter().notifyDataSetChanged();
         }));
         return view;
     }

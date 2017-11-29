@@ -58,6 +58,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private DBMovieService dbService = DBMovieService.getInstance();
     private DBHelperService helperService = new DBHelperService();
 
+
     private CollapsingToolbarLayout toolbarLayout;
     private FloatingActionButton fab;
     private TextView overViewView;
@@ -73,10 +74,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
 
     private OnMovieInformationGet listener;
-    private OnInfoUpdatedListener infoListener;
+    private OnInfoUpdatedListener infoListener = new OnInfoUpdatedListener() {
+        @Override
+        public void OnInfoUpdated(float code) {
+            ratingBar.setRating(code);
+            Snackbar.make(findViewById(R.id.nested_scroll_view), "Your rating saved", Snackbar.LENGTH_LONG).show();
+        }
+    };
 
     private Animator mCurrentAnimator;
-    BitmapDrawable mBitmapDrawable;
+    private BitmapDrawable mBitmapDrawable;
 
     private int mShortAnimationDuration;
 
@@ -93,16 +100,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (infoListener == null) {
-            infoListener = new OnInfoUpdatedListener() {
-                @Override
-                public void OnInfoUpdated(float code) {
-                    ratingBar.setRating(code);
-                    Snackbar.make(findViewById(R.id.nested_scroll_view), "Your rating saved", Snackbar.LENGTH_LONG).show();
-                }
-            };
-            service.addOnInfoUpdatedListener(infoListener);
-        }
+        service.addOnInfoUpdatedListener(infoListener);
         getFullInfo();
     }
 
@@ -298,10 +296,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             service.removeListener(listener);
             listener = null;
         }
-        if (infoListener != null) {
-            service.removeOnInfoUpdatedListener(infoListener);
-            infoListener = null;
-        }
+        service.removeOnInfoUpdatedListener(infoListener);
     }
 
     private void zoomImageFromThumb(final View thumbView, Bitmap bitmap) {

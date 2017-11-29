@@ -36,25 +36,22 @@ public class MoviesRepository extends Observable {
 
     private MoviesRepository() {
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new Interceptor() {
-                    @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
-                        Request request = chain.request();
+                .addInterceptor(chain -> {
+                    Request request = chain.request();
+                    try {
+                        okhttp3.Response response = chain.proceed(request);
+                        return response;
+                    } catch (Exception e) {
+                        Log.e("Smth went wrong", e.toString());
+                        numberOfRequests++;
                         try {
-                            okhttp3.Response response = chain.proceed(request);
-                            return response;
-                        } catch (Exception e) {
-                            Log.e("Smth went wrong", e.toString());
-                            numberOfRequests++;
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException e1) {
-                                e1.printStackTrace();
-                            }
-                            tryAgain(e);
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
                         }
-                        throw new IOException();
+                        tryAgain(e);
                     }
+                    throw new IOException();
                 }).build();
 
         Retrofit retrofit = new Retrofit.Builder()

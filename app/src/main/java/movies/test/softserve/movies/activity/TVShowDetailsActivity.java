@@ -61,6 +61,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
     private DBHelperService helperService = new DBHelperService();
     private DBMovieService dbService = DBMovieService.getInstance();
+    private TVShowsRepository repository = TVShowsRepository.getInstance();
 
     private Animator mCurrentAnimator;
     private BitmapDrawable mBitmapDrawable;
@@ -108,7 +109,6 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                         getFullInfo(tvShow);
                     }
                 };
-                TVShowsRepository repository = TVShowsRepository.getInstance();
                 repository.addOnFullTVShowGetListeners(listenerW);
                 repository.trytoGetFullTVShow(tvShow.getId());
             }
@@ -118,7 +118,6 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        TVShowsRepository repository = TVShowsRepository.getInstance();
         if (listenerW != null) {
             repository.removeOnFullTVShowGetListeners(listenerW);
             listenerW = null;
@@ -181,8 +180,8 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                             Snackbar.make(findViewById(R.id.nested_scroll_view), "Your rating saved", Snackbar.LENGTH_LONG).show();
                         }
                     };
-                    TVShowsRepository.getInstance().addOnInfoUpdatedListener(onInfoUpdatedListener);
-                    TVShowsRepository.getInstance().rateTVShow(tvShow.getId(), rating * 2);
+                    repository.addOnInfoUpdatedListener(onInfoUpdatedListener);
+                    repository.rateTVShow(tvShow.getId(), rating * 2);
                 }
             }
         });

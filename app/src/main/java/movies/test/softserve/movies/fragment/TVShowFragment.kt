@@ -21,11 +21,15 @@ import movies.test.softserve.movies.util.StartActivityClass
 
 class TVShowFragment : Fragment() {
 
-    private var mRecyclerView: RecyclerView? = null
+    private lateinit var mRecyclerView: RecyclerView
     private var repository: TVShowsRepository = TVShowsRepository.getInstance()
     private var dbService: DBMovieService = DBMovieService.getInstance()
     private var helperService: DBHelperService = DBHelperService()
-    private var listener: OnListOfTVShowsGetListener? = null
+    private var listener: OnListOfTVShowsGetListener = object : OnListOfTVShowsGetListener {
+        override fun onListOfTVShowsGet() {
+            mRecyclerView.adapter.notifyDataSetChanged()
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -40,11 +44,12 @@ class TVShowFragment : Fragment() {
             if (helperService.toDoWithFavourite(movie)) {
                 Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT)
                         .show()
+                view.adapter.notifyDataSetChanged()
             } else {
                 buildAlertDialog(movie)
             }
 
-            view.adapter.notifyDataSetChanged()
+
         }),
                 object : MovieListWrapper.OnEndReachListener {
                     override fun onEndReach(): MovieListWrapper.State {
@@ -61,23 +66,13 @@ class TVShowFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        mRecyclerView!!.adapter.notifyDataSetChanged()
-        if (listener == null) {
-            listener = object : OnListOfTVShowsGetListener {
-                override fun onListOfTVShowsGet() {
-                    mRecyclerView!!.adapter.notifyDataSetChanged()
-                }
-            }
-            repository.addOnListOfTVShowsGetListener(listener)
-        }
+        mRecyclerView.adapter.notifyDataSetChanged()
+        repository.addOnListOfTVShowsGetListener(listener)
     }
 
     override fun onPause() {
         super.onPause()
-        if (listener != null) {
-            repository.removeOnListOfTVShowsGetListener(listener)
-            listener = null
-        }
+        repository.removeOnListOfTVShowsGetListener(listener)
     }
 
     private fun buildAlertDialog(movie: TVEntity) {
@@ -85,15 +80,15 @@ class TVShowFragment : Fragment() {
                 .setMessage(R.string.delete_from_watched)
                 .setPositiveButton(R.string.yes) { _, _ ->
                     dbService.deleteFromDb(movie.id)
-                    Snackbar.make(mRecyclerView!!, "Deleted from favourite",
+                    Snackbar.make(mRecyclerView, "Deleted from favourite",
                             Snackbar.LENGTH_LONG).show()
-                    mRecyclerView!!.adapter.notifyDataSetChanged()
+                    mRecyclerView.adapter.notifyDataSetChanged()
                 }
                 .setNegativeButton(R.string.no) { _, _ ->
                     dbService.cancelFavourite(movie.id)
-                    Snackbar.make(mRecyclerView!!, "Deleted from favourite",
+                    Snackbar.make(mRecyclerView, "Deleted from favourite",
                             Snackbar.LENGTH_LONG).show()
-                    mRecyclerView!!.adapter.notifyDataSetChanged()
+                    mRecyclerView.adapter.notifyDataSetChanged()
                 }.create()
                 .show()
     }

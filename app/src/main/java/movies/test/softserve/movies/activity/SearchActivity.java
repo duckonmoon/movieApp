@@ -45,7 +45,19 @@ public class SearchActivity extends AppCompatActivity {
     private MovieService movieService = MovieService.getInstance();
     private DBMovieService dbService = DBMovieService.getInstance();
 
-    private OnListOfMoviesGetListener onListOfMoviesGetListener;
+    private OnListOfMoviesGetListener onListOfMoviesGetListener = new OnListOfMoviesGetListener() {
+        @Override
+        public void onListOfMoviesGetListener(@NonNull List<? extends TVEntity> movies) {
+            if (movies.size() > 0) {
+                mPageViewModel.getList().addAll(movies);
+                mPageViewModel.setPage(mPageViewModel.getPage() + 1);
+            } else {
+                message = "all";
+            }
+            mRecyclerView.getAdapter().notifyDataSetChanged();
+        }
+    };
+
     private String message = null;
 
     @Override
@@ -70,11 +82,10 @@ public class SearchActivity extends AppCompatActivity {
                 if (helperService.toDoWithFavourite(movie)) {
                     Snackbar.make(mRecyclerView, "Added to favourite", Snackbar.LENGTH_SHORT)
                             .show();
+                    mRecyclerView.getAdapter().notifyDataSetChanged();
                 } else {
                     buildAlertDialog(movie);
                 }
-
-                mRecyclerView.getAdapter().notifyDataSetChanged();
             }
         }), new MovieListWrapper.OnEndReachListener() {
             @Override
@@ -112,33 +123,16 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (onListOfMoviesGetListener == null) {
-            onListOfMoviesGetListener = new OnListOfMoviesGetListener() {
-                @Override
-                public void onListOfMoviesGetListener(@NonNull List<? extends TVEntity> movies) {
-                    if (movies.size() > 0) {
-                        mPageViewModel.getList().addAll(movies);
-                        mPageViewModel.setPage(mPageViewModel.getPage() + 1);
-                    } else {
-                        message = "all";
-                    }
-                    mRecyclerView.getAdapter().notifyDataSetChanged();
-                }
-            };
-            movieService.addOnListOfMoviesGetListener(onListOfMoviesGetListener);
-            Intent intent = getIntent();
-            id = intent.getIntExtra(ID, -1);
-        }
+
+        movieService.addOnListOfMoviesGetListener(onListOfMoviesGetListener);
+
         mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (onListOfMoviesGetListener != null) {
-            movieService.removeOnListOfMoviesGetListener(onListOfMoviesGetListener);
-            onListOfMoviesGetListener = null;
-        }
+        movieService.removeOnListOfMoviesGetListener(onListOfMoviesGetListener);
     }
 
     private void buildAlertDialog(final TVEntity movie) {

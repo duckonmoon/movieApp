@@ -17,8 +17,17 @@ import movies.test.softserve.movies.util.StartActivityClass
 
 class GenreFragment : Fragment() {
 
-    private var mRecyclerView: RecyclerView? = null
-    private var onListOfGenresGetListener: OnListOfGenresGetListener? = null
+    private lateinit var mRecyclerView: RecyclerView
+    private var onListOfGenresGetListener: OnListOfGenresGetListener =  object : OnListOfGenresGetListener {
+        override fun onListOfGenresGet(genres: List<Genre>?) {
+            if (mainController.genres.size > 0) {
+                return
+            } else {
+                mainController.genres.addAll(genres!!)
+                mRecyclerView.adapter.notifyDataSetChanged()
+            }
+        }
+    }
 
     private var mainController: MainController = MainController.getInstance()
     private var movieService: MovieService = MovieService.getInstance()
@@ -40,27 +49,14 @@ class GenreFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (onListOfGenresGetListener == null) {
-            onListOfGenresGetListener = object : OnListOfGenresGetListener {
-                override fun onListOfGenresGet(genres: List<Genre>?) {
-                    if (mainController.genres.size > 0) {
-                        return
-                    } else {
-                        mainController.genres.addAll(genres!!)
-                        mRecyclerView!!.adapter.notifyDataSetChanged()
-                    }
-                }
-            }
-            if (mainController.genres.size < 1) {
-                movieService.tryToGetAllGenres()
-            }
+        if (mainController.genres.size < 1) {
+            movieService.tryToGetAllGenres()
         }
-        movieService.addOnListOfGenresGetListener(onListOfGenresGetListener!!)
+        movieService.addOnListOfGenresGetListener(onListOfGenresGetListener)
     }
 
     override fun onPause() {
         super.onPause()
-        movieService.removeOnListOfGenresGetListener(onListOfGenresGetListener!!)
-        onListOfGenresGetListener = null
+        movieService.removeOnListOfGenresGetListener(onListOfGenresGetListener)
     }
 }

@@ -35,18 +35,18 @@ class SearchFragment : Fragment() {
     private var dbService: DBMovieService = DBMovieService.getInstance()
     private var helperService: DBHelperService = DBHelperService()
 
-    companion object {
-        private val COMPANION: String = "COMPANION"
-        private val TYPE_MOVIE = false
-    }
-    private var mRecyclerView: RecyclerView? = null
+    private val comp: String = "comp"
+    private val typeMovie = false
+
+
+    private lateinit var mRecyclerView: RecyclerView
 
     private var transfer: Transfer = Transfer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState!=null){
-            transfer = savedInstanceState.getSerializable(COMPANION) as Transfer
+            transfer = savedInstanceState.getSerializable(comp) as Transfer
         }
     }
 
@@ -74,7 +74,7 @@ class SearchFragment : Fragment() {
             transfer.query = editSearchView.text.toString()
             transfer.type = switchView.isChecked
             transfer.message = null
-            if (transfer.type == TYPE_MOVIE) {
+            if (transfer.type == typeMovie) {
                 movieRequest()
             } else {
                 tvShowRequest()
@@ -98,7 +98,7 @@ class SearchFragment : Fragment() {
 
             override fun onEndReach(): MovieListWrapper.State {
                 if (transfer.list.size > 0 && transfer.message == null) {
-                    if (transfer.type == TYPE_MOVIE) {
+                    if (transfer.type == typeMovie) {
                         movieRequest()
                     } else {
                         tvShowRequest()
@@ -121,12 +121,12 @@ class SearchFragment : Fragment() {
                     if (response.body()!!.movies.isEmpty()) {
                         transfer.message = "Overload"
                     }
-                    mRecyclerView!!.adapter.notifyDataSetChanged()
+                    mRecyclerView.adapter.notifyDataSetChanged()
                 }
             }
 
             override fun onFailure(call: Call<Page>?, t: Throwable?) {
-                Snackbar.make(mRecyclerView!!, "No Internet", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(mRecyclerView, "No Internet", Snackbar.LENGTH_SHORT).show()
             }
         })
     }
@@ -137,7 +137,7 @@ class SearchFragment : Fragment() {
                 if (response!!.body()!!.page == transfer.page) {
                     transfer.page++
                     transfer.list.addAll(Mapper.mapFromTVShowToTVEntity(response.body()!!.results))
-                    mRecyclerView!!.adapter.notifyDataSetChanged()
+                    mRecyclerView.adapter.notifyDataSetChanged()
                     if (response.body()!!.results.isEmpty()) {
                         transfer.message = "Overload"
                     }
@@ -145,14 +145,14 @@ class SearchFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<TVPage>?, t: Throwable?) {
-                Snackbar.make(mRecyclerView!!, "No Internet", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(mRecyclerView, "No Internet", Snackbar.LENGTH_SHORT).show()
             }
         })
     }
 
     override fun onResume() {
         super.onResume()
-        mRecyclerView!!.adapter.notifyDataSetChanged()
+        mRecyclerView.adapter.notifyDataSetChanged()
     }
 
     private fun buildAlertDialog(movie: TVEntity, view: RecyclerView) {
@@ -175,7 +175,7 @@ class SearchFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState!!.putSerializable(COMPANION, transfer)
+        outState!!.putSerializable(comp, transfer)
     }
 
 
@@ -187,5 +187,4 @@ private class Transfer : Serializable {
     var page: Int = 1
     var type: Boolean = false
     var list: ArrayList<TVEntity> = ArrayList()
-
 }

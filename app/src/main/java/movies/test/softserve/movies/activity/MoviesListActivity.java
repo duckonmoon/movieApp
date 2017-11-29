@@ -50,13 +50,18 @@ public class MoviesListActivity extends AppCompatActivity
 
     private RecyclerView mRecyclerView;
 
-    private AddedItemsEvent event;
+    private AddedItemsEvent event = (message) ->
+            runOnUiThread(() -> {
+                errorMessage = message;
+                mRecyclerView.getAdapter().notifyDataSetChanged();
+            });
 
     private FragmentViewModel viewModel;
 
     private String errorMessage;
 
-    private RatingService.OnRatingChangeListener onRatingChangeListener;
+    private RatingService.OnRatingChangeListener onRatingChangeListener
+            = (lvl, rating) -> navigationMenuStart();
 
     private DBHelperService helperService = new DBHelperService();
     private DBMovieService dbService = DBMovieService.getInstance();
@@ -168,31 +173,10 @@ public class MoviesListActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (event == null) {
-            event = new AddedItemsEvent() {
-                @Override
-                public void onItemsAdded(final String message) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            errorMessage = message;
-                            mRecyclerView.getAdapter().notifyDataSetChanged();
-                        }
-                    });
-                }
-            };
-            mainController.setAddedItemsEventListener(event);
-        }
+        mainController.setAddedItemsEventListener(event);
 
-        if (onRatingChangeListener == null) {
-            onRatingChangeListener = new RatingService.OnRatingChangeListener() {
-                @Override
-                public void onRatingChange(RatingService.Levels lvl, Float rating) {
-                    navigationMenuStart();
-                }
-            };
-            ratingService.addOnRatingChangeListener(onRatingChangeListener);
-        }
+        ratingService.addOnRatingChangeListener(onRatingChangeListener);
+
 
         navigationMenuStart();
 
@@ -261,12 +245,8 @@ public class MoviesListActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         mainController.removeAddedItemsEventListener();
-        if (onRatingChangeListener != null) {
-            ratingService.removeOnRatingChangeListener(onRatingChangeListener);
-            onRatingChangeListener = null;
-        }
+        ratingService.removeOnRatingChangeListener(onRatingChangeListener);
 
-        event = null;
     }
 
     @Override

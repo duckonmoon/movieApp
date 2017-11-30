@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -81,7 +82,13 @@ class SearchFragment : Fragment() {
             }
         }
 
-        view.list.layoutManager = LinearLayoutManager(context)
+        val isTablet = resources.getBoolean(R.bool.isTablet)
+        if (isTablet) {
+            mRecyclerView.layoutManager = GridLayoutManager(context, 2)
+        } else {
+            mRecyclerView.layoutManager = LinearLayoutManager(context)
+
+        }
         view.list.adapter = MovieListWrapper(MovieRecyclerViewAdapter(transfer.list, MovieRecyclerViewAdapter.OnMovieSelect { mov ->
             StartActivityClass.startDetailsActivity(activity, mov)
         }, MovieRecyclerViewAdapter.OnFavouriteClick { movie ->

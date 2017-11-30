@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -45,9 +46,14 @@ public class WatchedFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_watched_movie_list, container, false);
 
-        Context context = view.getContext();
         mRecyclerView = (RecyclerView) view;
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+        if (isTablet){
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
+        } else {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        }
         List<TVEntity> listOfMovies = new ArrayList<>();
         listOfMovies.addAll(dbService.getAllMovies());
         listOfMovies.addAll(dbService.getAllTVShows());

@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -73,7 +74,14 @@ public class MoviesListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
         mRecyclerView = findViewById(R.id.recyclerview);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+        if (isTablet){
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        } else {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        }
+
 
         mRecyclerView.setAdapter(new MovieListWrapper(new MovieRecyclerViewAdapter(mainController.getMovies(),
                 new MovieRecyclerViewAdapter.OnMovieSelect() {

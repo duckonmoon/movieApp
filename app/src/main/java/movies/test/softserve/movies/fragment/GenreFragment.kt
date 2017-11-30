@@ -2,6 +2,7 @@ package movies.test.softserve.movies.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -37,7 +38,12 @@ class GenreFragment : Fragment() {
         val view = inflater!!.inflate(R.layout.fragment_genre_list, container, false)
         mRecyclerView = view as RecyclerView
         val context = view.getContext()
-        view.layoutManager = LinearLayoutManager(context)
+        val isTablet = resources.getBoolean(R.bool.isTablet)
+        if (isTablet) {
+            mRecyclerView.layoutManager = GridLayoutManager(context, 3)
+        } else {
+            mRecyclerView.layoutManager = LinearLayoutManager(context)
+        }
         view.adapter = ViewAdapter(MainController.getInstance().genres, onItemClickListener = object : ViewAdapter.OnItemClickListener {
             override fun onItemClick(genre: Genre) {
                 StartActivityClass.startActivitySearch(activity, genre)

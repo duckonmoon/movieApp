@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -70,7 +71,13 @@ public class SearchActivity extends AppCompatActivity {
         }
         mPageViewModel = ViewModelProviders.of(this).get(PageViewModel.class);
         mRecyclerView = findViewById(R.id.recyclerview);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+        if (isTablet){
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        } else {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        }
         mRecyclerView.setAdapter(new MovieListWrapper(new MovieRecyclerViewAdapter(mPageViewModel.getList(), new MovieRecyclerViewAdapter.OnMovieSelect() {
             @Override
             public void OnMovieSelected(TVEntity mov) {

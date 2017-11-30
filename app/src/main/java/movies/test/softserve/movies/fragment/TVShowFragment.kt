@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -35,7 +36,13 @@ class TVShowFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_tvshow_list, container, false)
         mRecyclerView = view as RecyclerView
-        view.layoutManager = LinearLayoutManager(view.context)
+        val isTablet = resources.getBoolean(R.bool.isTablet)
+        if (isTablet) {
+            mRecyclerView.layoutManager = GridLayoutManager(context, 2)
+        } else {
+            mRecyclerView.layoutManager = LinearLayoutManager(context)
+
+        }
         view.adapter = MovieListWrapper(MovieRecyclerViewAdapter(repository.tvShows,
                 MovieRecyclerViewAdapter.OnMovieSelect { mov ->
                     StartActivityClass.startDetailsActivity(activity, mov)

@@ -1,6 +1,10 @@
 package movies.test.softserve.movies.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import movies.test.softserve.movies.entity.Achievement;
+import movies.test.softserve.movies.event.OnAchievementDoneListener;
 import movies.test.softserve.movies.service.DBMovieService;
 
 /**
@@ -9,11 +13,29 @@ import movies.test.softserve.movies.service.DBMovieService;
 
 public class AchievementService {
 
-    private DBMovieService service;
+    private DBMovieService service = DBMovieService.getInstance();
+    private List<Achievement> achievements = new ArrayList<>();
+    private List<OnAchievementDoneListener> listeners = new ArrayList<>();
 
-    public AchievementService() {
-        service = DBMovieService.getInstance();
+    private static AchievementService INSTANCE;
+
+    public static AchievementService getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new AchievementService();
+        }
+        return INSTANCE;
     }
+
+    private AchievementService() {
+        for (Achievement achievement:
+             Achievement.Companion.getAchievements()) {
+            if (!getAchievementStatus(achievement)){
+                achievements.add(achievement);
+            }
+
+        }
+    }
+
 
     public boolean getAchievementStatus(Achievement achievement) {
         if (achievement.getGenre() != null) {
@@ -37,6 +59,33 @@ public class AchievementService {
         }
 
 
+    }
+
+    public void checkWhatAchievementsIsDone() {
+        Runnable runnable = () -> {
+            List<Achievement> achievementsToDelete = new ArrayList<>();
+            for (Achievement achievement :
+                    achievements) {
+                if (getAchievementStatus(achievement)) {
+                    for (OnAchievementDoneListener listener :
+                            listeners) {
+                        listener.onAchievementDone(achievement);
+                        achievementsToDelete.add(achievement);
+                    }
+                }
+            }
+            achievements.removeAll(achievementsToDelete);
+        };
+        runnable.run();
+    }
+
+
+    public void addListener(OnAchievementDoneListener listener){
+        listeners.add(listener);
+    }
+
+    public void removeListener(OnAchievementDoneListener listener){
+        listeners.remove(listener);
     }
 
     private boolean getTVShowAchievementWithoutGenre(Achievement achievement) {

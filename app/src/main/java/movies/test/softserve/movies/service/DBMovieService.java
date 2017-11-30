@@ -12,6 +12,7 @@ import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.db.entity.MovieDbEntities.GenreEntry;
 import movies.test.softserve.movies.db.entity.MovieDbEntities.MovieEntry;
 import movies.test.softserve.movies.entity.TVEntity;
+import movies.test.softserve.movies.util.AchievementService;
 import movies.test.softserve.movies.util.RatingService;
 
 /**
@@ -51,7 +52,9 @@ public class DBMovieService {
         values.put(MovieEntry.COLUMN_NAME_TYPE, CONTENT_TYPE_MOVIE);
         ratingService.change(voteAverage, RatingService.ADD);
         insertGenresIfNotExists(id, genres);
-        return database.insert(MovieEntry.TABLE_NAME, null, values);
+        long returnValue = database.insert(MovieEntry.TABLE_NAME, null, values);
+        AchievementService.getInstance().checkWhatAchievementsIsDone();
+        return returnValue;
     }
 
     public long insertTVShowToFavourite(Integer id, String name, float voteAverage, int voteCount, String overview, String posterpath) {
@@ -66,7 +69,9 @@ public class DBMovieService {
         values.put(MovieEntry.COLUMN_NAME_WATCHED, 1);
         values.put(MovieEntry.COLUMN_NAME_TYPE, CONTENT_TYPE_TVSHOW);
         ratingService.change(voteAverage, RatingService.ADD);
-        return database.insert(MovieEntry.TABLE_NAME, null, values);
+        long returnValue = database.insert(MovieEntry.TABLE_NAME, null, values);
+        AchievementService.getInstance().checkWhatAchievementsIsDone();
+        return returnValue;
     }
 
     public long addMovieToDb(Integer id, String title, float voteAverage, int voteCount, String overview, String releaseDate, String posterpath, List<Integer> genres) {
@@ -83,7 +88,9 @@ public class DBMovieService {
         values.put(MovieEntry.COLUMN_NAME_TYPE, CONTENT_TYPE_MOVIE);
         ratingService.change(voteAverage, RatingService.ADD);
         insertGenresIfNotExists(id, genres);
-        return database.insert(MovieEntry.TABLE_NAME, null, values);
+        long returnValue = database.insert(MovieEntry.TABLE_NAME, null, values);
+        AchievementService.getInstance().checkWhatAchievementsIsDone();
+        return returnValue;
     }
 
     public long addTVShowToDb(Integer id, String name, float voteAverage, int voteCount, String overview, String posterpath) {
@@ -98,7 +105,9 @@ public class DBMovieService {
         values.put(MovieEntry.COLUMN_NAME_WATCHED, 1);
         values.put(MovieEntry.COLUMN_NAME_TYPE, CONTENT_TYPE_TVSHOW);
         ratingService.change(voteAverage, RatingService.ADD);
-        return database.insert(MovieEntry.TABLE_NAME, null, values);
+        long returnValue = database.insert(MovieEntry.TABLE_NAME, null, values);
+        AchievementService.getInstance().checkWhatAchievementsIsDone();
+        return returnValue;
     }
 
 

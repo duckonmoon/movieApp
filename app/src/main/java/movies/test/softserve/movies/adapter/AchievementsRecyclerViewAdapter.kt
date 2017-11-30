@@ -13,6 +13,9 @@ import movies.test.softserve.movies.util.AchievementService
 
 class AchievementsRecyclerViewAdapter(private val mValues: List<Achievement>) : RecyclerView.Adapter<AchievementsRecyclerViewAdapter.ViewHolder>() {
 
+    private var service : AchievementService = AchievementService.getInstance()
+
+
     companion object {
         val VISIBLE = 1f
         val INVISIBLE = 0.05f
@@ -30,8 +33,7 @@ class AchievementsRecyclerViewAdapter(private val mValues: List<Achievement>) : 
         holder.mContentView.text = mValues[position].description
         holder.mImageView.setImageResource(mValues[position].resourceId)
 
-
-        if (AchievementService().getAchievementStatus(mValues[position])) {
+        if (service.getAchievementStatus(mValues[position])) {
             holder.mImageView.alpha = VISIBLE
         } else {
             holder.mImageView.alpha = INVISIBLE

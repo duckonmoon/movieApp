@@ -44,7 +44,7 @@ import movies.test.softserve.movies.util.RatingService;
 import movies.test.softserve.movies.util.StartActivityClass;
 import movies.test.softserve.movies.viewmodel.FragmentViewModel;
 
-public class MoviesListActivity extends AppCompatActivity
+public class MoviesListActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String BUNDLE_RECYCLER_LAYOUT = "classname.recycler.layout";

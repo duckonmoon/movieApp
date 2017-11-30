@@ -53,7 +53,7 @@ import movies.test.softserve.movies.viewmodel.FullTVSeriesViewModel;
  * Created by rkrit on 20.11.17.
  */
 
-public class TVShowDetailsActivity extends AppCompatActivity {
+public class TVShowDetailsActivity extends BaseActivity {
     public static final String TV_ENTITY = "tv entity";
 
     private TVEntity tvShow;

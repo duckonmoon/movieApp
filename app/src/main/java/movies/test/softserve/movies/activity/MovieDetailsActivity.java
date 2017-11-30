@@ -50,7 +50,7 @@ import movies.test.softserve.movies.util.StartActivityClass;
 import movies.test.softserve.movies.util.BudgetFormatter;
 import movies.test.softserve.movies.viewmodel.FullMovieViewModel;
 
-public class MovieDetailsActivity extends AppCompatActivity {
+public class MovieDetailsActivity extends BaseActivity {
 
     public static final String TV_ENTITY = "tv entity";
 

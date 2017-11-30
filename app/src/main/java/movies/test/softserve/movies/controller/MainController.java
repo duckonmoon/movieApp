@@ -1,40 +1,51 @@
 package movies.test.softserve.movies.controller;
 
+import android.app.Activity;
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import movies.test.softserve.movies.entity.Achievement;
 import movies.test.softserve.movies.entity.Genre;
 import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.event.AddedItemsEvent;
+import movies.test.softserve.movies.event.OnAchievementDoneListener;
 import movies.test.softserve.movies.event.OnSessionGetListener;
 import movies.test.softserve.movies.repository.MoviesRepository;
 import movies.test.softserve.movies.repository.TVShowsRepository;
 import movies.test.softserve.movies.service.MovieReaderDbHelper;
 import movies.test.softserve.movies.service.MovieService;
+import movies.test.softserve.movies.util.AchievementService;
 
 /**
  * Created by rkrit on 25.10.17.
  */
 
-public class MainController extends Application implements Observer {
+public class MainController extends Application implements Observer, OnAchievementDoneListener {
     private List<TVEntity> movies;
     private List<Genre> genres = new ArrayList<>();
     private Integer page;
     private MoviesRepository moviesRepository;
     private AddedItemsEvent eventListener;
     private MovieReaderDbHelper movieReaderDbHelper;
+    private AchievementService achievementService;
     private SQLiteDatabase database;
     private MovieService movieService;
     private GuestSession guestSession;
 
 
     private static MainController INSTANCE;
+
+
+    public static Activity CurrentContext;
 
     @Override
     public void onCreate() {
@@ -45,6 +56,8 @@ public class MainController extends Application implements Observer {
         movieReaderDbHelper = new MovieReaderDbHelper(getApplicationContext());
         database = movieReaderDbHelper.getWritableDatabase();
         moviesRepository = MoviesRepository.getInstance();
+        achievementService = AchievementService.getInstance();
+        achievementService.addListener(this::onAchievementDone);
         moviesRepository.addObserver(this);
         movieService = MovieService.getInstance();
         movieService.addSessionListener(new OnSessionGetListener() {
@@ -114,5 +127,19 @@ public class MainController extends Application implements Observer {
 
     public void setGenres(List<Genre> genres) {
         this.genres = genres;
+    }
+
+    @Override
+    public void onAchievementDone(Achievement achievement) {
+        try {
+            //Toast.makeText(this, achievement.getDescription(), Toast.LENGTH_LONG).show();
+            new AlertDialog.Builder(CurrentContext)
+                    .setTitle(achievement.getTitle())
+                    .setIcon(achievement.getResourceId())
+                    .setMessage(achievement.getDescription())
+                    .show();
+        } catch (Exception e) {
+            Log.e("Smth went wrong", e.getMessage());
+        }
     }
 }

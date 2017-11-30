@@ -26,7 +26,7 @@ import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.util.StartActivityClass;
 import movies.test.softserve.movies.viewmodel.PageViewModel;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends BaseActivity {
 
     public static final String ID = "search_id";
     public static final String SEARCH_PARAM = "search_param";

@@ -45,7 +45,7 @@ public class MainController extends Application implements Observer, OnAchieveme
     private static MainController INSTANCE;
 
 
-    public static Activity CurrentContext;
+    private Activity currentContext;
 
     @Override
     public void onCreate() {
@@ -57,7 +57,7 @@ public class MainController extends Application implements Observer, OnAchieveme
         database = movieReaderDbHelper.getWritableDatabase();
         moviesRepository = MoviesRepository.getInstance();
         achievementService = AchievementService.getInstance();
-        achievementService.addListener(this::onAchievementDone);
+        achievementService.addListener(this);
         moviesRepository.addObserver(this);
         movieService = MovieService.getInstance();
         movieService.addSessionListener(new OnSessionGetListener() {
@@ -129,11 +129,19 @@ public class MainController extends Application implements Observer, OnAchieveme
         this.genres = genres;
     }
 
+    public Activity getCurrentContext() {
+        return currentContext;
+    }
+
+    public void setCurrentContext(Activity currentContext) {
+        this.currentContext = currentContext;
+    }
+
     @Override
     public void onAchievementDone(Achievement achievement) {
         try {
             //Toast.makeText(this, achievement.getDescription(), Toast.LENGTH_LONG).show();
-            new AlertDialog.Builder(CurrentContext)
+            new AlertDialog.Builder(currentContext)
                     .setTitle(achievement.getTitle())
                     .setIcon(achievement.getResourceId())
                     .setMessage(achievement.getDescription())

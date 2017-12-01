@@ -87,7 +87,7 @@ public class SearchActivity extends BaseActivity {
             @Override
             public void onFavouriteClick(final TVEntity movie) {
                 if (helperService.toDoWithFavourite(movie)) {
-                    Snackbar.make(mRecyclerView, "Added to favourite", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(mRecyclerView, getString(R.string.added_to_favourite), Snackbar.LENGTH_SHORT)
                             .show();
                     mRecyclerView.getAdapter().notifyDataSetChanged();
                 } else {
@@ -148,7 +148,7 @@ public class SearchActivity extends BaseActivity {
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dbService.deleteFromDb(movie.getId());
-                        Snackbar.make(mRecyclerView, "Deleted from favourite",
+                        Snackbar.make(mRecyclerView, R.string.mark_unwatched,
                                 Snackbar.LENGTH_LONG).show();
                         mRecyclerView.getAdapter().notifyDataSetChanged();
                     }
@@ -156,7 +156,7 @@ public class SearchActivity extends BaseActivity {
                 .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dbService.cancelFavourite(movie.getId());
-                        Snackbar.make(mRecyclerView, "Deleted from favourite",
+                        Snackbar.make(mRecyclerView, R.string.removed_from_favourite,
                                 Snackbar.LENGTH_LONG).show();
                         mRecyclerView.getAdapter().notifyDataSetChanged();
                     }

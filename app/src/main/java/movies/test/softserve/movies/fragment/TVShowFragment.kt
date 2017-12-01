@@ -49,7 +49,7 @@ class TVShowFragment : Fragment() {
                 }, MovieRecyclerViewAdapter.OnFavouriteClick { movie ->
 
             if (helperService.toDoWithFavourite(movie)) {
-                Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT)
+                Snackbar.make(view, R.string.added_to_favourite, Snackbar.LENGTH_SHORT)
                         .show()
                 view.adapter.notifyDataSetChanged()
             } else {
@@ -87,13 +87,13 @@ class TVShowFragment : Fragment() {
                 .setMessage(R.string.delete_from_watched)
                 .setPositiveButton(R.string.yes) { _, _ ->
                     dbService.deleteFromDb(movie.id)
-                    Snackbar.make(mRecyclerView, "Deleted from favourite",
+                    Snackbar.make(mRecyclerView, R.string.mark_unwatched,
                             Snackbar.LENGTH_LONG).show()
                     mRecyclerView.adapter.notifyDataSetChanged()
                 }
                 .setNegativeButton(R.string.no) { _, _ ->
                     dbService.cancelFavourite(movie.id)
-                    Snackbar.make(mRecyclerView, "Deleted from favourite",
+                    Snackbar.make(mRecyclerView, R.string.removed_from_favourite,
                             Snackbar.LENGTH_LONG).show()
                     mRecyclerView.adapter.notifyDataSetChanged()
                 }.create()

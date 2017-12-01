@@ -93,7 +93,7 @@ class SearchFragment : Fragment() {
             StartActivityClass.startDetailsActivity(activity, mov)
         }, MovieRecyclerViewAdapter.OnFavouriteClick { movie ->
             if (helperService.toDoWithFavourite(movie)) {
-                Snackbar.make(view.list, "Added to favourite", Snackbar.LENGTH_SHORT)
+                Snackbar.make(view.list, R.string.add_to_favourite, Snackbar.LENGTH_SHORT)
                         .show()
             } else {
                 buildAlertDialog(movie, view.list)
@@ -133,7 +133,7 @@ class SearchFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<Page>?, t: Throwable?) {
-                Snackbar.make(mRecyclerView, "No Internet", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(mRecyclerView, R.string.no_internet, Snackbar.LENGTH_SHORT).show()
             }
         })
     }
@@ -152,7 +152,7 @@ class SearchFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<TVPage>?, t: Throwable?) {
-                Snackbar.make(mRecyclerView, "No Internet", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(mRecyclerView, R.string.no_internet, Snackbar.LENGTH_SHORT).show()
             }
         })
     }
@@ -167,13 +167,13 @@ class SearchFragment : Fragment() {
                 .setMessage(R.string.delete_from_watched)
                 .setPositiveButton(R.string.yes) { _, _ ->
                     dbService.deleteFromDb(movie.id)
-                    Snackbar.make(view, "Deleted from favourite",
+                    Snackbar.make(view, R.string.mark_unwatched,
                             Snackbar.LENGTH_LONG).show()
                     view.adapter.notifyDataSetChanged()
                 }
                 .setNegativeButton(R.string.no) { _, _ ->
                     dbService.cancelFavourite(movie.id)
-                    Snackbar.make(view, "Deleted from favourite",
+                    Snackbar.make(view, R.string.removed_from_favourite,
                             Snackbar.LENGTH_LONG).show()
                     view.adapter.notifyDataSetChanged()
                 }.create()

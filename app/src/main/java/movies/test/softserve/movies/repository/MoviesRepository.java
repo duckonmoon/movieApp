@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Observable;
 
 import movies.test.softserve.movies.constans.Constants;
@@ -75,7 +76,8 @@ public class MoviesRepository extends Observable {
 
     public synchronized void tryToGetAllMovies() {
         numberOfRequests = 0;
-        Call<Page> call = service.getPage(Constants.API_KEY, MainController.getInstance().getPage());
+        Call<Page> call = service.getPage(Constants.API_KEY, MainController.getInstance().getPage(),
+                Locale.getDefault().getLanguage());
         call.enqueue(new Callback<Page>() {
             @Override
             public void onResponse(Call<Page> call, Response<Page> response) {
@@ -95,7 +97,8 @@ public class MoviesRepository extends Observable {
 
     private synchronized void tryAgain(Exception e) {
         if (numberOfRequests < 3) {
-            Call<Page> call = service.getPage(Constants.API_KEY, MainController.getInstance().getPage());
+            Call<Page> call = service.getPage(Constants.API_KEY, MainController.getInstance().getPage(),
+                    Locale.getDefault().getLanguage());
             call.enqueue(new Callback<Page>() {
                 @Override
                 public void onResponse(Call<Page> call, Response<Page> response) {

@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -18,7 +17,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -46,8 +44,8 @@ import movies.test.softserve.movies.event.OnMovieInformationGet;
 import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.MovieService;
-import movies.test.softserve.movies.util.StartActivityClass;
 import movies.test.softserve.movies.util.BudgetFormatter;
+import movies.test.softserve.movies.util.StartActivityClass;
 import movies.test.softserve.movies.viewmodel.FullMovieViewModel;
 
 public class MovieDetailsActivity extends BaseActivity {
@@ -78,7 +76,7 @@ public class MovieDetailsActivity extends BaseActivity {
         @Override
         public void OnInfoUpdated(float code) {
             ratingBar.setRating(code);
-            Snackbar.make(findViewById(R.id.nested_scroll_view), "Your rating saved", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.rating_saved), Snackbar.LENGTH_LONG).show();
         }
     };
 
@@ -108,59 +106,46 @@ public class MovieDetailsActivity extends BaseActivity {
         getSupportActionBar().setTitle(movie.getTitle());
         overViewView.setText(movie.getOverview());
         ratingBar.setRating(movie.getVoteAverage().floatValue() / 2);
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                if (fromUser) {
-                    service.rateMovie(movie.getId(), rating * 2);
-                }
+        ratingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
+            if (fromUser) {
+                service.rateMovie(movie.getId(), rating * 2);
             }
         });
-        releaseDateView.setText(releaseDateView.getText().toString() + movie.getReleaseDate());
-        voteCountView.setText("" + ((float) Math.round(movie.getVoteAverage() * 10)) / 10 + "/" + movie.getVoteCount());
+        releaseDateView.setText(getString(R.string.release_date, movie.getReleaseDate()));
+        voteCountView.setText(getString (R.string.vote_count, movie.getVoteAverage(),movie.getVoteCount()));
         if (dbService.checkIfIsFavourite(movie.getId())) {
             fab.setImageResource(R.drawable.ic_stars_black_24dp);
         }
 
-        share.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
-                        .setQuote(movie.getTitle() + "     \r\nPlot: " + movie.getOverview())
-                        .setContentUrl(Uri.parse("https://image.tmdb.org/t/p/w500" + movie.getPosterPath()))
-                        .build();
-                ShareDialog.show(MovieDetailsActivity.this, shareLinkContent);
-            }
+        share.setOnClickListener(v -> {
+            ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
+                    .setQuote(movie.getTitle() + "     \r\nPlot: " + movie.getOverview())
+                    .setContentUrl(Uri.parse("https://image.tmdb.org/t/p/w500" + movie.getPosterPath()))
+                    .build();
+            ShareDialog.show(MovieDetailsActivity.this, shareLinkContent);
         });
         watched.setImageResource(dbService.checkIfExists(movie.getId()) ? R.mipmap.checked : R.mipmap.not_checked);
-        watched.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (helperService.toDoWithWatched(movie)) {
-                    case WATCHED:
-                        watched.setImageResource(R.mipmap.checked);
-                        Snackbar.make(findViewById(R.id.nested_scroll_view), "Added to watched", Snackbar.LENGTH_SHORT).show();
-                        break;
-                    case FAVOURITE:
-                        Snackbar.make(findViewById(R.id.nested_scroll_view), "It's favourite, u cant do this", Snackbar.LENGTH_SHORT).show();
-                        break;
-                    case CANCELED:
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MovieDetailsActivity.this);
-                        builder.setMessage(R.string.confirm)
-                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dbService.deleteFromDb(movie.getId());
-                                        watched.setImageResource(R.mipmap.not_checked);
-                                        Snackbar.make(findViewById(R.id.nested_scroll_view), "Marked as unwatched", Snackbar.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                    }
-                                });
-                        builder.create().show();
-                        break;
-                }
+        watched.setOnClickListener(v -> {
+            switch (helperService.toDoWithWatched(movie)) {
+                case WATCHED:
+                    watched.setImageResource(R.mipmap.checked);
+                    Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.added_to_watched), Snackbar.LENGTH_SHORT).show();
+                    break;
+                case FAVOURITE:
+                    Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.you_cant_favourrite), Snackbar.LENGTH_SHORT).show();
+                    break;
+                case CANCELED:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MovieDetailsActivity.this);
+                    builder.setMessage(R.string.confirm)
+                            .setPositiveButton(R.string.yes, (dialog, id) -> {
+                                dbService.deleteFromDb(movie.getId());
+                                watched.setImageResource(R.mipmap.not_checked);
+                                Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.mark_unwatched), Snackbar.LENGTH_SHORT).show();
+                            })
+                            .setNegativeButton(R.string.no, (dialog, id) -> {
+                            });
+                    builder.create().show();
+                    break;
             }
         });
     }
@@ -191,7 +176,7 @@ public class MovieDetailsActivity extends BaseActivity {
         RecyclerView countries = findViewById(R.id.countries);
         RecyclerView companies = findViewById(R.id.companies);
         if (fullMovie.getBudget() != 0) {
-            budget.setText(getString(R.string.budget) + BudgetFormatter.toMoney(fullMovie.getBudget()) + "$");
+            budget.setText(getString(R.string.budget,BudgetFormatter.toMoney(fullMovie.getBudget())));
             budget.setVisibility(View.VISIBLE);
         }
         genres.setLayoutManager(new LinearLayoutManager(this,
@@ -212,7 +197,7 @@ public class MovieDetailsActivity extends BaseActivity {
 
 
         if (fullMovie.getHomepage() != null && !fullMovie.getHomepage().equals("")) {
-            links.setText(getString(R.string.homepage) + fullMovie.getHomepage());
+            links.setText(getString(R.string.homepage, fullMovie.getHomepage()));
             links.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -234,13 +219,13 @@ public class MovieDetailsActivity extends BaseActivity {
             public void onClick(View view) {
                 if (helperService.toDoWithFavourite(movie)) {
                     fab.setImageResource(R.drawable.ic_stars_black_24dp);
-                    Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    Snackbar.make(view, getString(R.string.added_to_favourite), Snackbar.LENGTH_LONG)
+                            .show();
                     watched.setImageResource(R.mipmap.checked);
                 } else {
                     fab.setImageResource(R.drawable.ic_star_border_black_24dp);
-                    Snackbar.make(view, "Removed to favourite", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    Snackbar.make(view, R.string.removed_from_favourite, Snackbar.LENGTH_LONG)
+                            .show();
                 }
             }
         });
@@ -250,12 +235,9 @@ public class MovieDetailsActivity extends BaseActivity {
         links = findViewById(R.id.links);
         share = findViewById(R.id.share);
         mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
-        toolbarLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBitmapDrawable != null) {
-                    zoomImageFromThumb(toolbarLayout, mBitmapDrawable.getBitmap());
-                }
+        toolbarLayout.setOnClickListener(v -> {
+            if (mBitmapDrawable != null) {
+                zoomImageFromThumb(toolbarLayout, mBitmapDrawable.getBitmap());
             }
         });
 

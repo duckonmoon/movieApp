@@ -64,10 +64,10 @@ public class WatchedFragment extends Fragment {
             }
         }, movie -> {
             if (helperService.toDoWithFavourite(movie)) {
-                Snackbar.make(mRecyclerView, "Added to favourite", Snackbar.LENGTH_SHORT)
+                Snackbar.make(mRecyclerView, R.string.added_to_favourite, Snackbar.LENGTH_SHORT)
                         .show();
             } else {
-                Snackbar.make(mRecyclerView, "Removed from favourite", Snackbar.LENGTH_SHORT)
+                Snackbar.make(mRecyclerView, R.string.removed_from_favourite, Snackbar.LENGTH_SHORT)
                         .show();
 
 

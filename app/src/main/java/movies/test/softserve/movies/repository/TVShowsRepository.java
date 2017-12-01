@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import movies.test.softserve.movies.constans.Constants;
 import movies.test.softserve.movies.controller.MainController;
@@ -73,7 +74,7 @@ public class TVShowsRepository {
 
 
     public void tryToGetTVShows() {
-        Call<TVPage> call = service.getTopRatedTVShows(Constants.API_KEY, page);
+        Call<TVPage> call = service.getTopRatedTVShows(Constants.API_KEY, page, Locale.getDefault().getLanguage());
         call.enqueue(new Callback<TVPage>() {
             @Override
             public void onResponse(Call<TVPage> call, Response<TVPage> response) {
@@ -157,7 +158,7 @@ public class TVShowsRepository {
     }
 
     public void getTVShowByKeyword(@NonNull String query, @NonNull Integer page, @NonNull Callback<TVPage> callback) {
-        Call<TVPage> call = service.getTVShowByKeyword(Constants.API_KEY, Uri.parse(query.trim()), page);
+        Call<TVPage> call = service.getTVShowByKeyword(Constants.API_KEY, Uri.parse(query.trim()), page,Locale.getDefault().getLanguage());
         call.enqueue(callback);
     }
 

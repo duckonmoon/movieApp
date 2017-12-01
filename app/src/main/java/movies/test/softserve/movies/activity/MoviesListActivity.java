@@ -75,8 +75,8 @@ public class MoviesListActivity extends BaseActivity
         setContentView(R.layout.activity_movies);
         mRecyclerView = findViewById(R.id.recyclerview);
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
-        if (isTablet){
-            mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        if (isTablet) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         } else {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -93,7 +93,7 @@ public class MoviesListActivity extends BaseActivity
             @Override
             public void onFavouriteClick(final TVEntity mov) {
                 if (helperService.toDoWithFavourite(mov)) {
-                    Snackbar.make(mRecyclerView, "Added to favourite",
+                    Snackbar.make(mRecyclerView, getString(R.string.added_to_favourite),
                             Snackbar.LENGTH_LONG).show();
                     mRecyclerView.getAdapter().notifyDataSetChanged();
                 } else {
@@ -102,7 +102,7 @@ public class MoviesListActivity extends BaseActivity
                             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dbService.deleteFromDb(mov.getId());
-                                    Snackbar.make(mRecyclerView, "Deleted from favourite",
+                                    Snackbar.make(mRecyclerView,  R.string.mark_unwatched,
                                             Snackbar.LENGTH_LONG).show();
                                     mRecyclerView.getAdapter().notifyDataSetChanged();
                                 }
@@ -110,7 +110,7 @@ public class MoviesListActivity extends BaseActivity
                             .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dbService.cancelFavourite(mov.getId());
-                                    Snackbar.make(mRecyclerView, "Deleted from favourite",
+                                    Snackbar.make(mRecyclerView, R.string.removed_from_favourite,
                                             Snackbar.LENGTH_LONG).show();
                                     mRecyclerView.getAdapter().notifyDataSetChanged();
                                 }

@@ -2,6 +2,8 @@ package movies.test.softserve.movies.service;
 
 import android.net.Uri;
 
+import java.util.Locale;
+
 import movies.test.softserve.movies.entity.Code;
 import movies.test.softserve.movies.entity.FullMovie;
 import movies.test.softserve.movies.entity.GenresContainer;
@@ -23,11 +25,13 @@ import retrofit2.http.Query;
 public interface MoviesService {
     @GET("3/discover/movie")
     Call<Page> getPage(@Query("api_key") String apiKey,
-                       @Query("page") int page);
+                       @Query("page") int page,
+                       @Query("language") String language);
 
     @GET("3/movie/{movie_id}")
     Call<FullMovie> getMovie(@Path("movie_id") Integer movie_id,
-                             @Query("api_key") String apiKey);
+                             @Query("api_key") String apiKey,
+                             @Query("language") String language);
 
     @GET("3/authentication/guest_session/new")
     Call<GuestSession> getGuestSession(@Query("api_key") String apiKey);
@@ -74,9 +78,9 @@ public interface MoviesService {
             @Query("without_keywords") String without_keywords);
 
     @GET("3/genre/movie/list")
-    Call<GenresContainer> getAllGenres(@Query("api_key") String apiKey);
+    Call<GenresContainer> getAllGenres(@Query("api_key") String apiKey,@Query("language") String language);
 
     @GET("3/search/movie")
-    Call<Page> getMovieByKeyword(@Query("api_key") String apiKey, @Query("query") Uri uri, @Query("page") Integer page);
+    Call<Page> getMovieByKeyword(@Query("api_key") String apiKey, @Query("query") Uri uri, @Query("page") Integer page,@Query("language") String language);
 
 }

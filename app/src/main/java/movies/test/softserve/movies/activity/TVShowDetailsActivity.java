@@ -133,8 +133,8 @@ public class TVShowDetailsActivity extends BaseActivity {
             @Override
             public void run() {
                 releaseDateView.setVisibility(View.VISIBLE);
-                releaseDateView.setText("" + releaseDateView.getText().toString() + fullTVShow.getFirstAirDate());
-                if (fullTVShow.getHomepage() != null && fullTVShow.getHomepage() != "") {
+                releaseDateView.setText(getString(R.string.release_date, fullTVShow.getFirstAirDate()));
+                if (fullTVShow.getHomepage() != null && !fullTVShow.getHomepage().equals("")) {
                     links.setText(fullTVShow.getHomepage());
                     links.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -177,7 +177,7 @@ public class TVShowDetailsActivity extends BaseActivity {
                         @Override
                         public void OnInfoUpdated(float rating) {
                             ratingBar.setRating(rating);
-                            Snackbar.make(findViewById(R.id.nested_scroll_view), "Your rating saved", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.rating_saved), Snackbar.LENGTH_LONG).show();
                         }
                     };
                     repository.addOnInfoUpdatedListener(onInfoUpdatedListener);
@@ -187,7 +187,7 @@ public class TVShowDetailsActivity extends BaseActivity {
         });
 
 
-        voteCountView.setText("" + (((float) Math.round(tvShow.getVoteAverage() * 10)) / 10) + "/" + tvShow.getVoteCount());
+        voteCountView.setText(getString(R.string.vote_count,tvShow.getVoteAverage(), tvShow.getVoteCount()));
         overviewView.setText(tvShow.getOverview());
         releaseDateView.setVisibility(View.GONE);
         share.setOnClickListener(new View.OnClickListener() {
@@ -236,10 +236,10 @@ public class TVShowDetailsActivity extends BaseActivity {
                 switch (helperService.toDoWithWatched(tvShow)) {
                     case WATCHED:
                         watched.setImageResource(R.mipmap.checked);
-                        Snackbar.make(findViewById(R.id.nested_scroll_view), "Added to watched", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.added_to_watched), Snackbar.LENGTH_SHORT).show();
                         break;
                     case FAVOURITE:
-                        Snackbar.make(findViewById(R.id.nested_scroll_view), "It's favourite, u cant do this", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.you_cant_favourrite), Snackbar.LENGTH_SHORT).show();
                         break;
                     case CANCELED:
                         AlertDialog.Builder builder = new AlertDialog.Builder(TVShowDetailsActivity.this);
@@ -249,7 +249,7 @@ public class TVShowDetailsActivity extends BaseActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dbService.deleteFromDb(tvShow.getId());
                                         watched.setImageResource(R.mipmap.not_checked);
-                                        Snackbar.make(findViewById(R.id.nested_scroll_view), "Marked as unwatched", Snackbar.LENGTH_SHORT).show();
+                                        Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.mark_unwatched), Snackbar.LENGTH_SHORT).show();
                                     }
                                 }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                             @Override
@@ -284,13 +284,13 @@ public class TVShowDetailsActivity extends BaseActivity {
             public void onClick(View v) {
                 if (helperService.toDoWithFavourite(tvShow)) {
                     fab.setImageResource(R.drawable.ic_stars_black_24dp);
-                    Snackbar.make(v, "Added to favourite", Snackbar.LENGTH_SHORT)
-                            .setAction("Action", null).show();
+                    Snackbar.make(v, getString(R.string.added_to_favourite), Snackbar.LENGTH_SHORT)
+                            .show();
                     watched.setImageResource(R.mipmap.checked);
                 } else {
                     fab.setImageResource(R.drawable.ic_star_border_black_24dp);
-                    Snackbar.make(v, "Removed to favourite", Snackbar.LENGTH_SHORT)
-                            .setAction("Action", null).show();
+                    Snackbar.make(v, getString(R.string.removed_from_favourite), Snackbar.LENGTH_SHORT)
+                            .show();
                 }
             }
         });

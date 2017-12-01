@@ -12,6 +12,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MainController.CurrentContext = this;
+        MainController.getInstance().setCurrentContext(this);
     }
 }

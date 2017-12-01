@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import movies.test.softserve.movies.constans.Constants;
 import movies.test.softserve.movies.controller.MainController;
@@ -68,10 +69,10 @@ public class MovieService {
     }
 
     public synchronized void tryToGetMovie(Integer id) {
-        Call<FullMovie> call = service.getMovie(id, Constants.API_KEY);
+        Call<FullMovie> call = service.getMovie(id, Constants.API_KEY, Locale.getDefault().getLanguage());
         call.enqueue(new Callback<FullMovie>() {
             @Override
-            public void onResponse(Call<FullMovie> call, Response<FullMovie> response) {
+            public void onResponse(@NonNull Call<FullMovie> call, @NonNull Response<FullMovie> response) {
                 FullMovie fullMovie = response.body();
                 for (OnMovieInformationGet listener :
                         listOfListeners) {
@@ -80,7 +81,7 @@ public class MovieService {
             }
 
             @Override
-            public void onFailure(Call<FullMovie> call, Throwable t) {
+            public void onFailure(@NonNull Call<FullMovie> call, @NonNull Throwable t) {
                 Log.e("Smth went wrong", t.getMessage());
             }
         });
@@ -90,7 +91,7 @@ public class MovieService {
         Call<GuestSession> call = service.getGuestSession(Constants.API_KEY);
         call.enqueue(new Callback<GuestSession>() {
             @Override
-            public void onResponse(Call<GuestSession> call, Response<GuestSession> response) {
+            public void onResponse(@NonNull Call<GuestSession> call, @NonNull Response<GuestSession> response) {
                 GuestSession guestSession = response.body();
                 for (OnSessionGetListener listener :
                         onSessionGetListenersList) {
@@ -99,7 +100,7 @@ public class MovieService {
             }
 
             @Override
-            public void onFailure(Call<GuestSession> call, Throwable t) {
+            public void onFailure(@NonNull Call<GuestSession> call, @NonNull Throwable t) {
                 Log.e("Smth went wrong", t.getMessage());
             }
         });
@@ -112,7 +113,7 @@ public class MovieService {
             Call<Code> call = service.rateMovie(Constants.CONTENT_TYPE, movie_id, Constants.API_KEY, session.getGuestSessionId(), new Rating(value));
             call.enqueue(new Callback<Code>() {
                 @Override
-                public void onResponse(Call<Code> call, Response<Code> response) {
+                public void onResponse(@NonNull Call<Code> call, @NonNull Response<Code> response) {
                     Log.d("Success", response.body().getStatusMessage());
                     for (OnInfoUpdatedListener listener :
                             onInfoUpdatedList) {
@@ -121,7 +122,7 @@ public class MovieService {
                 }
 
                 @Override
-                public void onFailure(Call<Code> call, Throwable t) {
+                public void onFailure(@NonNull Call<Code> call, @NonNull Throwable t) {
                     Log.e("Smth went wrong", t.getMessage());
                 }
             });
@@ -134,7 +135,7 @@ public class MovieService {
 
     public void getMovieByGenreCompany(final Integer genre, final Integer productionCompany, final Integer page) {
         Call<Page> call = service.discoverMovie(Constants.API_KEY,
-                null,
+                Locale.getDefault().getLanguage(),
                 null,
                 null,
                 null,
@@ -167,7 +168,7 @@ public class MovieService {
         );
         call.enqueue(new Callback<Page>() {
             @Override
-            public void onResponse(Call<Page> call, Response<Page> response) {
+            public void onResponse(@NonNull Call<Page> call, @NonNull Response<Page> response) {
                 for (OnListOfMoviesGetListener listener :
                         onListOfMoviesGetListeners) {
                     if (response.body() != null) {
@@ -187,10 +188,10 @@ public class MovieService {
     }
 
     public void tryToGetAllGenres() {
-        Call<GenresContainer> call = service.getAllGenres(Constants.API_KEY);
+        Call<GenresContainer> call = service.getAllGenres(Constants.API_KEY, Locale.getDefault().getLanguage());
         call.enqueue(new Callback<GenresContainer>() {
             @Override
-            public void onResponse(Call<GenresContainer> call, Response<GenresContainer> response) {
+            public void onResponse(@NonNull Call<GenresContainer> call, @NonNull Response<GenresContainer> response) {
                 for (OnListOfGenresGetListener listener :
                         onListOfGenresGetListeners) {
                     listener.onListOfGenresGet(response.body().getGenres());
@@ -199,14 +200,14 @@ public class MovieService {
             }
 
             @Override
-            public void onFailure(Call<GenresContainer> call, Throwable t) {
+            public void onFailure(@NonNull Call<GenresContainer> call,@NonNull Throwable t) {
                 Log.e("Smth went wrong", t.getMessage());
             }
         });
     }
 
     public void getMovieByKeyword(@NonNull String query, @NonNull Integer page, @NonNull Callback<Page> callback) {
-        Call<Page> call = service.getMovieByKeyword(Constants.API_KEY, Uri.parse(query.trim()), page);
+        Call<Page> call = service.getMovieByKeyword(Constants.API_KEY, Uri.parse(query.trim()), page, Locale.getDefault().getLanguage());
         call.enqueue(callback);
     }
 

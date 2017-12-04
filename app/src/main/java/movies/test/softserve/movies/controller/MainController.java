@@ -2,9 +2,14 @@ package movies.test.softserve.movies.controller;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -12,6 +17,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.entity.Achievement;
 import movies.test.softserve.movies.entity.Genre;
 import movies.test.softserve.movies.entity.GuestSession;
@@ -140,11 +146,20 @@ public class MainController extends Application implements Observer, OnAchieveme
     @Override
     public void onAchievementDone(Achievement achievement) {
         try {
-            //Toast.makeText(this, achievement.getDescription(), Toast.LENGTH_LONG).show();
+            LayoutInflater inflater = currentContext.getLayoutInflater();
+            View view = inflater.inflate(R.layout.alert_dialog_layout,null);
+            ImageView image = view.findViewById(R.id.achieve_image);
+            image.setImageResource(achievement.getResourceId());
+            TextView title = view.findViewById(R.id.achieve_title);
+            title.setText(achievement.getTitle());
+            TextView text = view.findViewById(R.id.achieve_text);
+            text.setText(achievement.getDescription());
             new AlertDialog.Builder(currentContext)
-                    .setTitle(achievement.getTitle())
-                    .setIcon(achievement.getResourceId())
-                    .setMessage(achievement.getDescription())
+                    .setView(view)
+                    .setTitle(getString(R.string.achievement_unlocked))
+                    .setPositiveButton(R.string.hooray, (dialog, which) -> {
+
+                    })
                     .show();
         } catch (Exception e) {
             Log.e("Smth went wrong", e.getMessage());

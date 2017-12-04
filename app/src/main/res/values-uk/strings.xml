@@ -4,7 +4,7 @@
     <string name="end">Довантажити</string>
     <string name="add_to_favourite">Додати до улюблених</string>
     <string name="try_again">Спробуємо</string>
-    <string name="explore">Серіали</string>
+    <string name="explore">Фільми</string>
     <string name="favourite">Улюблені</string>
     <string name="movies">Фільми</string>
     <string name="created_by_duckonmoon">придумав duckonmoon</string>
@@ -32,4 +32,6 @@
     <string name="removed_from_favourite">Видалено з улюблених</string>
     <string name="mark_unwatched">Позначено як не переглянутий</string>
     <string name="no_internet">Немає інтернету</string>
+    <string name="achievement_unlocked">Досягнення відкрито:)</string>
+    <string name="hooray">Ура</string>
 </resources>

@@ -42,4 +42,6 @@
     <string name="removed_from_favourite">Removed to favourite</string>
     <string name="mark_unwatched">Marked as unwatched</string>
     <string name="no_internet">No internet</string>
+    <string name="achievement_unlocked">Achievement Unlocked:)</string>
+    <string name="hooray">Hooray</string>
 </resources>

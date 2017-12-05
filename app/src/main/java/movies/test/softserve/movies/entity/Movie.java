@@ -3,12 +3,14 @@ package movies.test.softserve.movies.entity;
 /**
  * Created by rkrit on 20.10.17.
  */
-import java.util.ArrayList;
-import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Movie implements ITV {

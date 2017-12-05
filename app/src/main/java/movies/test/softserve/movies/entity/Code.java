@@ -2,19 +2,12 @@ package movies.test.softserve.movies.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Code implements Parcelable
-{
+public class Code implements Parcelable {
 
-    @SerializedName("status_code")
-    @Expose
-    private Integer statusCode;
-    @SerializedName("status_message")
-    @Expose
-    private String statusMessage;
     public final static Parcelable.Creator<Code> CREATOR = new Creator<Code>() {
 
 
@@ -29,8 +22,13 @@ public class Code implements Parcelable
             return (new Code[size]);
         }
 
-    }
-            ;
+    };
+    @SerializedName("status_code")
+    @Expose
+    private Integer statusCode;
+    @SerializedName("status_message")
+    @Expose
+    private String statusMessage;
 
     protected Code(Parcel in) {
         this.statusCode = ((Integer) in.readValue((Integer.class.getClassLoader())));

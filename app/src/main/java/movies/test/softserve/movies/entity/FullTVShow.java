@@ -1,17 +1,33 @@
 package movies.test.softserve.movies.entity;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class FullTVShow implements Serializable, Parcelable
-{
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+public class FullTVShow implements Serializable, Parcelable {
+
+    public final static Parcelable.Creator<FullTVShow> CREATOR = new Creator<FullTVShow>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public FullTVShow createFromParcel(Parcel in) {
+            return new FullTVShow(in);
+        }
+
+        public FullTVShow[] newArray(int size) {
+            return (new FullTVShow[size]);
+        }
+
+    };
+    private final static long serialVersionUID = 8403401438291775201L;
     @SerializedName("backdrop_path")
     @Expose
     private String backdropPath;
@@ -20,7 +36,7 @@ public class FullTVShow implements Serializable, Parcelable
     private List<CreatedBy> createdBy = new ArrayList<>();
     @SerializedName("episode_run_time")
     @Expose
-    private List<Integer> episodeRunTime  = new ArrayList<>();
+    private List<Integer> episodeRunTime = new ArrayList<>();
     @SerializedName("first_air_date")
     @Expose
     private String firstAirDate;
@@ -90,23 +106,6 @@ public class FullTVShow implements Serializable, Parcelable
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;
-    public final static Parcelable.Creator<FullTVShow> CREATOR = new Creator<FullTVShow>() {
-
-
-        @SuppressWarnings({
-                "unchecked"
-        })
-        public FullTVShow createFromParcel(Parcel in) {
-            return new FullTVShow(in);
-        }
-
-        public FullTVShow[] newArray(int size) {
-            return (new FullTVShow[size]);
-        }
-
-    }
-            ;
-    private final static long serialVersionUID = 8403401438291775201L;
 
     protected FullTVShow(Parcel in) {
         this.backdropPath = ((String) in.readValue((String.class.getClassLoader())));

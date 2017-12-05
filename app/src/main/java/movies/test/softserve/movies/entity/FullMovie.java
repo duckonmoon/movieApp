@@ -1,15 +1,30 @@
 package movies.test.softserve.movies.entity;
 
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class FullMovie implements Parcelable
-{
+import java.util.List;
 
+public class FullMovie implements Parcelable {
+
+    public final static Parcelable.Creator<FullMovie> CREATOR = new Creator<FullMovie>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public FullMovie createFromParcel(Parcel in) {
+            return new FullMovie(in);
+        }
+
+        public FullMovie[] newArray(int size) {
+            return (new FullMovie[size]);
+        }
+
+    };
     @SerializedName("adult")
     @Expose
     private Boolean adult;
@@ -85,22 +100,6 @@ public class FullMovie implements Parcelable
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;
-    public final static Parcelable.Creator<FullMovie> CREATOR = new Creator<FullMovie>() {
-
-
-        @SuppressWarnings({
-                "unchecked"
-        })
-        public FullMovie createFromParcel(Parcel in) {
-            return new FullMovie(in);
-        }
-
-        public FullMovie[] newArray(int size) {
-            return (new FullMovie[size]);
-        }
-
-    }
-            ;
 
     protected FullMovie(Parcel in) {
         this.adult = ((Boolean) in.readValue((Boolean.class.getClassLoader())));

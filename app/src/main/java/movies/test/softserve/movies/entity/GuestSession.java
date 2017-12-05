@@ -2,22 +2,12 @@ package movies.test.softserve.movies.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class GuestSession implements Parcelable {
 
-    @SerializedName("success")
-    @Expose
-    private Boolean success;
-    @SerializedName("guest_session_id")
-    @Expose
-    private String guestSessionId;
-    @SerializedName("expires_at")
-    @Expose
-    private String expiresAt;
     public final static Parcelable.Creator<GuestSession> CREATOR = new Creator<GuestSession>() {
 
 
@@ -33,6 +23,15 @@ public class GuestSession implements Parcelable {
         }
 
     };
+    @SerializedName("success")
+    @Expose
+    private Boolean success;
+    @SerializedName("guest_session_id")
+    @Expose
+    private String guestSessionId;
+    @SerializedName("expires_at")
+    @Expose
+    private String expiresAt;
 
     protected GuestSession(Parcel in) {
         this.success = ((Boolean) in.readValue((Boolean.class.getClassLoader())));

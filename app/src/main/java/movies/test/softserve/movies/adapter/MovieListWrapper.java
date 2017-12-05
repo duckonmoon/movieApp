@@ -73,6 +73,18 @@ public class MovieListWrapper extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
 
+    public enum State {
+        Loading,
+        Failed,
+        end
+    }
+
+    public interface OnEndReachListener {
+        State onEndReach();
+
+        void onEndButtonClick();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public Button mButton;
         public ProgressBar mProgressBar;
@@ -90,17 +102,5 @@ public class MovieListWrapper extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             });
         }
-    }
-
-    public interface OnEndReachListener {
-        State onEndReach();
-
-        void onEndButtonClick();
-    }
-
-    public enum State {
-        Loading,
-        Failed,
-        end
     }
 }

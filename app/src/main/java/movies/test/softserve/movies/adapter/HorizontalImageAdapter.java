@@ -49,6 +49,10 @@ public class HorizontalImageAdapter extends RecyclerView.Adapter<HorizontalImage
     }
 
 
+    public interface OnClickListener {
+        void onClick(ImageView imageView);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView mImage;
 
@@ -57,9 +61,5 @@ public class HorizontalImageAdapter extends RecyclerView.Adapter<HorizontalImage
             mImage = itemView.findViewById(R.id.item_image);
             mImage.setOnClickListener((v) -> listener.onClick(mImage));
         }
-    }
-
-    public interface OnClickListener {
-        void onClick(ImageView imageView);
     }
 }

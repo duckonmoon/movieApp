@@ -19,7 +19,7 @@ import movies.test.softserve.movies.util.StartActivityClass
 class GenreFragment : Fragment() {
 
     private lateinit var mRecyclerView: RecyclerView
-    private var onListOfGenresGetListener: OnListOfGenresGetListener =  object : OnListOfGenresGetListener {
+    private var onListOfGenresGetListener: OnListOfGenresGetListener = object : OnListOfGenresGetListener {
         override fun onListOfGenresGet(genres: List<Genre>?) {
             if (mainController.genres.size > 0) {
                 return

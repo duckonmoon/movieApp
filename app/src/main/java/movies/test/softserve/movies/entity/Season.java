@@ -1,15 +1,31 @@
 package movies.test.softserve.movies.entity;
 
-import java.io.Serializable;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Season implements Serializable, Parcelable
-{
+import java.io.Serializable;
 
+public class Season implements Serializable, Parcelable {
+
+    public final static Parcelable.Creator<Season> CREATOR = new Creator<Season>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Season createFromParcel(Parcel in) {
+            return new Season(in);
+        }
+
+        public Season[] newArray(int size) {
+            return (new Season[size]);
+        }
+
+    };
+    private final static long serialVersionUID = -1002491789578755083L;
     @SerializedName("air_date")
     @Expose
     private String airDate;
@@ -25,23 +41,6 @@ public class Season implements Serializable, Parcelable
     @SerializedName("season_number")
     @Expose
     private Integer seasonNumber;
-    public final static Parcelable.Creator<Season> CREATOR = new Creator<Season>() {
-
-
-        @SuppressWarnings({
-                "unchecked"
-        })
-        public Season createFromParcel(Parcel in) {
-            return new Season(in);
-        }
-
-        public Season[] newArray(int size) {
-            return (new Season[size]);
-        }
-
-    }
-            ;
-    private final static long serialVersionUID = -1002491789578755083L;
 
     protected Season(Parcel in) {
         this.airDate = ((String) in.readValue((String.class.getClassLoader())));

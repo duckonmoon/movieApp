@@ -47,8 +47,8 @@ public class MovieFragment extends Fragment {
         Context context = view.getContext();
         mRecyclerView = (RecyclerView) view;
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
-        if (isTablet){
-            mRecyclerView.setLayoutManager(new GridLayoutManager(context,2));
+        if (isTablet) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(context, 2));
         } else {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 

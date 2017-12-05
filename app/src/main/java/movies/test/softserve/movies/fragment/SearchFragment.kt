@@ -18,9 +18,13 @@ import kotlinx.android.synthetic.main.fragment_tventity_list.view.*
 import movies.test.softserve.movies.R
 import movies.test.softserve.movies.adapter.MovieListWrapper
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter
-import movies.test.softserve.movies.entity.*
+import movies.test.softserve.movies.entity.Page
+import movies.test.softserve.movies.entity.TVEntity
+import movies.test.softserve.movies.entity.TVPage
 import movies.test.softserve.movies.repository.TVShowsRepository
-import movies.test.softserve.movies.service.*
+import movies.test.softserve.movies.service.DBHelperService
+import movies.test.softserve.movies.service.DBMovieService
+import movies.test.softserve.movies.service.MovieService
 import movies.test.softserve.movies.util.Mapper
 import movies.test.softserve.movies.util.StartActivityClass
 import retrofit2.Call
@@ -46,7 +50,7 @@ class SearchFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState!=null){
+        if (savedInstanceState != null) {
             transfer = savedInstanceState.getSerializable(comp) as Transfer
         }
     }

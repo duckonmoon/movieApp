@@ -10,7 +10,7 @@ import retrofit2.http.*
  */
 interface TVShowsService {
     @GET("3/tv/top_rated")
-    fun getTopRatedTVShows(@Query("api_key") apiKey: String, @Query("page") page: Int?,@Query("language") language:String): Call<TVPage>
+    fun getTopRatedTVShows(@Query("api_key") apiKey: String, @Query("page") page: Int?, @Query("language") language: String): Call<TVPage>
 
     @GET("3/tv/{tv_id}")
     fun getTVShow(@Path("tv_id") tvID: Int, @Query("api_key") apiKey: String): Call<FullTVShow>
@@ -26,5 +26,5 @@ interface TVShowsService {
     fun getVideos(@Path("tv_id") tvID: Int, @Path("season_number") season_number: Int, @Query("api_key") apiKey: String): Call<VideoContainer>
 
     @GET("3/search/tv")
-    fun getTVShowByKeyword(@Query("api_key") apiKey: String, @Query("query") uri: Uri, @Query("page") page: Int,@Query("language") language:String): Call<TVPage>
+    fun getTVShowByKeyword(@Query("api_key") apiKey: String, @Query("query") uri: Uri, @Query("page") page: Int, @Query("language") language: String): Call<TVPage>
 }

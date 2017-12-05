@@ -21,9 +21,9 @@ import movies.test.softserve.movies.entity.VideoContainer;
 import movies.test.softserve.movies.event.OnFullTVShowGetListener;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnListOfTVShowsGetListener;
-import movies.test.softserve.movies.util.Mapper;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.service.TVShowsService;
+import movies.test.softserve.movies.util.Mapper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -158,7 +158,7 @@ public class TVShowsRepository {
     }
 
     public void getTVShowByKeyword(@NonNull String query, @NonNull Integer page, @NonNull Callback<TVPage> callback) {
-        Call<TVPage> call = service.getTVShowByKeyword(Constants.API_KEY, Uri.parse(query.trim()), page,Locale.getDefault().getLanguage());
+        Call<TVPage> call = service.getTVShowByKeyword(Constants.API_KEY, Uri.parse(query.trim()), page, Locale.getDefault().getLanguage());
         call.enqueue(callback);
     }
 

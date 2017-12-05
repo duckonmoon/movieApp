@@ -20,22 +20,21 @@ import movies.test.softserve.movies.util.RatingService;
  */
 
 public class DBMovieService {
+    public static final Integer CONTENT_TYPE_MOVIE = 1;
+    public static final Integer CONTENT_TYPE_TVSHOW = 0;
     private static DBMovieService INSTANCE;
     private SQLiteDatabase database;
     private RatingService ratingService = RatingService.getInstance();
 
-    public static final Integer CONTENT_TYPE_MOVIE = 1;
-    public static final Integer CONTENT_TYPE_TVSHOW = 0;
+    private DBMovieService() {
+        database = MainController.getInstance().getDatabase();
+    }
 
     public static DBMovieService getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new DBMovieService();
         }
         return INSTANCE;
-    }
-
-    private DBMovieService() {
-        database = MainController.getInstance().getDatabase();
     }
 
     public long insertMovieToFavourite(Integer id, String title, float voteAverage, int voteCount, String overview, String releaseDate, String posterpath, List<Integer> genres) {

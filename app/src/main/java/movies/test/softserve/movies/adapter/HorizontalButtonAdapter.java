@@ -42,6 +42,10 @@ public class HorizontalButtonAdapter extends RecyclerView.Adapter<HorizontalButt
     }
 
 
+    public interface OnClickListener {
+        void onClick(AdditionalInfo info);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public Button mButton;
 
@@ -52,9 +56,5 @@ public class HorizontalButtonAdapter extends RecyclerView.Adapter<HorizontalButt
                 listener.onClick(items.get(getAdapterPosition()));
             });
         }
-    }
-
-    public interface OnClickListener {
-        void onClick(AdditionalInfo info);
     }
 }

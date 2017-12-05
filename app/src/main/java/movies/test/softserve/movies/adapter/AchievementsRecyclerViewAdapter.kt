@@ -13,7 +13,7 @@ import movies.test.softserve.movies.util.AchievementService
 
 class AchievementsRecyclerViewAdapter(private val mValues: List<Achievement>) : RecyclerView.Adapter<AchievementsRecyclerViewAdapter.ViewHolder>() {
 
-    private var service : AchievementService = AchievementService.getInstance()
+    private var service: AchievementService = AchievementService.getInstance()
 
 
     companion object {

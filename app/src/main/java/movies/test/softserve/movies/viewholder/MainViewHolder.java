@@ -23,12 +23,6 @@ public class MainViewHolder extends RecyclerView.ViewHolder {
     public Delegate delegate;
 
 
-    public interface Delegate {
-        void onMovieSelect(int position);
-
-        void onFavouriteClick(int position);
-    }
-
     public MainViewHolder(View view, final Delegate delegate) {
         super(view);
         mTextView = view.findViewById(R.id.description);
@@ -54,5 +48,11 @@ public class MainViewHolder extends RecyclerView.ViewHolder {
     @Override
     public String toString() {
         return super.toString();
+    }
+
+    public interface Delegate {
+        void onMovieSelect(int position);
+
+        void onFavouriteClick(int position);
     }
 }

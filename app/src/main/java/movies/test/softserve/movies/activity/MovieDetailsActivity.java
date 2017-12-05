@@ -112,7 +112,7 @@ public class MovieDetailsActivity extends BaseActivity {
             }
         });
         releaseDateView.setText(getString(R.string.release_date, movie.getReleaseDate()));
-        voteCountView.setText(getString (R.string.vote_count, movie.getVoteAverage(),movie.getVoteCount()));
+        voteCountView.setText(getString(R.string.vote_count, movie.getVoteAverage(), movie.getVoteCount()));
         if (dbService.checkIfIsFavourite(movie.getId())) {
             fab.setImageResource(R.drawable.ic_stars_black_24dp);
         }
@@ -176,7 +176,7 @@ public class MovieDetailsActivity extends BaseActivity {
         RecyclerView countries = findViewById(R.id.countries);
         RecyclerView companies = findViewById(R.id.companies);
         if (fullMovie.getBudget() != 0) {
-            budget.setText(getString(R.string.budget,BudgetFormatter.toMoney(fullMovie.getBudget())));
+            budget.setText(getString(R.string.budget, BudgetFormatter.toMoney(fullMovie.getBudget())));
             budget.setVisibility(View.VISIBLE);
         }
         genres.setLayoutManager(new LinearLayoutManager(this,

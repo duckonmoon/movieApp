@@ -1,7 +1,7 @@
 package movies.test.softserve.movies.entity
 
 import movies.test.softserve.movies.R
-import movies.test.softserve.movies.constans.Constants.*
+import movies.test.softserve.movies.constans.Constants.TVType
 import java.util.*
 
 /**

@@ -6,5 +6,6 @@ package movies.test.softserve.movies.entity;
 
 public interface AdditionalInfo {
     String getName();
+
     Integer getId();
 }

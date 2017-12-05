@@ -1,7 +1,5 @@
 package movies.test.softserve.movies.entity
 
-import java.util.ArrayList
-
 /**
  * Created by rkrit on 10.11.17.
  */

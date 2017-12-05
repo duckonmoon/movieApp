@@ -1,22 +1,13 @@
-
 package movies.test.softserve.movies.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Rating implements Parcelable
-{
+public class Rating implements Parcelable {
 
-    public Rating(Float value) {
-        this.value = value;
-    }
-
-    @SerializedName("value")
-    @Expose
-    private Float value;
     public final static Parcelable.Creator<Rating> CREATOR = new Creator<Rating>() {
 
 
@@ -31,8 +22,13 @@ public class Rating implements Parcelable
             return (new Rating[size]);
         }
 
+    };
+    @SerializedName("value")
+    @Expose
+    private Float value;
+    public Rating(Float value) {
+        this.value = value;
     }
-            ;
 
     protected Rating(Parcel in) {
         this.value = ((Float) in.readValue((Float.class.getClassLoader())));

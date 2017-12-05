@@ -1,12 +1,7 @@
 package movies.test.softserve.movies.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import movies.test.softserve.movies.fragment.AchievementsFragment
-import movies.test.softserve.movies.fragment.SearchFragment
-import movies.test.softserve.movies.fragment.GenreFragment
-import movies.test.softserve.movies.fragment.MovieFragment
-import movies.test.softserve.movies.fragment.TVShowFragment
-import movies.test.softserve.movies.fragment.WatchedFragment
+import movies.test.softserve.movies.fragment.*
 
 /**
  * Created by rkrit on 02.11.17.

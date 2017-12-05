@@ -19,7 +19,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +27,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -40,7 +38,6 @@ import com.squareup.picasso.Target;
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.adapter.HorizontalImageAdapter;
 import movies.test.softserve.movies.entity.FullTVShow;
-import movies.test.softserve.movies.entity.Season;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.event.OnFullTVShowGetListener;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
@@ -187,7 +184,7 @@ public class TVShowDetailsActivity extends BaseActivity {
         });
 
 
-        voteCountView.setText(getString(R.string.vote_count,tvShow.getVoteAverage(), tvShow.getVoteCount()));
+        voteCountView.setText(getString(R.string.vote_count, tvShow.getVoteAverage(), tvShow.getVoteCount()));
         overviewView.setText(tvShow.getOverview());
         releaseDateView.setVisibility(View.GONE);
         share.setOnClickListener(new View.OnClickListener() {

@@ -13,13 +13,6 @@ public class DBHelperService {
         service = DBMovieService.getInstance();
     }
 
-    public enum Watched {
-        WATCHED,
-        FAVOURITE,
-        CANCELED
-    }
-
-
     public boolean toDoWithFavourite(TVEntity movie) {
         if (!service.checkIfIsFavourite(movie.getId())) {
             if (!service.checkIfExists(movie.getId())) {
@@ -50,7 +43,6 @@ public class DBHelperService {
         }
     }
 
-
     public Watched toDoWithWatched(TVEntity movie) {
         if (!service.checkIfExists(movie.getId())) {
             if (movie.getType() == TVEntity.TYPE.MOVIE) {
@@ -78,5 +70,12 @@ public class DBHelperService {
                 return Watched.CANCELED;
             }
         }
+    }
+
+
+    public enum Watched {
+        WATCHED,
+        FAVOURITE,
+        CANCELED
     }
 }

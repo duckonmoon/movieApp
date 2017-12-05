@@ -1,15 +1,31 @@
 package movies.test.softserve.movies.entity;
 
-import java.io.Serializable;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Video implements Serializable, Parcelable
-{
+import java.io.Serializable;
 
+public class Video implements Serializable, Parcelable {
+
+    public final static Parcelable.Creator<Video> CREATOR = new Creator<Video>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Video createFromParcel(Parcel in) {
+            return new Video(in);
+        }
+
+        public Video[] newArray(int size) {
+            return (new Video[size]);
+        }
+
+    };
+    private final static long serialVersionUID = 7555685416953562094L;
     @SerializedName("id")
     @Expose
     private String id;
@@ -34,23 +50,6 @@ public class Video implements Serializable, Parcelable
     @SerializedName("type")
     @Expose
     private String type;
-    public final static Parcelable.Creator<Video> CREATOR = new Creator<Video>() {
-
-
-        @SuppressWarnings({
-                "unchecked"
-        })
-        public Video createFromParcel(Parcel in) {
-            return new Video(in);
-        }
-
-        public Video[] newArray(int size) {
-            return (new Video[size]);
-        }
-
-    }
-            ;
-    private final static long serialVersionUID = 7555685416953562094L;
 
     protected Video(Parcel in) {
         this.id = ((String) in.readValue((String.class.getClassLoader())));

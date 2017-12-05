@@ -15,48 +15,16 @@ import movies.test.softserve.movies.controller.MainController;
  */
 
 public class RatingService {
+    public final static String ADD = "plus";
+    public final static String SUB = "minus";
+    private final static String MAIN_SHARED_PREF = "main.shared.pref";
+    private final static String RATING = "rating";
     private static RatingService INSTANCE;
     private Float rating;
     private Levels lvl;
     private Float progress;
     private MainController controller;
     private List<OnRatingChangeListener> listeners = new ArrayList<>();
-
-    private final static String MAIN_SHARED_PREF = "main.shared.pref";
-    private final static String RATING = "rating";
-
-    public Levels getLvl() {
-        reset();
-        return lvl;
-    }
-
-    public Float getProgress() {
-        reset();
-        return progress;
-    }
-
-    public enum Levels {
-        ZERO(100),
-        FIRST(200),
-        SECOND(300),
-        THIRD(400),
-        FOURTH(500),
-        FIFTH(600),
-        SIXTH(700),
-        SEVENTH(800),
-        EIGHTH(900),
-        NINTH(100),
-        TENTH(0);
-
-        Levels(int i) {
-            toNextLevel = i;
-        }
-
-        public final int toNextLevel;
-    }
-
-    public final static String ADD = "plus";
-    public final static String SUB = "minus";
 
     private RatingService() {
         INSTANCE = this;
@@ -69,6 +37,16 @@ public class RatingService {
             new RatingService();
         }
         return INSTANCE;
+    }
+
+    public Levels getLvl() {
+        reset();
+        return lvl;
+    }
+
+    public Float getProgress() {
+        reset();
+        return progress;
     }
 
     public void change(Float movieRate, String mode) {
@@ -122,6 +100,26 @@ public class RatingService {
 
     public void removeOnRatingChangeListener(OnRatingChangeListener listener) {
         listeners.remove(listener);
+    }
+
+    public enum Levels {
+        ZERO(100),
+        FIRST(200),
+        SECOND(300),
+        THIRD(400),
+        FOURTH(500),
+        FIFTH(600),
+        SIXTH(700),
+        SEVENTH(800),
+        EIGHTH(900),
+        NINTH(100),
+        TENTH(0);
+
+        public final int toNextLevel;
+
+        Levels(int i) {
+            toNextLevel = i;
+        }
     }
 
     public interface OnRatingChangeListener {

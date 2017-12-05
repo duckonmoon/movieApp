@@ -14,7 +14,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +41,7 @@ import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.util.RatingService;
 import movies.test.softserve.movies.util.StartActivityClass;
+import movies.test.softserve.movies.view.RatingView;
 import movies.test.softserve.movies.viewmodel.FragmentViewModel;
 
 public class MoviesListActivity extends BaseActivity
@@ -50,24 +50,19 @@ public class MoviesListActivity extends BaseActivity
     private static final String BUNDLE_RECYCLER_LAYOUT = "classname.recycler.layout";
 
     private RecyclerView mRecyclerView;
-
+    private FragmentViewModel viewModel;
+    private String errorMessage;
     private AddedItemsEvent event = (message) ->
             runOnUiThread(() -> {
                 errorMessage = message;
                 mRecyclerView.getAdapter().notifyDataSetChanged();
             });
-
-    private FragmentViewModel viewModel;
-
-    private String errorMessage;
-
-    private RatingService.OnRatingChangeListener onRatingChangeListener
-            = (lvl, rating) -> navigationMenuStart();
-
     private DBHelperService helperService = new DBHelperService();
     private DBMovieService dbService = DBMovieService.getInstance();
     private MainController mainController = MainController.getInstance();
     private RatingService ratingService = RatingService.getInstance();
+    private RatingService.OnRatingChangeListener onRatingChangeListener
+            = (lvl, rating) -> navigationMenuStart();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +97,7 @@ public class MoviesListActivity extends BaseActivity
                             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dbService.deleteFromDb(mov.getId());
-                                    Snackbar.make(mRecyclerView,  R.string.mark_unwatched,
+                                    Snackbar.make(mRecyclerView, R.string.mark_unwatched,
                                             Snackbar.LENGTH_LONG).show();
                                     mRecyclerView.getAdapter().notifyDataSetChanged();
                                 }
@@ -262,40 +257,9 @@ public class MoviesListActivity extends BaseActivity
     private void navigationMenuStart() {
         View navigationView = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
         ProgressBar progressBar = navigationView.findViewById(R.id.rating_service_rating);
-        ImageView imageView = navigationView.findViewById(R.id.rating_service_image);
+        RatingView ratingView = navigationView.findViewById(R.id.rating_service_image);
+        ratingView.setLevel(ratingService.getLvl().ordinal()+1);
         progressBar.setProgress(ratingService.getProgress().intValue());
-        switch (ratingService.getLvl()) {
-            case ZERO:
-                imageView.setImageResource(R.mipmap.zero_icom_round);
-                break;
-            case FIRST:
-                imageView.setImageResource(R.mipmap.point_holderf_round);
-                break;
-            case SECOND:
-                imageView.setImageResource(R.mipmap.ic_two_round);
-                break;
-            case THIRD:
-                imageView.setImageResource(R.mipmap.ic_three);
-                break;
-            case FOURTH:
-                imageView.setImageResource(R.mipmap.ic_four);
-                break;
-            case FIFTH:
-                imageView.setImageResource(R.mipmap.ic_five);
-                break;
-            case SIXTH:
-                imageView.setImageResource(R.mipmap.ic_six);
-                break;
-            case SEVENTH:
-                imageView.setImageResource(R.mipmap.ic_seven);
-                break;
-            case EIGHTH:
-                imageView.setImageResource(R.mipmap.ic_eight);
-                break;
-            case NINTH:
-                imageView.setImageResource(R.mipmap.ic_nine);
-                break;
-        }
     }
 }
 

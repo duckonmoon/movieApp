@@ -2,19 +2,12 @@ package movies.test.softserve.movies.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Genre implements Parcelable,AdditionalInfo
-{
+public class Genre implements Parcelable, AdditionalInfo {
 
-    @SerializedName("id")
-    @Expose
-    private Integer id;
-    @SerializedName("name")
-    @Expose
-    private String name;
     public final static Parcelable.Creator<Genre> CREATOR = new Creator<Genre>() {
 
 
@@ -29,8 +22,13 @@ public class Genre implements Parcelable,AdditionalInfo
             return (new Genre[size]);
         }
 
-    }
-            ;
+    };
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("name")
+    @Expose
+    private String name;
 
     protected Genre(Parcel in) {
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));

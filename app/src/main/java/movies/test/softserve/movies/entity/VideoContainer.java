@@ -1,23 +1,17 @@
 package movies.test.softserve.movies.entity;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class VideoContainer implements Serializable, Parcelable
-{
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-    @SerializedName("id")
-    @Expose
-    private Integer id;
-    @SerializedName("results")
-    @Expose
-    private List<Video> results = new ArrayList<Video>();
+public class VideoContainer implements Serializable, Parcelable {
+
     public final static Parcelable.Creator<VideoContainer> CREATOR = new Creator<VideoContainer>() {
 
 
@@ -32,9 +26,14 @@ public class VideoContainer implements Serializable, Parcelable
             return (new VideoContainer[size]);
         }
 
-    }
-            ;
+    };
     private final static long serialVersionUID = -5544989223604801752L;
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("results")
+    @Expose
+    private List<Video> results = new ArrayList<Video>();
 
     protected VideoContainer(Parcel in) {
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));

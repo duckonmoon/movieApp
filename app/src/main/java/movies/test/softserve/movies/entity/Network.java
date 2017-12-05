@@ -1,21 +1,15 @@
 package movies.test.softserve.movies.entity;
 
-import java.io.Serializable;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Network implements Serializable, Parcelable
-{
+import java.io.Serializable;
 
-    @SerializedName("id")
-    @Expose
-    private Integer id;
-    @SerializedName("name")
-    @Expose
-    private String name;
+public class Network implements Serializable, Parcelable {
+
     public final static Parcelable.Creator<Network> CREATOR = new Creator<Network>() {
 
 
@@ -30,9 +24,14 @@ public class Network implements Serializable, Parcelable
             return (new Network[size]);
         }
 
-    }
-            ;
+    };
     private final static long serialVersionUID = 7676287473115122540L;
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("name")
+    @Expose
+    private String name;
 
     protected Network(Parcel in) {
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));

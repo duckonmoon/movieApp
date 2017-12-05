@@ -2,19 +2,12 @@ package movies.test.softserve.movies.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SpokenLanguage implements Parcelable
-{
+public class SpokenLanguage implements Parcelable {
 
-    @SerializedName("iso_639_1")
-    @Expose
-    private String iso6391;
-    @SerializedName("name")
-    @Expose
-    private String name;
     public final static Parcelable.Creator<SpokenLanguage> CREATOR = new Creator<SpokenLanguage>() {
 
 
@@ -29,8 +22,13 @@ public class SpokenLanguage implements Parcelable
             return (new SpokenLanguage[size]);
         }
 
-    }
-            ;
+    };
+    @SerializedName("iso_639_1")
+    @Expose
+    private String iso6391;
+    @SerializedName("name")
+    @Expose
+    private String name;
 
     protected SpokenLanguage(Parcel in) {
         this.iso6391 = ((String) in.readValue((String.class.getClassLoader())));

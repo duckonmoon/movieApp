@@ -48,8 +48,8 @@ public class WatchedFragment extends Fragment {
 
         mRecyclerView = (RecyclerView) view;
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
-        if (isTablet){
-            mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
+        if (isTablet) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         } else {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -69,7 +69,6 @@ public class WatchedFragment extends Fragment {
             } else {
                 Snackbar.make(mRecyclerView, R.string.removed_from_favourite, Snackbar.LENGTH_SHORT)
                         .show();
-
 
 
             }

@@ -91,53 +91,61 @@ public class TVEntity implements Serializable {
         this.releaseDate = releaseDate;
     }
 
-    public static class TVEntityBuilder{
+    public enum TYPE {
+        TV_SHOW,
+        MOVIE
+    }
+
+    public static class TVEntityBuilder {
         private TVEntity tvEntity = new TVEntity();
+
         public TVEntityBuilder setId(Integer id) {
             tvEntity.setId(id);
             return this;
         }
+
         public TVEntityBuilder setPosterPath(String posterPath) {
             tvEntity.posterPath = posterPath;
             return this;
         }
+
         public TVEntityBuilder setVoteAverage(Double voteAverage) {
             tvEntity.voteAverage = voteAverage;
             return this;
         }
+
         public TVEntityBuilder setVoteCount(Integer voteCount) {
             tvEntity.voteCount = voteCount;
             return this;
         }
+
         public TVEntityBuilder setTitle(String title) {
             tvEntity.title = title;
             return this;
         }
+
         public TVEntityBuilder setOverview(String overview) {
             tvEntity.overview = overview;
             return this;
         }
+
         public TVEntityBuilder setGenreIds(List<Integer> genreIds) {
             tvEntity.genreIds = genreIds;
             return this;
         }
-        public TVEntityBuilder setType(TYPE type){
+
+        public TVEntityBuilder setType(TYPE type) {
             tvEntity.type = type;
             return this;
         }
 
-        public TVEntityBuilder setReleaseDate(String releaseDate){
+        public TVEntityBuilder setReleaseDate(String releaseDate) {
             tvEntity.releaseDate = releaseDate;
             return this;
         }
 
-        public TVEntity create(){
+        public TVEntity create() {
             return tvEntity;
         }
-    }
-
-    public enum TYPE{
-        TV_SHOW,
-        MOVIE
     }
 }

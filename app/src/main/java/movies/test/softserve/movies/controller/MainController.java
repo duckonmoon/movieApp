@@ -2,7 +2,6 @@ package movies.test.softserve.movies.controller;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -10,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +34,7 @@ import movies.test.softserve.movies.util.AchievementService;
  */
 
 public class MainController extends Application implements Observer, OnAchievementDoneListener {
+    private static MainController INSTANCE;
     private List<TVEntity> movies;
     private List<Genre> genres = new ArrayList<>();
     private Integer page;
@@ -46,12 +45,11 @@ public class MainController extends Application implements Observer, OnAchieveme
     private SQLiteDatabase database;
     private MovieService movieService;
     private GuestSession guestSession;
-
-
-    private static MainController INSTANCE;
-
-
     private Activity currentContext;
+
+    public static MainController getInstance() {
+        return INSTANCE;
+    }
 
     @Override
     public void onCreate() {
@@ -76,7 +74,6 @@ public class MainController extends Application implements Observer, OnAchieveme
         TVShowsRepository.getInstance().tryToGetTVShows();
 
     }
-
 
     @Override
     public void update(Observable o, Object arg) {
@@ -111,10 +108,6 @@ public class MainController extends Application implements Observer, OnAchieveme
         return page;
     }
 
-    public static MainController getInstance() {
-        return INSTANCE;
-    }
-
     public void requestMore() {
         moviesRepository.tryToGetAllMovies();
     }
@@ -144,25 +137,35 @@ public class MainController extends Application implements Observer, OnAchieveme
     }
 
     @Override
-    public void onAchievementDone(Achievement achievement) {
-        try {
-            LayoutInflater inflater = currentContext.getLayoutInflater();
-            View view = inflater.inflate(R.layout.alert_dialog_layout,null);
-            ImageView image = view.findViewById(R.id.achieve_image);
-            image.setImageResource(achievement.getResourceId());
-            TextView title = view.findViewById(R.id.achieve_title);
-            title.setText(achievement.getTitle());
-            TextView text = view.findViewById(R.id.achieve_text);
-            text.setText(achievement.getDescription());
-            new AlertDialog.Builder(currentContext)
-                    .setView(view)
-                    .setTitle(getString(R.string.achievement_unlocked))
-                    .setPositiveButton(R.string.hooray, (dialog, which) -> {
+    public void onAchievementDone(final Achievement achievement) {
+        currentContext.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                show(achievement);
+            }
+        });
 
-                    })
-                    .show();
-        } catch (Exception e) {
-            Log.e("Smth went wrong", e.getMessage());
-        }
+    }
+
+    private void show(Achievement achievement) {                try {
+        LayoutInflater inflater = currentContext.getLayoutInflater();
+        View view = inflater.inflate(R.layout.alert_dialog_layout, null);
+        ImageView image = view.findViewById(R.id.achieve_image);
+        image.setImageResource(achievement.getResourceId());
+        TextView title = view.findViewById(R.id.achieve_title);
+        title.setText(achievement.getTitle());
+        TextView text = view.findViewById(R.id.achieve_text);
+        text.setText(achievement.getDescription());
+        new AlertDialog.Builder(currentContext)
+                .setView(view)
+                .setTitle(getString(R.string.achievement_unlocked))
+                .setPositiveButton(R.string.hooray, (dialog, which) -> {
+
+                })
+                .show();
+    } catch (Exception e) {
+        Log.e("Smth went wrong", e.getMessage());
+    }
+
     }
 }

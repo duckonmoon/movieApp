@@ -13,11 +13,20 @@ import movies.test.softserve.movies.service.DBMovieService;
 
 public class AchievementService {
 
+    private static AchievementService INSTANCE;
     private DBMovieService service = DBMovieService.getInstance();
     private List<Achievement> achievements = new ArrayList<>();
     private List<OnAchievementDoneListener> listeners = new ArrayList<>();
 
-    private static AchievementService INSTANCE;
+    private AchievementService() {
+        for (Achievement achievement :
+                Achievement.Companion.getAchievements()) {
+            if (!getAchievementStatus(achievement)) {
+                achievements.add(achievement);
+            }
+
+        }
+    }
 
     public static AchievementService getInstance() {
         if (INSTANCE == null) {
@@ -25,17 +34,6 @@ public class AchievementService {
         }
         return INSTANCE;
     }
-
-    private AchievementService() {
-        for (Achievement achievement:
-             Achievement.Companion.getAchievements()) {
-            if (!getAchievementStatus(achievement)){
-                achievements.add(achievement);
-            }
-
-        }
-    }
-
 
     public boolean getAchievementStatus(Achievement achievement) {
         if (achievement.getGenre() != null) {
@@ -80,11 +78,11 @@ public class AchievementService {
     }
 
 
-    public void addListener(OnAchievementDoneListener listener){
+    public void addListener(OnAchievementDoneListener listener) {
         listeners.add(listener);
     }
 
-    public void removeListener(OnAchievementDoneListener listener){
+    public void removeListener(OnAchievementDoneListener listener) {
         listeners.remove(listener);
     }
 

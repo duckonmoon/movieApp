@@ -200,7 +200,7 @@ public class MovieService {
             }
 
             @Override
-            public void onFailure(@NonNull Call<GenresContainer> call,@NonNull Throwable t) {
+            public void onFailure(@NonNull Call<GenresContainer> call, @NonNull Throwable t) {
                 Log.e("Smth went wrong", t.getMessage());
             }
         });

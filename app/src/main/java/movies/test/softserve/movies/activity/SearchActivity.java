@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,7 +44,7 @@ public class SearchActivity extends BaseActivity {
     private DBHelperService helperService = new DBHelperService();
     private MovieService movieService = MovieService.getInstance();
     private DBMovieService dbService = DBMovieService.getInstance();
-
+    private String message = null;
     private OnListOfMoviesGetListener onListOfMoviesGetListener = new OnListOfMoviesGetListener() {
         @Override
         public void onListOfMoviesGetListener(@NonNull List<? extends TVEntity> movies) {
@@ -59,8 +58,6 @@ public class SearchActivity extends BaseActivity {
         }
     };
 
-    private String message = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +69,8 @@ public class SearchActivity extends BaseActivity {
         mPageViewModel = ViewModelProviders.of(this).get(PageViewModel.class);
         mRecyclerView = findViewById(R.id.recyclerview);
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
-        if (isTablet){
-            mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        if (isTablet) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         } else {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 

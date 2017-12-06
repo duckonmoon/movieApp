@@ -8,6 +8,7 @@ import movies.test.softserve.movies.entity.GenresContainer;
 import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.Page;
 import movies.test.softserve.movies.entity.Rating;
+import movies.test.softserve.movies.entity.VideoContainer;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -80,5 +81,8 @@ public interface MoviesService {
 
     @GET("3/search/movie")
     Call<Page> getMovieByKeyword(@Query("api_key") String apiKey, @Query("query") Uri uri, @Query("page") Integer page, @Query("language") String language);
+
+    @GET("3/movie/{movie_id}/videos")
+    Call<VideoContainer> getVideosForMovie(@Path("movie_id") Integer movie_id,@Query("api_key") String apiKey);
 
 }

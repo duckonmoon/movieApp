@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -66,6 +67,8 @@ public class MovieDetailsActivity extends BaseActivity {
     private TextView links;
     private ImageView share;
     private ImageView watched;
+
+    private Button trailersButton;
 
     private FullMovieViewModel viewModel;
     private TVEntity movie;
@@ -148,6 +151,8 @@ public class MovieDetailsActivity extends BaseActivity {
                     break;
             }
         });
+
+        trailersButton.setOnClickListener(view -> StartActivityClass.startVideosActivity(this,movie));
     }
 
     private void getFullInfo() {
@@ -240,7 +245,8 @@ public class MovieDetailsActivity extends BaseActivity {
                 zoomImageFromThumb(toolbarLayout, mBitmapDrawable.getBitmap());
             }
         });
-
+        trailersButton = findViewById(R.id.trailers_button);
+        trailersButton.setVisibility(View.VISIBLE);
     }
 
     private void getIntentInfo() {

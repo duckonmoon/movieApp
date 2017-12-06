@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import movies.test.softserve.movies.R
 import movies.test.softserve.movies.entity.Genre
+import movies.test.softserve.movies.entity.Item
 
 
-class ViewAdapter(private val mValues: List<Genre>, private val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<ViewAdapter.ViewHolder>() {
+class ViewAdapter(private val mValues: List<Item>, private val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<ViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -30,11 +31,11 @@ class ViewAdapter(private val mValues: List<Genre>, private val onItemClickListe
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val mIdView: TextView = mView.findViewById(R.id.id)
-        var mItem: Genre? = null
+        var mItem: Item? = null
 
     }
 
     interface OnItemClickListener {
-        fun onItemClick(genre: Genre)
+        fun onItemClick(genre: Item)
     }
 }

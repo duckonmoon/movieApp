@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 
+import movies.test.softserve.movies.VideoActivity;
 import movies.test.softserve.movies.activity.MovieDetailsActivity;
 import movies.test.softserve.movies.activity.SearchActivity;
 import movies.test.softserve.movies.activity.TVShowDetailsActivity;
@@ -51,5 +52,11 @@ public class StartActivityClass {
         Uri webPage = Uri.parse(homepage);
         Intent webIntent = new Intent(Intent.ACTION_VIEW, webPage);
         activity.startActivity(webIntent);
+    }
+
+    public static void startVideosActivity(Activity activity,TVEntity tvEntity){
+        Intent intent = new Intent(activity, VideoActivity.class);
+        intent.putExtra(VideoActivity.Companion.getMOVIE_ID(),tvEntity.getId());
+        activity.startActivity(intent);
     }
 }

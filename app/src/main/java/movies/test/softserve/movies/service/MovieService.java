@@ -17,11 +17,13 @@ import movies.test.softserve.movies.entity.GenresContainer;
 import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.Page;
 import movies.test.softserve.movies.entity.Rating;
+import movies.test.softserve.movies.entity.VideoContainer;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnListOfGenresGetListener;
 import movies.test.softserve.movies.event.OnListOfMoviesGetListener;
 import movies.test.softserve.movies.event.OnMovieInformationGet;
 import movies.test.softserve.movies.event.OnSessionGetListener;
+import movies.test.softserve.movies.event.OnVideoGetListener;
 import movies.test.softserve.movies.util.Mapper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,6 +44,7 @@ public class MovieService {
     private List<OnInfoUpdatedListener> onInfoUpdatedList;
     private List<OnListOfMoviesGetListener> onListOfMoviesGetListeners;
     private List<OnListOfGenresGetListener> onListOfGenresGetListeners;
+    private List<OnVideoGetListener> onVideoGetListeners;
 
     private MovieService() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -54,6 +57,7 @@ public class MovieService {
         onInfoUpdatedList = new ArrayList<>();
         onListOfMoviesGetListeners = new ArrayList<>();
         onListOfGenresGetListeners = new ArrayList<>();
+        onVideoGetListeners = new ArrayList<>();
     }
 
 
@@ -206,6 +210,27 @@ public class MovieService {
         });
     }
 
+    public void tryToGetVideos(int movieId){
+        Call<VideoContainer> call = service.getVideosForMovie(movieId,Constants.API_KEY);
+        call.enqueue(new Callback<VideoContainer>() {
+            @Override
+            public void onResponse(Call<VideoContainer> call, Response<VideoContainer> response) {
+                if (response.body().getResults() != null) {
+                    for (OnVideoGetListener listener :
+                            onVideoGetListeners) {
+                        listener.onVideoGet(response.body().getResults());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<VideoContainer> call, Throwable t) {
+                Log.e("Smth went wrong",t.getMessage());
+            }
+        });
+
+    }
+
     public void getMovieByKeyword(@NonNull String query, @NonNull Integer page, @NonNull Callback<Page> callback) {
         Call<Page> call = service.getMovieByKeyword(Constants.API_KEY, Uri.parse(query.trim()), page, Locale.getDefault().getLanguage());
         call.enqueue(callback);
@@ -247,5 +272,13 @@ public class MovieService {
 
     public void removeOnListOfGenresGetListener(@NonNull OnListOfGenresGetListener listener) {
         onListOfGenresGetListeners.remove(listener);
+    }
+
+    public void addOnVideoGetListener(@NonNull OnVideoGetListener listener){
+        onVideoGetListeners.add(listener);
+    }
+
+    public void removeOnVideoGetListener(@NonNull OnVideoGetListener listener){
+        onVideoGetListeners.remove(listener);
     }
 }

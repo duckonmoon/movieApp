@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Video implements Serializable, Parcelable {
+public class Video implements Serializable, Parcelable,Item {
 
     public final static Parcelable.Creator<Video> CREATOR = new Creator<Video>() {
 

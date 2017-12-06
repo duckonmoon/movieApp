@@ -105,9 +105,18 @@ public class WatchedFragment extends Fragment {
 
     private void setAdapter() {
         List<TVEntity> listOfMovies = new ArrayList<>();
-        listOfMovies.addAll(dbService.getAllMovies());
-        listOfMovies.addAll(dbService.getAllTVShows());
-        ((MovieRecyclerViewAdapter) mRecyclerView.getAdapter()).setMovies(listOfMovies);
+        new Runnable() {
+            @Override
+            public void run() {
+                listOfMovies.addAll(dbService.getAllMovies());
+                listOfMovies.addAll(dbService.getAllTVShows());
+                getActivity().runOnUiThread(() -> {
+                    ((MovieRecyclerViewAdapter) mRecyclerView.getAdapter()).setMovies(listOfMovies);
+                });
+            }
+        };
+
+
         mRecyclerView.getAdapter().notifyDataSetChanged();
 
     }

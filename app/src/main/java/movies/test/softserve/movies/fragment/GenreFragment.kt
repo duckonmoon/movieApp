@@ -12,6 +12,7 @@ import movies.test.softserve.movies.R
 import movies.test.softserve.movies.adapter.ViewAdapter
 import movies.test.softserve.movies.controller.MainController
 import movies.test.softserve.movies.entity.Genre
+import movies.test.softserve.movies.entity.Item
 import movies.test.softserve.movies.event.OnListOfGenresGetListener
 import movies.test.softserve.movies.service.MovieService
 import movies.test.softserve.movies.util.StartActivityClass
@@ -44,9 +45,9 @@ class GenreFragment : Fragment() {
         } else {
             mRecyclerView.layoutManager = LinearLayoutManager(context)
         }
-        view.adapter = ViewAdapter(MainController.getInstance().genres, onItemClickListener = object : ViewAdapter.OnItemClickListener {
-            override fun onItemClick(genre: Genre) {
-                StartActivityClass.startActivitySearch(activity, genre)
+        view.adapter = ViewAdapter(MainController.getInstance().genres, object : ViewAdapter.OnItemClickListener {
+            override fun onItemClick(genre: Item) {
+                StartActivityClass.startActivitySearch(activity, genre as Genre)
             }
         })
 

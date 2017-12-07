@@ -210,8 +210,9 @@ public class MovieService {
         });
     }
 
-    public void tryToGetVideos(int movieId){
-        Call<VideoContainer> call = service.getVideosForMovie(movieId,Constants.API_KEY);
+    public void tryToGetVideos(int movieId) {
+        Call<VideoContainer> call = service.getVideosForMovie(movieId, Constants.API_KEY,
+                Locale.getDefault().getLanguage());
         call.enqueue(new Callback<VideoContainer>() {
             @Override
             public void onResponse(Call<VideoContainer> call, Response<VideoContainer> response) {
@@ -225,7 +226,7 @@ public class MovieService {
 
             @Override
             public void onFailure(Call<VideoContainer> call, Throwable t) {
-                Log.e("Smth went wrong",t.getMessage());
+                Log.e("Smth went wrong", t.getMessage());
             }
         });
 
@@ -274,11 +275,11 @@ public class MovieService {
         onListOfGenresGetListeners.remove(listener);
     }
 
-    public void addOnVideoGetListener(@NonNull OnVideoGetListener listener){
+    public void addOnVideoGetListener(@NonNull OnVideoGetListener listener) {
         onVideoGetListeners.add(listener);
     }
 
-    public void removeOnVideoGetListener(@NonNull OnVideoGetListener listener){
+    public void removeOnVideoGetListener(@NonNull OnVideoGetListener listener) {
         onVideoGetListeners.remove(listener);
     }
 }

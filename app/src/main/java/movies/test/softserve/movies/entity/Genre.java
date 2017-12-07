@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Genre implements Parcelable, AdditionalInfo,Item {
+public class Genre implements Parcelable, AdditionalInfo, Item {
 
     public final static Parcelable.Creator<Genre> CREATOR = new Creator<Genre>() {
 

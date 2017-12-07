@@ -147,25 +147,26 @@ public class MainController extends Application implements Observer, OnAchieveme
 
     }
 
-    private void show(Achievement achievement) {                try {
-        LayoutInflater inflater = currentContext.getLayoutInflater();
-        View view = inflater.inflate(R.layout.alert_dialog_layout, null);
-        ImageView image = view.findViewById(R.id.achieve_image);
-        image.setImageResource(achievement.getResourceId());
-        TextView title = view.findViewById(R.id.achieve_title);
-        title.setText(achievement.getTitle());
-        TextView text = view.findViewById(R.id.achieve_text);
-        text.setText(achievement.getDescription());
-        new AlertDialog.Builder(currentContext)
-                .setView(view)
-                .setTitle(getString(R.string.achievement_unlocked))
-                .setPositiveButton(R.string.hooray, (dialog, which) -> {
+    private void show(Achievement achievement) {
+        try {
+            LayoutInflater inflater = currentContext.getLayoutInflater();
+            View view = inflater.inflate(R.layout.alert_dialog_layout, null);
+            ImageView image = view.findViewById(R.id.achieve_image);
+            image.setImageResource(achievement.getResourceId());
+            TextView title = view.findViewById(R.id.achieve_title);
+            title.setText(achievement.getTitle());
+            TextView text = view.findViewById(R.id.achieve_text);
+            text.setText(achievement.getDescription());
+            new AlertDialog.Builder(currentContext)
+                    .setView(view)
+                    .setTitle(getString(R.string.achievement_unlocked))
+                    .setPositiveButton(R.string.hooray, (dialog, which) -> {
 
-                })
-                .show();
-    } catch (Exception e) {
-        Log.e("Smth went wrong", e.getMessage());
-    }
+                    })
+                    .show();
+        } catch (Exception e) {
+            Log.e("Smth went wrong", e.getMessage());
+        }
 
     }
 }

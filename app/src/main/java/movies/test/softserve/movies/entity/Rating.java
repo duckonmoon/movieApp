@@ -26,6 +26,7 @@ public class Rating implements Parcelable {
     @SerializedName("value")
     @Expose
     private Float value;
+
     public Rating(Float value) {
         this.value = value;
     }

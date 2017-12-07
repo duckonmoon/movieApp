@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 
-import movies.test.softserve.movies.VideoActivity;
 import movies.test.softserve.movies.activity.MovieDetailsActivity;
 import movies.test.softserve.movies.activity.SearchActivity;
 import movies.test.softserve.movies.activity.TVShowDetailsActivity;
+import movies.test.softserve.movies.activity.VideoActivity;
 import movies.test.softserve.movies.entity.Genre;
 import movies.test.softserve.movies.entity.ProductionCompany;
 import movies.test.softserve.movies.entity.TVEntity;
@@ -54,9 +54,9 @@ public class StartActivityClass {
         activity.startActivity(webIntent);
     }
 
-    public static void startVideosActivity(Activity activity,TVEntity tvEntity){
+    public static void startVideosActivity(Activity activity, TVEntity tvEntity) {
         Intent intent = new Intent(activity, VideoActivity.class);
-        intent.putExtra(VideoActivity.Companion.getMOVIE_ID(),tvEntity.getId());
+        intent.putExtra(VideoActivity.Companion.getMOVIE_ID(), tvEntity.getId());
         activity.startActivity(intent);
     }
 }

@@ -83,6 +83,6 @@ public interface MoviesService {
     Call<Page> getMovieByKeyword(@Query("api_key") String apiKey, @Query("query") Uri uri, @Query("page") Integer page, @Query("language") String language);
 
     @GET("3/movie/{movie_id}/videos")
-    Call<VideoContainer> getVideosForMovie(@Path("movie_id") Integer movie_id,@Query("api_key") String apiKey);
+    Call<VideoContainer> getVideosForMovie(@Path("movie_id") Integer movie_id, @Query("api_key") String apiKey, @Query("language") String language);
 
 }

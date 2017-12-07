@@ -152,7 +152,7 @@ public class MovieDetailsActivity extends BaseActivity {
             }
         });
 
-        trailersButton.setOnClickListener(view -> StartActivityClass.startVideosActivity(this,movie));
+        trailersButton.setOnClickListener(view -> StartActivityClass.startVideosActivity(this, movie));
     }
 
     private void getFullInfo() {

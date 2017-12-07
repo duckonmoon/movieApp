@@ -1,13 +1,12 @@
-package movies.test.softserve.movies
+package movies.test.softserve.movies.activity
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.View
 import android.widget.FrameLayout
-import movies.test.softserve.movies.activity.BaseActivity
-import movies.test.softserve.movies.adapter.ViewAdapter
-import movies.test.softserve.movies.entity.Item
+import movies.test.softserve.movies.R
+import movies.test.softserve.movies.adapter.VideoAdapter
 import movies.test.softserve.movies.entity.Video
 import movies.test.softserve.movies.event.OnVideoGetListener
 import movies.test.softserve.movies.fragment.YoutubeFragment
@@ -21,14 +20,14 @@ class VideoActivity : BaseActivity() {
 
     private var service = MovieService.getInstance()
 
-    private lateinit var frame : FrameLayout
-    private lateinit var recycler : RecyclerView
+    private lateinit var frame: FrameLayout
+    private lateinit var recycler: RecyclerView
 
-    private var list : ArrayList<Video> = ArrayList()
+    private var list: ArrayList<Video> = ArrayList()
 
     private var movieId = 0
 
-    private var onVideoGetListener = object : OnVideoGetListener{
+    private var onVideoGetListener = object : OnVideoGetListener {
         override fun onVideoGet(videos: List<Video>) {
             if (list.size < 1) {
                 list.addAll(videos)
@@ -43,13 +42,19 @@ class VideoActivity : BaseActivity() {
         frame = findViewById(R.id.frame)
         recycler = findViewById(R.id.recycler)
 
-        movieId = intent.extras.getInt(MOVIE_ID,0)
+        movieId = intent.extras.getInt(MOVIE_ID, 0)
 
-        recycler.layoutManager = GridLayoutManager(this,3)
-        recycler.adapter = ViewAdapter(list,object : ViewAdapter.OnItemClickListener{
-            override fun onItemClick(genre: Item) {
+        val isTablet = resources.getBoolean(R.bool.isTablet)
+        if (isTablet) {
+            recycler.layoutManager = GridLayoutManager(this, 2)
+        } else {
+            recycler.layoutManager = LinearLayoutManager(this)
+        }
+
+        recycler.adapter = VideoAdapter(list, object : VideoAdapter.OnItemClickListener {
+            override fun onItemClick(video: Video) {
                 val transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.frame,YoutubeFragment.newInstance((genre as Video).key))
+                transaction.replace(R.id.frame, YoutubeFragment.newInstance(video.key))
                 transaction.commit()
             }
         })
@@ -60,7 +65,7 @@ class VideoActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         service.addOnVideoGetListener(onVideoGetListener)
-        if (list.size < 1){
+        if (list.size < 1) {
             service.tryToGetVideos(movieId)
         }
     }
@@ -77,7 +82,7 @@ class VideoActivity : BaseActivity() {
                 transaction.remove(fragment)
             }
             transaction.commit()
-        }else{
+        } else {
             super.onBackPressed()
         }
 

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.OnInitializedListener;
@@ -23,10 +24,11 @@ public class YoutubeFragment extends Fragment {
     private static String VIDEO_ID = "VIDEO_ID";
 
     private String videoId = "EGy39OMyHzw";
+
     public static YoutubeFragment newInstance(String videoId) {
 
         Bundle args = new Bundle();
-        args.putString(VIDEO_ID,videoId);
+        args.putString(VIDEO_ID, videoId);
 
         YoutubeFragment fragment = new YoutubeFragment();
         fragment.setArguments(args);
@@ -37,7 +39,7 @@ public class YoutubeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments().getString(VIDEO_ID)!=null){
+        if (getArguments().getString(VIDEO_ID) != null) {
             videoId = getArguments().getString(VIDEO_ID);
         }
     }

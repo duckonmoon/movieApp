@@ -32,7 +32,7 @@ class RatingView : View {
     private lateinit var textPaint: TextPaint
 
     constructor(context: Context) : super(context) {
-        init(context, null)
+        init()
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
@@ -47,7 +47,7 @@ class RatingView : View {
         } finally {
             a.recycle()
         }
-        init(context, attrs)
+        init()
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
@@ -62,10 +62,10 @@ class RatingView : View {
         } finally {
             a.recycle()
         }
-        init(context, attrs)
+        init()
     }
 
-    private fun init(context: Context, attrs: AttributeSet?) {
+    private fun init() {
         paint = Paint()
         paint.isAntiAlias = true
         textPaint = TextPaint()
@@ -106,7 +106,7 @@ class RatingView : View {
                 desiredHeight
         }
 
-        height = Math.min(width,height)
+        height = Math.min(width, height)
         width = height
 
         setMeasuredDimension(width, height)

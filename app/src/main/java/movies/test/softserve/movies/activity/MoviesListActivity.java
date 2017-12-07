@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import movies.test.softserve.movies.R;
@@ -258,7 +257,7 @@ public class MoviesListActivity extends BaseActivity
         View navigationView = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
         ProgressBar progressBar = navigationView.findViewById(R.id.rating_service_rating);
         RatingView ratingView = navigationView.findViewById(R.id.rating_service_image);
-        ratingView.setLevel(ratingService.getLvl().ordinal()+1);
+        ratingView.setLevel(ratingService.getLvl().ordinal() + 1);
         progressBar.setProgress(ratingService.getProgress().intValue());
     }
 }

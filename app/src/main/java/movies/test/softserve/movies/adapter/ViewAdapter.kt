@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import movies.test.softserve.movies.R
-import movies.test.softserve.movies.entity.Genre
 import movies.test.softserve.movies.entity.Item
 
 

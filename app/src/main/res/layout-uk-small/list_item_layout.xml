@@ -57,8 +57,8 @@
                 <ImageView
                     android:id="@+id/lit_favourite"
                     android:layout_width="30dp"
-                    android:layout_gravity="center_horizontal"
                     android:layout_height="30dp"
+                    android:layout_gravity="center_horizontal"
                     android:src="@drawable/ic_star_border_black_24dp" />
             </LinearLayout>
 

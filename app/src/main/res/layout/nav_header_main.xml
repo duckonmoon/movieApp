@@ -35,27 +35,27 @@
         android:text="@string/created_by_duckonmoon" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
 
         <movies.test.softserve.movies.view.RatingView
             android:id="@+id/rating_service_image"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="25dp"
-            app:lvl="1"
-            app:circlecolor="@color/main_app_color"/>
+            android:layout_weight="1"
+            app:circlecolor="@color/main_app_color"
+            app:lvl="1" />
 
         <ProgressBar
+            android:id="@+id/rating_service_rating"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
-            android:layout_weight="10"
             android:layout_height="wrap_content"
-            android:max="100"
             android:layout_marginTop="3dp"
-            android:id="@+id/rating_service_rating"
+            android:layout_weight="10"
+            android:max="100"
             android:progress="50" />
     </LinearLayout>
 </LinearLayout>

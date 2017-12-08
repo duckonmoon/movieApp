@@ -2,6 +2,6 @@
 <resources>
     <declare-styleable name="RatingView">
         <attr name="circlecolor" format="color" />
-        <attr name="lvl" format="integer"/>
+        <attr name="lvl" format="integer" />
     </declare-styleable>
 </resources>

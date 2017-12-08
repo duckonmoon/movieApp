@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/container"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     android:background="@color/main_background"
-    android:paddingTop="@dimen/top_margin"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:paddingTop="@dimen/top_margin">
 
     <LinearLayout
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:orientation="horizontal">
 
         <EditText
@@ -24,14 +23,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="@string/search" />
+            android:hint="@string/search"
+            android:inputType="textPersonName" />
 
         <TextView
-            android:layout_marginStart="@dimen/standart_small_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
+            android:layout_marginStart="@dimen/standart_small_margin"
             android:text="@string/movies" />
 
         <Switch
@@ -45,11 +44,11 @@
             android:text="@string/tvshows" />
 
         <ImageView
-            android:layout_marginStart="@dimen/standart_small_margin"
             android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginStart="@dimen/standart_small_margin"
             android:src="@drawable/ic_search_black_24dp" />
     </LinearLayout>
 

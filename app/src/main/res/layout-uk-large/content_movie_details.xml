@@ -18,8 +18,8 @@
             android:id="@+id/overview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/top_margin"
             android:layout_margin="@dimen/top_margin"
+            android:layout_marginStart="@dimen/top_margin"
             android:text="@string/temporary"
             android:textSize="@dimen/text_normal_size" />
 
@@ -28,29 +28,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <RatingBar
                 android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
-                android:layout_marginStart="@dimen/top_margin"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/top_margin" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/standart_small_margin">
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/standart_small_margin"
+                android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/watched"/>
+                    android:text="@string/watched" />
+
                 <ImageView
                     android:id="@+id/watched"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@android:drawable/checkbox_off_background"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:src="@android:drawable/checkbox_off_background" />
             </LinearLayout>
         </LinearLayout>
 
@@ -69,46 +72,46 @@
             android:id="@+id/budget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/top_margin"
             android:layout_gravity="center_vertical"
+            android:layout_marginBottom="@dimen/standart_small_margin"
+            android:layout_marginStart="@dimen/top_margin"
             android:text="@string/budget"
             android:textSize="16sp"
-            android:visibility="gone"
-            android:layout_marginBottom="@dimen/standart_small_margin"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/release_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/top_margin"
             android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/top_margin"
 
             android:text="@string/release_date"
             android:textSize="16sp" />
 
         <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/top_margin"
             android:id="@+id/genres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/top_margin"
             tools:itemCount="0">
 
         </android.support.v7.widget.RecyclerView>
 
         <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/top_margin"
             android:id="@+id/countries"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/top_margin"
             tools:itemCount="0">
 
         </android.support.v7.widget.RecyclerView>
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/companies"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/top_margin"
-            android:id="@+id/companies"
             tools:itemCount="0">
 
         </android.support.v7.widget.RecyclerView>
@@ -118,9 +121,9 @@
             android:id="@+id/links"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/standart_small_margin"
             android:layout_marginStart="@dimen/top_margin"
-            android:textColor="@color/main_app_color"/>
+            android:layout_marginTop="@dimen/standart_small_margin"
+            android:textColor="@color/main_app_color" />
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"

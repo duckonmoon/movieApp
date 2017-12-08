@@ -1,5 +1,6 @@
 package movies.test.softserve.movies.activity
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
@@ -22,6 +23,8 @@ class VideoActivity : BaseActivity() {
 
     private lateinit var frame: FrameLayout
     private lateinit var recycler: RecyclerView
+
+    private var youtubeFragment: YoutubeFragment? = null
 
     private var list: ArrayList<Video> = ArrayList()
 
@@ -53,8 +56,9 @@ class VideoActivity : BaseActivity() {
 
         recycler.adapter = VideoAdapter(list, object : VideoAdapter.OnItemClickListener {
             override fun onItemClick(video: Video) {
+                youtubeFragment = YoutubeFragment.newInstance(video.key)
                 val transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.frame, YoutubeFragment.newInstance(video.key))
+                transaction.replace(R.id.frame, youtubeFragment)
                 transaction.commit()
             }
         })
@@ -76,15 +80,15 @@ class VideoActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.fragments.size > 0) {
-            val transaction = supportFragmentManager.beginTransaction()
-            for (fragment in supportFragmentManager.fragments) {
-                transaction.remove(fragment)
-            }
-            transaction.commit()
-        } else {
-            super.onBackPressed()
+        val fragment = supportFragmentManager.findFragmentById(R.id.frame)
+        if (fragment is YoutubeFragment) {
+            fragment.onBackPressed()
+            supportFragmentManager.beginTransaction()
+                    .remove(fragment)
+                    .commit()
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
+            return
         }
-
+        super.onBackPressed()
     }
 }

@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.widget.FrameLayout
+import kotlinx.android.synthetic.main.activity_video.*
 import movies.test.softserve.movies.R
 import movies.test.softserve.movies.adapter.VideoAdapter
 import movies.test.softserve.movies.entity.Video
@@ -32,9 +34,10 @@ class VideoActivity : BaseActivity() {
 
     private var onVideoGetListener = object : OnVideoGetListener {
         override fun onVideoGet(videos: List<Video>) {
-            if (list.size < 1) {
+            if (list.isEmpty() && videos.isNotEmpty()) {
                 list.addAll(videos)
                 recycler.adapter.notifyDataSetChanged()
+                empty.visibility = View.GONE
             }
         }
     }

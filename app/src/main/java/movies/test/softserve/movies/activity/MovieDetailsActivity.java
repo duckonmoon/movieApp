@@ -34,14 +34,20 @@ import com.facebook.share.widget.ShareDialog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.List;
+
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.adapter.HorizontalButtonAdapter;
+import movies.test.softserve.movies.adapter.HorizontalImageAdapter;
+import movies.test.softserve.movies.entity.Backdrop;
 import movies.test.softserve.movies.entity.FullMovie;
 import movies.test.softserve.movies.entity.Genre;
+import movies.test.softserve.movies.entity.Poster;
 import movies.test.softserve.movies.entity.ProductionCompany;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnMovieInformationGet;
+import movies.test.softserve.movies.event.OnPostersGetListener;
 import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.MovieService;
@@ -74,7 +80,14 @@ public class MovieDetailsActivity extends BaseActivity {
     private TVEntity movie;
 
 
-    private OnMovieInformationGet listener;
+    private OnMovieInformationGet listener = new OnMovieInformationGet() {
+        @Override
+        public void onMovieGet(FullMovie movie) {
+            viewModel.setFullMovie(movie);
+            addGenresCountriesCompanies();
+        }
+    };
+
     private OnInfoUpdatedListener infoListener = new OnInfoUpdatedListener() {
         @Override
         public void OnInfoUpdated(float code) {
@@ -82,6 +95,7 @@ public class MovieDetailsActivity extends BaseActivity {
             Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.rating_saved), Snackbar.LENGTH_LONG).show();
         }
     };
+
 
     private Animator mCurrentAnimator;
     private BitmapDrawable mBitmapDrawable;
@@ -156,60 +170,54 @@ public class MovieDetailsActivity extends BaseActivity {
     }
 
     private void getFullInfo() {
-        if (listener == null) {
-            if (viewModel.getFullMovie() == null) {
-                listener = new OnMovieInformationGet() {
-                    @Override
-                    public void onMovieGet(FullMovie movie) {
-                        viewModel.setFullMovie(movie);
-                        addGenresCountriesCompanies();
-                    }
-                };
-                service.addListener(listener);
-                service.tryToGetMovie(movie.getId());
-            } else {
-                addGenresCountriesCompanies();
-            }
+        service.addListener(listener);
+        if (viewModel.getFullMovie() == null) {
+            service.tryToGetMovie(movie.getId());
+        } else {
+            addGenresCountriesCompanies();
         }
     }
 
 
     public void addGenresCountriesCompanies() {
         final FullMovie fullMovie = viewModel.getFullMovie();
-        TextView budget = findViewById(R.id.budget);
-        RecyclerView genres = findViewById(R.id.genres);
-        RecyclerView countries = findViewById(R.id.countries);
-        RecyclerView companies = findViewById(R.id.companies);
-        if (fullMovie.getBudget() != 0) {
-            budget.setText(getString(R.string.budget, BudgetFormatter.toMoney(fullMovie.getBudget())));
-            budget.setVisibility(View.VISIBLE);
-        }
-        genres.setLayoutManager(new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL, false));
-        genres.setAdapter(new HorizontalButtonAdapter(fullMovie.getGenres(),
-                (i) -> StartActivityClass.startActivitySearch(this, (Genre) i)));
+        runOnUiThread(() -> {
+            TextView budget = findViewById(R.id.budget);
+            RecyclerView genres = findViewById(R.id.genres);
+            RecyclerView countries = findViewById(R.id.countries);
+            RecyclerView companies = findViewById(R.id.companies);
+            if (fullMovie.getBudget() != 0) {
+                budget.setText(getString(R.string.budget, BudgetFormatter.toMoney(fullMovie.getBudget())));
+                budget.setVisibility(View.VISIBLE);
+            }
+            genres.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
+                    LinearLayoutManager.HORIZONTAL, false));
+            genres.setAdapter(new HorizontalButtonAdapter(fullMovie.getGenres(),
+                    (i) -> StartActivityClass.startActivitySearch(MovieDetailsActivity.this, (Genre) i)));
 
-        countries.setLayoutManager(new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL, false));
-        countries.setAdapter(new HorizontalButtonAdapter(fullMovie.getProductionCountries(),
-                (i) -> {
-                }));
+            countries.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
+                    LinearLayoutManager.HORIZONTAL, false));
+            countries.setAdapter(new HorizontalButtonAdapter(fullMovie.getProductionCountries(),
+                    (i) -> {
+                    }));
 
-        companies.setLayoutManager(new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL, false));
-        companies.setAdapter(new HorizontalButtonAdapter(fullMovie.getProductionCompanies(),
-                item -> StartActivityClass.startActivitySearch(this, (ProductionCompany) item)));
+            companies.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
+                    LinearLayoutManager.HORIZONTAL, false));
+            companies.setAdapter(new HorizontalButtonAdapter(fullMovie.getProductionCompanies(),
+                    item -> StartActivityClass.startActivitySearch(MovieDetailsActivity.this, (ProductionCompany) item)));
 
 
-        if (fullMovie.getHomepage() != null && !fullMovie.getHomepage().equals("")) {
-            links.setText(getString(R.string.homepage, fullMovie.getHomepage()));
-            links.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    StartActivityClass.startWebIntent(MovieDetailsActivity.this, fullMovie.getHomepage());
-                }
-            });
-        }
+            if (fullMovie.getHomepage() != null && !fullMovie.getHomepage().equals("")) {
+                links.setText(getString(R.string.homepage, fullMovie.getHomepage()));
+                links.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        StartActivityClass.startWebIntent(MovieDetailsActivity.this, fullMovie.getHomepage());
+                    }
+                });
+            }
+        });
+
     }
 
     private void initView() {
@@ -280,10 +288,7 @@ public class MovieDetailsActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (listener != null) {
-            service.removeListener(listener);
-            listener = null;
-        }
+        service.removeListener(listener);
         service.removeOnInfoUpdatedListener(infoListener);
     }
 
@@ -388,4 +393,6 @@ public class MovieDetailsActivity extends BaseActivity {
             }
         });
     }
+
+
 }

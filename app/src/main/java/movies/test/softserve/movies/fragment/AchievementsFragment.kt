@@ -14,9 +14,8 @@ import movies.test.softserve.movies.entity.Achievement
 class AchievementsFragment : Fragment() {
     private var mColumnCount = 3
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_achievements_list, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_achievements_list, container, false)
 
         if (view is RecyclerView) {
             val context = view.getContext()

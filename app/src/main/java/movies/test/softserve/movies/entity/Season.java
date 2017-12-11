@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Season implements Serializable, Parcelable {
+public class Season implements Serializable, Parcelable, ForImage {
 
     public final static Parcelable.Creator<Season> CREATOR = new Creator<Season>() {
 

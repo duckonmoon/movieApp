@@ -16,12 +16,14 @@ import movies.test.softserve.movies.entity.FullMovie;
 import movies.test.softserve.movies.entity.GenresContainer;
 import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.Page;
+import movies.test.softserve.movies.entity.PosterContainer;
 import movies.test.softserve.movies.entity.Rating;
 import movies.test.softserve.movies.entity.VideoContainer;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnListOfGenresGetListener;
 import movies.test.softserve.movies.event.OnListOfMoviesGetListener;
 import movies.test.softserve.movies.event.OnMovieInformationGet;
+import movies.test.softserve.movies.event.OnPostersGetListener;
 import movies.test.softserve.movies.event.OnSessionGetListener;
 import movies.test.softserve.movies.event.OnVideoGetListener;
 import movies.test.softserve.movies.util.Mapper;
@@ -45,6 +47,7 @@ public class MovieService {
     private List<OnListOfMoviesGetListener> onListOfMoviesGetListeners;
     private List<OnListOfGenresGetListener> onListOfGenresGetListeners;
     private List<OnVideoGetListener> onVideoGetListeners;
+    private List<OnPostersGetListener> onPostersGetListeners;
 
     private MovieService() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -58,6 +61,7 @@ public class MovieService {
         onListOfMoviesGetListeners = new ArrayList<>();
         onListOfGenresGetListeners = new ArrayList<>();
         onVideoGetListeners = new ArrayList<>();
+        onPostersGetListeners = new ArrayList<>();
     }
 
 
@@ -237,6 +241,30 @@ public class MovieService {
         call.enqueue(callback);
     }
 
+    public void tryToGetPostersAndBackdeops(@NonNull Integer movieId) {
+        Call<PosterContainer> call = service.getMoviePosters(movieId,
+                Constants.API_KEY,
+                Locale.getDefault().getLanguage());
+        call.enqueue(new Callback<PosterContainer>() {
+            @Override
+            public void onResponse(Call<PosterContainer> call, Response<PosterContainer> response) {
+                for (OnPostersGetListener listener :
+                        onPostersGetListeners) {
+                    if (response.body() != null) {
+                        listener.onPostersGet(response.body().getPosters());
+                        listener.onBackDropGet(response.body().getBackdrops());
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PosterContainer> call, Throwable t) {
+                Log.e("Smth went wrong", t.getMessage());
+            }
+        });
+    }
+
 
     public void addListener(@NonNull OnMovieInformationGet listener) {
         listOfListeners.add(listener);
@@ -281,5 +309,13 @@ public class MovieService {
 
     public void removeOnVideoGetListener(@NonNull OnVideoGetListener listener) {
         onVideoGetListeners.remove(listener);
+    }
+
+    public void addOnPosterGetListener(@NonNull OnPostersGetListener listener) {
+        onPostersGetListeners.add(listener);
+    }
+
+    public void removeOnPosterGetListener(@NonNull OnPostersGetListener listener) {
+        onPostersGetListeners.remove(listener);
     }
 }

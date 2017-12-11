@@ -34,9 +34,8 @@ class GenreFragment : Fragment() {
     private var mainController: MainController = MainController.getInstance()
     private var movieService: MovieService = MovieService.getInstance()
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_genre_list, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_genre_list, container, false)
         mRecyclerView = view as RecyclerView
         val context = view.getContext()
         val isTablet = resources.getBoolean(R.bool.isTablet)

@@ -7,6 +7,7 @@ import movies.test.softserve.movies.entity.FullMovie;
 import movies.test.softserve.movies.entity.GenresContainer;
 import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.Page;
+import movies.test.softserve.movies.entity.PosterContainer;
 import movies.test.softserve.movies.entity.Rating;
 import movies.test.softserve.movies.entity.VideoContainer;
 import retrofit2.Call;
@@ -84,5 +85,10 @@ public interface MoviesService {
 
     @GET("3/movie/{movie_id}/videos")
     Call<VideoContainer> getVideosForMovie(@Path("movie_id") Integer movie_id, @Query("api_key") String apiKey, @Query("language") String language);
+
+    @GET("3/movie/{movie_id}/images")
+    Call<PosterContainer> getMoviePosters(@Path("movie_id") Integer movie_id,
+                                          @Query("api_key") String apiKey,
+                                          @Query("language") String language);
 
 }

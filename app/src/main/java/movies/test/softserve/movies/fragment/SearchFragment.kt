@@ -55,9 +55,9 @@ class SearchFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_tventity_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_tventity_list, container, false)
 
         val context = view.context
         view.container.setOnClickListener { }
@@ -69,9 +69,9 @@ class SearchFragment : Fragment() {
             if (editSearchView.text.toString() == "") {
                 return@setOnClickListener
             }
-            val currView = activity.currentFocus
+            val currView = activity?.currentFocus
             if (currView != null) {
-                val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(view!!.windowToken, 0)
             }
             transfer.page = 1
@@ -167,7 +167,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun buildAlertDialog(movie: TVEntity, view: RecyclerView) {
-        AlertDialog.Builder(activity)
+        AlertDialog.Builder(activity!!)
                 .setMessage(R.string.delete_from_watched)
                 .setPositiveButton(R.string.yes) { _, _ ->
                     dbService.deleteFromDb(movie.id)
@@ -184,9 +184,9 @@ class SearchFragment : Fragment() {
                 .show()
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState!!.putSerializable(comp, transfer)
+        outState.putSerializable(comp, transfer)
     }
 
 

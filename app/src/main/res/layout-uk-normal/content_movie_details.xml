@@ -129,7 +129,6 @@
 
         </android.support.v7.widget.RecyclerView>
 
-
         <TextView
             android:id="@+id/links"
             android:layout_width="match_parent"

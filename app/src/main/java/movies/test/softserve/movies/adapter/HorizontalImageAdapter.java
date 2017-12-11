@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import movies.test.softserve.movies.R;
+import movies.test.softserve.movies.entity.ForImage;
 import movies.test.softserve.movies.entity.Season;
 
 /**
@@ -19,10 +20,10 @@ import movies.test.softserve.movies.entity.Season;
 
 public class HorizontalImageAdapter extends RecyclerView.Adapter<HorizontalImageAdapter.ViewHolder> {
 
-    private List<Season> items;
+    private List<? extends ForImage> items;
     private HorizontalImageAdapter.OnClickListener listener;
 
-    public HorizontalImageAdapter(List<Season> items, HorizontalImageAdapter.OnClickListener listener) {
+    public HorizontalImageAdapter(List<? extends ForImage> items, HorizontalImageAdapter.OnClickListener listener) {
         this.items = items;
         this.listener = listener;
     }

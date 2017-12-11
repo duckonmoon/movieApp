@@ -32,9 +32,9 @@ class TVShowFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_tvshow_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_tvshow_list, container, false)
         mRecyclerView = view as RecyclerView
         val isTablet = resources.getBoolean(R.bool.isTablet)
         if (isTablet) {
@@ -83,7 +83,7 @@ class TVShowFragment : Fragment() {
     }
 
     private fun buildAlertDialog(movie: TVEntity) {
-        AlertDialog.Builder(activity)
+        AlertDialog.Builder(activity!!)
                 .setMessage(R.string.delete_from_watched)
                 .setPositiveButton(R.string.yes) { _, _ ->
                     dbService.deleteFromDb(movie.id)

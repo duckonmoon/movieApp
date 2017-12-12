@@ -18,6 +18,7 @@ import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.Page;
 import movies.test.softserve.movies.entity.PosterContainer;
 import movies.test.softserve.movies.entity.Rating;
+import movies.test.softserve.movies.entity.TVPage;
 import movies.test.softserve.movies.entity.VideoContainer;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnListOfGenresGetListener;
@@ -25,6 +26,7 @@ import movies.test.softserve.movies.event.OnListOfMoviesGetListener;
 import movies.test.softserve.movies.event.OnMovieInformationGet;
 import movies.test.softserve.movies.event.OnPostersGetListener;
 import movies.test.softserve.movies.event.OnSessionGetListener;
+import movies.test.softserve.movies.event.OnSimilarTVEntitiesGetListener;
 import movies.test.softserve.movies.event.OnVideoGetListener;
 import movies.test.softserve.movies.util.Mapper;
 import retrofit2.Call;
@@ -48,6 +50,7 @@ public class MovieService {
     private List<OnListOfGenresGetListener> onListOfGenresGetListeners;
     private List<OnVideoGetListener> onVideoGetListeners;
     private List<OnPostersGetListener> onPostersGetListeners;
+    private List<OnSimilarTVEntitiesGetListener> onSimilarTVEntitiesGetListeners;
 
     private MovieService() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -62,6 +65,7 @@ public class MovieService {
         onListOfGenresGetListeners = new ArrayList<>();
         onVideoGetListeners = new ArrayList<>();
         onPostersGetListeners = new ArrayList<>();
+        onSimilarTVEntitiesGetListeners = new ArrayList<>();
     }
 
 
@@ -214,9 +218,9 @@ public class MovieService {
         });
     }
 
-    public void tryToGetVideos(int movieId) {
+    public void tryToGetVideos(int movieId, String locale) {
         Call<VideoContainer> call = service.getVideosForMovie(movieId, Constants.API_KEY,
-                Locale.getDefault().getLanguage());
+                locale);
         call.enqueue(new Callback<VideoContainer>() {
             @Override
             public void onResponse(Call<VideoContainer> call, Response<VideoContainer> response) {
@@ -260,6 +264,26 @@ public class MovieService {
 
             @Override
             public void onFailure(Call<PosterContainer> call, Throwable t) {
+                Log.e("Smth went wrong", t.getMessage());
+            }
+        });
+    }
+
+    public void tryToGetSimilarMovies(Integer movie_id, Integer page) {
+        Call<Page> call = service.getSimilarMovies(movie_id, Constants.API_KEY, Locale.getDefault().getLanguage(), page);
+        call.enqueue(new Callback<Page>() {
+            @Override
+            public void onResponse(Call<Page> call, Response<Page> response) {
+                if (response.body() != null) {
+                    for (OnSimilarTVEntitiesGetListener listener :
+                            onSimilarTVEntitiesGetListeners) {
+                        listener.onSimilarTVEntitiesGetListener(Mapper.mapFromMovieToTVEntity(response.body().getMovies()));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Page> call, Throwable t) {
                 Log.e("Smth went wrong", t.getMessage());
             }
         });
@@ -317,5 +341,13 @@ public class MovieService {
 
     public void removeOnPosterGetListener(@NonNull OnPostersGetListener listener) {
         onPostersGetListeners.remove(listener);
+    }
+
+    public void addOnSimilarTVEntitiesGetListener(OnSimilarTVEntitiesGetListener listener){
+        onSimilarTVEntitiesGetListeners.add(listener);
+    }
+
+    public void removeOnSimilarTVEntitiesGetListener(OnSimilarTVEntitiesGetListener listener){
+        onSimilarTVEntitiesGetListeners.remove(listener);
     }
 }

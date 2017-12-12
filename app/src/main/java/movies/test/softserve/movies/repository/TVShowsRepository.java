@@ -21,6 +21,7 @@ import movies.test.softserve.movies.entity.VideoContainer;
 import movies.test.softserve.movies.event.OnFullTVShowGetListener;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnListOfTVShowsGetListener;
+import movies.test.softserve.movies.event.OnSimilarTVEntitiesGetListener;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.service.TVShowsService;
 import movies.test.softserve.movies.util.Mapper;
@@ -46,6 +47,8 @@ public class TVShowsRepository {
     private List<OnListOfTVShowsGetListener> listOfTVShowsGetListeners;
     private List<OnFullTVShowGetListener> onFullTVShowGetListeners;
     private List<OnInfoUpdatedListener> onInfoUpdatedList;
+    private List<OnSimilarTVEntitiesGetListener> onSimilarTVEntitiesGetListeners;
+
 
     private TVShowsRepository() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -59,6 +62,7 @@ public class TVShowsRepository {
         listOfTVShowsGetListeners = new ArrayList<>();
         onFullTVShowGetListeners = new ArrayList<>();
         onInfoUpdatedList = new ArrayList<>();
+        onSimilarTVEntitiesGetListeners = new ArrayList<>();
     }
 
     public static synchronized TVShowsRepository getInstance() {
@@ -157,6 +161,26 @@ public class TVShowsRepository {
         });
     }
 
+    public void tryToGetSimilarTvShows(Integer tv_id, Integer page) {
+        Call<TVPage> call = service.getSimilarTVShows(tv_id, Constants.API_KEY, Locale.getDefault().getLanguage(), page);
+        call.enqueue(new Callback<TVPage>() {
+            @Override
+            public void onResponse(Call<TVPage> call, Response<TVPage> response) {
+                if (response.body() != null) {
+                    for (OnSimilarTVEntitiesGetListener listener :
+                            onSimilarTVEntitiesGetListeners) {
+                        listener.onSimilarTVEntitiesGetListener(Mapper.mapFromTVShowToTVEntity(response.body().getResults()));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TVPage> call, Throwable t) {
+                Log.e("Smth went wrong", t.getMessage());
+            }
+        });
+    }
+
     public void getTVShowByKeyword(@NonNull String query, @NonNull Integer page, @NonNull Callback<TVPage> callback) {
         Call<TVPage> call = service.getTVShowByKeyword(Constants.API_KEY, Uri.parse(query.trim()), page, Locale.getDefault().getLanguage());
         call.enqueue(callback);
@@ -189,5 +213,13 @@ public class TVShowsRepository {
 
     public void removeOnInfoUpdatedListener(@NonNull OnInfoUpdatedListener listener) {
         onInfoUpdatedList.remove(listener);
+    }
+
+    public void addOnSimilarTVEntitiesGetListener(OnSimilarTVEntitiesGetListener listener) {
+        onSimilarTVEntitiesGetListeners.add(listener);
+    }
+
+    public void removeOnSimilarTVEntitiesGetListener(OnSimilarTVEntitiesGetListener listener) {
+        onSimilarTVEntitiesGetListeners.remove(listener);
     }
 }

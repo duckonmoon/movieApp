@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -44,6 +45,7 @@ import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.repository.TVShowsRepository;
 import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
+import movies.test.softserve.movies.util.StartActivityClass;
 import movies.test.softserve.movies.viewmodel.FullTVSeriesViewModel;
 
 /**
@@ -291,6 +293,8 @@ public class TVShowDetailsActivity extends BaseActivity {
                 }
             }
         });
+        Button similarButton = findViewById(R.id.similar_button);
+        similarButton.setOnClickListener((i) -> StartActivityClass.startSimilarActivity(this,tvShow) );
     }
 
     private void zoomImageFromThumb(final View thumbView, Bitmap bitmap) {

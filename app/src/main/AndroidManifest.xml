@@ -41,7 +41,10 @@
             android:name=".activity.TVShowDetailsActivity"
             android:label="@string/title_activity_tvshow_details"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activity.VideoActivity"/>
+        <activity android:name=".activity.VideoActivity"
+            android:theme="@style/SearchTheme"/>
+        <activity android:name=".activity.SimilarActivity"
+            android:theme="@style/SearchTheme"/>
     </application>
 
 </manifest>

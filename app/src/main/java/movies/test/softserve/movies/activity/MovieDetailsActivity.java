@@ -34,20 +34,14 @@ import com.facebook.share.widget.ShareDialog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.util.List;
-
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.adapter.HorizontalButtonAdapter;
-import movies.test.softserve.movies.adapter.HorizontalImageAdapter;
-import movies.test.softserve.movies.entity.Backdrop;
 import movies.test.softserve.movies.entity.FullMovie;
 import movies.test.softserve.movies.entity.Genre;
-import movies.test.softserve.movies.entity.Poster;
 import movies.test.softserve.movies.entity.ProductionCompany;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnMovieInformationGet;
-import movies.test.softserve.movies.event.OnPostersGetListener;
 import movies.test.softserve.movies.service.DBHelperService;
 import movies.test.softserve.movies.service.DBMovieService;
 import movies.test.softserve.movies.service.MovieService;
@@ -179,7 +173,7 @@ public class MovieDetailsActivity extends BaseActivity {
     }
 
 
-    public void addGenresCountriesCompanies() {
+    private void addGenresCountriesCompanies() {
         final FullMovie fullMovie = viewModel.getFullMovie();
         runOnUiThread(() -> {
             TextView budget = findViewById(R.id.budget);
@@ -255,6 +249,8 @@ public class MovieDetailsActivity extends BaseActivity {
         });
         trailersButton = findViewById(R.id.trailers_button);
         trailersButton.setVisibility(View.VISIBLE);
+        Button similarButton = findViewById(R.id.similar_button);
+        similarButton.setOnClickListener((i) -> StartActivityClass.startSimilarActivity(this,movie) );
     }
 
     private void getIntentInfo() {

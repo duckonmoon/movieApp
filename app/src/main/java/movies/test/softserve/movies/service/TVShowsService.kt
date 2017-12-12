@@ -27,4 +27,10 @@ interface TVShowsService {
 
     @GET("3/search/tv")
     fun getTVShowByKeyword(@Query("api_key") apiKey: String, @Query("query") uri: Uri, @Query("page") page: Int, @Query("language") language: String): Call<TVPage>
+
+    @GET("3/tv/{tv_id}/similar")
+    fun getSimilarTVShows(@Path("tv_id") tv_id: Int,
+                          @Query("api_key") apiKey: String,
+                          @Query("language") language: String,
+                          @Query("page") page: Int?): Call<TVPage>
 }

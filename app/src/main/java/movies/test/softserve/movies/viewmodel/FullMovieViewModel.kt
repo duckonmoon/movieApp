@@ -10,6 +10,6 @@ import movies.test.softserve.movies.entity.Poster
  */
 class FullMovieViewModel : ViewModel() {
     var fullMovie: FullMovie? = null
-    var posters :List<Poster>? = null
-    var backdrops : List<Backdrop>? = null
+    var posters: List<Poster>? = null
+    var backdrops: List<Backdrop>? = null
 }

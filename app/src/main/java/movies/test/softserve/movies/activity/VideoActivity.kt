@@ -14,6 +14,7 @@ import movies.test.softserve.movies.entity.Video
 import movies.test.softserve.movies.event.OnVideoGetListener
 import movies.test.softserve.movies.fragment.YoutubeFragment
 import movies.test.softserve.movies.service.MovieService
+import java.util.*
 
 class VideoActivity : BaseActivity() {
 
@@ -32,12 +33,18 @@ class VideoActivity : BaseActivity() {
 
     private var movieId = 0
 
+    private var firsttry = true
+
     private var onVideoGetListener = object : OnVideoGetListener {
         override fun onVideoGet(videos: List<Video>) {
             if (list.isEmpty() && videos.isNotEmpty()) {
                 list.addAll(videos)
                 recycler.adapter.notifyDataSetChanged()
                 empty.visibility = View.GONE
+            }
+            if (videos.isEmpty() && Locale.getDefault().language == "uk" && firsttry) {
+                service.tryToGetVideos(movieId, null)
+                firsttry = false
             }
         }
     }
@@ -73,7 +80,7 @@ class VideoActivity : BaseActivity() {
         super.onResume()
         service.addOnVideoGetListener(onVideoGetListener)
         if (list.size < 1) {
-            service.tryToGetVideos(movieId)
+            service.tryToGetVideos(movieId, Locale.getDefault().language)
         }
     }
 

@@ -12,7 +12,6 @@ import java.util.List;
 
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.entity.ForImage;
-import movies.test.softserve.movies.entity.Season;
 
 /**
  * Created by rkrit on 27.11.17.

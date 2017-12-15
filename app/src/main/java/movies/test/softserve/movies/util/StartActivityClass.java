@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 
-import movies.test.softserve.movies.activity.SimilarActivity;
 import movies.test.softserve.movies.activity.MovieDetailsActivity;
 import movies.test.softserve.movies.activity.SearchActivity;
+import movies.test.softserve.movies.activity.SimilarActivity;
 import movies.test.softserve.movies.activity.TVShowDetailsActivity;
 import movies.test.softserve.movies.activity.VideoActivity;
 import movies.test.softserve.movies.entity.Genre;
@@ -61,9 +61,9 @@ public class StartActivityClass {
         activity.startActivity(intent);
     }
 
-    public static void startSimilarActivity(Activity activity, TVEntity tvEntity){
+    public static void startSimilarActivity(Activity activity, TVEntity tvEntity) {
         Intent intent = new Intent(activity, SimilarActivity.class);
-        intent.putExtra(SimilarActivity.Companion.getMOVIE(),tvEntity);
+        intent.putExtra(SimilarActivity.Companion.getMOVIE(), tvEntity);
         activity.startActivity(intent);
     }
 }

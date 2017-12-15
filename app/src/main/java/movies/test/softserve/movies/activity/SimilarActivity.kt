@@ -34,11 +34,14 @@ class SimilarActivity : BaseActivity() {
     private lateinit var movie: TVEntity
     private lateinit var transfer: Transfer
 
+    private var all = false
+
     private var listener: OnSimilarTVEntitiesGetListener = OnSimilarTVEntitiesGetListener { tvEntities ->
-        run {
-            transfer.list.addAll(tvEntities)
-            transfer.page += 1
-            recyclerview.adapter.notifyDataSetChanged()
+        transfer.list.addAll(tvEntities)
+        transfer.page += 1
+        recyclerview.adapter.notifyDataSetChanged()
+        if (tvEntities.isEmpty()){
+            all = true
         }
     }
 
@@ -48,7 +51,7 @@ class SimilarActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         movie = intent.extras[MOVIE] as TVEntity
-        transfer = Transfer(movie)
+        transfer = Transfer()
         val isTablet = resources.getBoolean(R.bool.isTablet)
         if (isTablet) {
             recyclerview.layoutManager = GridLayoutManager(this, 2)
@@ -85,12 +88,15 @@ class SimilarActivity : BaseActivity() {
                 }),
                 object : MovieListWrapper.OnEndReachListener {
                     override fun onEndReach(): MovieListWrapper.State {
-                        if (movie.type == TVEntity.TYPE.MOVIE) {
-                            movieRequest()
-                        } else {
-                            tvShowRequest()
+                        if (!all) {
+                            if (movie.type == TVEntity.TYPE.MOVIE) {
+                                movieRequest()
+                            } else {
+                                tvShowRequest()
+                            }
+                            return MovieListWrapper.State.Loading
                         }
-                        return MovieListWrapper.State.Loading
+                        return MovieListWrapper.State.end
                     }
 
                     override fun onEndButtonClick() {
@@ -144,7 +150,7 @@ class SimilarActivity : BaseActivity() {
                 .show()
     }
 
-    private class Transfer(var movie: TVEntity) : Serializable {
+    private class Transfer : Serializable {
         var page: Int = 1
         var list: ArrayList<TVEntity> = ArrayList()
     }

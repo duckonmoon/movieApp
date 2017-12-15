@@ -294,7 +294,7 @@ public class TVShowDetailsActivity extends BaseActivity {
             }
         });
         Button similarButton = findViewById(R.id.similar_button);
-        similarButton.setOnClickListener((i) -> StartActivityClass.startSimilarActivity(this,tvShow) );
+        similarButton.setOnClickListener((i) -> StartActivityClass.startSimilarActivity(this, tvShow));
     }
 
     private void zoomImageFromThumb(final View thumbView, Bitmap bitmap) {

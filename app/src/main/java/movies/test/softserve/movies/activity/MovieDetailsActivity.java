@@ -250,7 +250,7 @@ public class MovieDetailsActivity extends BaseActivity {
         trailersButton = findViewById(R.id.trailers_button);
         trailersButton.setVisibility(View.VISIBLE);
         Button similarButton = findViewById(R.id.similar_button);
-        similarButton.setOnClickListener((i) -> StartActivityClass.startSimilarActivity(this,movie) );
+        similarButton.setOnClickListener((i) -> StartActivityClass.startSimilarActivity(this, movie));
     }
 
     private void getIntentInfo() {

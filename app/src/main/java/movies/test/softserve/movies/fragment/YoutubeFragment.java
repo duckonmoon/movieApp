@@ -111,6 +111,7 @@ public class YoutubeFragment extends Fragment {
     public void onBackPressed() {
         try {
             youTubePlayer.setFullscreen(false);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 }

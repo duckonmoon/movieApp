@@ -23,11 +23,11 @@ public class DBMovieService {
     public static final Integer CONTENT_TYPE_MOVIE = 1;
     public static final Integer CONTENT_TYPE_TVSHOW = 0;
     private static DBMovieService INSTANCE;
-    private SQLiteDatabase database;
+    //private SQLiteDatabase database;
     private RatingService ratingService = RatingService.getInstance();
 
     private DBMovieService() {
-        database = MainController.getInstance().getDatabase();
+        //database = MainController.getInstance().getDatabase();
     }
 
     public static DBMovieService getInstance() {
@@ -37,8 +37,23 @@ public class DBMovieService {
         return INSTANCE;
     }
 
+    private TVEntity dumbTVEntity(TVEntity.TYPE type){
+        TVEntity entity = new TVEntity();
+        entity.setGenreIds(new ArrayList<>());
+        entity.setId(1);
+        entity.setOverview("Wow");
+        entity.setTitle("Wow");
+        entity.setVoteCount(20);
+        entity.setVoteAverage(1.5);
+        entity.setPosterPath("/eKi8dIrr8voobbaGzDpe8w0PVbC.jpg");
+        entity.setType(type);
+        entity.setReleaseDate("222222");
+        return entity;
+    }
+
+
     public long insertMovieToFavourite(Integer id, String title, float voteAverage, int voteCount, String overview, String releaseDate, String posterpath, List<Integer> genres) {
-        ContentValues values = new ContentValues();
+        /*ContentValues values = new ContentValues();
         values.put(MovieEntry._ID, id);
         values.put(MovieEntry.COLUMN_NAME_TITLE, title);
         values.put(MovieEntry.COLUMN_NAME_VOTE_AVERAGE, voteAverage);
@@ -53,11 +68,12 @@ public class DBMovieService {
         insertGenresIfNotExists(id, genres);
         long returnValue = database.insert(MovieEntry.TABLE_NAME, null, values);
         AchievementService.getInstance().checkWhatAchievementsIsDone();
-        return returnValue;
+        return returnValue;*/
+        return 1;
     }
 
     public long insertTVShowToFavourite(Integer id, String name, float voteAverage, int voteCount, String overview, String posterpath) {
-        ContentValues values = new ContentValues();
+        /*ContentValues values = new ContentValues();
         values.put(MovieEntry._ID, id);
         values.put(MovieEntry.COLUMN_NAME_TITLE, name);
         values.put(MovieEntry.COLUMN_NAME_VOTE_AVERAGE, voteAverage);
@@ -69,12 +85,12 @@ public class DBMovieService {
         values.put(MovieEntry.COLUMN_NAME_TYPE, CONTENT_TYPE_TVSHOW);
         ratingService.change(voteAverage, RatingService.ADD);
         long returnValue = database.insert(MovieEntry.TABLE_NAME, null, values);
-        AchievementService.getInstance().checkWhatAchievementsIsDone();
-        return returnValue;
+        AchievementService.getInstance().checkWhatAchievementsIsDone();*/
+        return 1;
     }
 
     public long addMovieToDb(Integer id, String title, float voteAverage, int voteCount, String overview, String releaseDate, String posterpath, List<Integer> genres) {
-        ContentValues values = new ContentValues();
+        /*ContentValues values = new ContentValues();
         values.put(MovieEntry._ID, id);
         values.put(MovieEntry.COLUMN_NAME_TITLE, title);
         values.put(MovieEntry.COLUMN_NAME_VOTE_AVERAGE, voteAverage);
@@ -89,11 +105,12 @@ public class DBMovieService {
         insertGenresIfNotExists(id, genres);
         long returnValue = database.insert(MovieEntry.TABLE_NAME, null, values);
         AchievementService.getInstance().checkWhatAchievementsIsDone();
-        return returnValue;
+        return returnValue;*/
+        return 1;
     }
 
     public long addTVShowToDb(Integer id, String name, float voteAverage, int voteCount, String overview, String posterpath) {
-        ContentValues values = new ContentValues();
+        /*ContentValues values = new ContentValues();
         values.put(MovieEntry._ID, id);
         values.put(MovieEntry.COLUMN_NAME_TITLE, name);
         values.put(MovieEntry.COLUMN_NAME_VOTE_AVERAGE, voteAverage);
@@ -106,12 +123,13 @@ public class DBMovieService {
         ratingService.change(voteAverage, RatingService.ADD);
         long returnValue = database.insert(MovieEntry.TABLE_NAME, null, values);
         AchievementService.getInstance().checkWhatAchievementsIsDone();
-        return returnValue;
+        return returnValue;*/
+        return 1;
     }
 
 
     public boolean checkIfExists(Integer id) {
-        String[] projection = {
+        /*String[] projection = {
                 MovieEntry._ID
         };
         String[] sA = {id.toString()};
@@ -129,12 +147,12 @@ public class DBMovieService {
             cursor.close();
             return true;
         }
-        cursor.close();
+        cursor.close();*/
         return false;
     }
 
     public boolean checkIfIsFavourite(Integer id) {
-        String[] projection = {
+        /*String[] projection = {
                 MovieEntry._ID
         };
         String[] sA = {id.toString()};
@@ -152,19 +170,20 @@ public class DBMovieService {
             cursor.close();
             return true;
         }
-        cursor.close();
+        cursor.close();*/
         return false;
     }
 
     public boolean deleteFromDb(Integer id) {
-        TVEntity movie = getMovieByID(id);
+        /*TVEntity movie = getMovieByID(id);
         ratingService.change(movie.getVoteAverage().floatValue(), RatingService.SUB);
         database.delete(GenreEntry.TABLE_NAME, GenreEntry.COLUMN_NAME_MOVIE_ID + " = " + id, null);
-        return database.delete(MovieEntry.TABLE_NAME, MovieEntry._ID + " = " + id, null) > 0;
+        return database.delete(MovieEntry.TABLE_NAME, MovieEntry._ID + " = " + id, null) > 0;*/
+        return true;
     }
 
     public List<TVEntity> getAllMovies() {
-        ArrayList<TVEntity> movieArrayList = new ArrayList<>();
+        /*ArrayList<TVEntity> movieArrayList = new ArrayList<>();
         String[] projection = {
                 MovieEntry._ID,
                 MovieEntry.COLUMN_NAME_VOTE_COUNT,
@@ -199,11 +218,12 @@ public class DBMovieService {
             movieArrayList.add(movie);
         }
         cursor.close();
-        return movieArrayList;
+        return movieArrayList;*/
+        return new ArrayList<TVEntity>();
     }
 
     public List<TVEntity> getFavouriteMovies() {
-        ArrayList<TVEntity> movieArrayList = new ArrayList<>();
+        /*ArrayList<TVEntity> movieArrayList = new ArrayList<>();
         String[] projection = {
                 MovieEntry._ID,
                 MovieEntry.COLUMN_NAME_VOTE_COUNT,
@@ -238,12 +258,12 @@ public class DBMovieService {
             movieArrayList.add(movie);
         }
         cursor.close();
-        return movieArrayList;
-
+        return movieArrayList;*/
+        return new ArrayList<>();
     }
 
     public TVEntity getMovieByID(Integer id) {
-        String[] projection = {
+        /*String[] projection = {
                 MovieEntry._ID,
                 MovieEntry.COLUMN_NAME_VOTE_COUNT,
                 MovieEntry.COLUMN_NAME_VOTE_AVERAGE,
@@ -274,12 +294,13 @@ public class DBMovieService {
             movie.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
             movie.setType(TVEntity.TYPE.MOVIE);
         }
-        cursor.close();
-        return movie;
+        cursor.close();*/
+
+        return dumbTVEntity(TVEntity.TYPE.MOVIE);
     }
 
     public List<TVEntity> getAllTVShows() {
-        ArrayList<TVEntity> movieArrayList = new ArrayList<>();
+        /*ArrayList<TVEntity> movieArrayList = new ArrayList<>();
         String[] projection = {
                 MovieEntry._ID,
                 MovieEntry.COLUMN_NAME_VOTE_COUNT,
@@ -313,11 +334,12 @@ public class DBMovieService {
             movieArrayList.add(movie);
         }
         cursor.close();
-        return movieArrayList;
+        return movieArrayList;*/
+        return new ArrayList<>();
     }
 
     public List<TVEntity> getFavouriteTVShows() {
-        ArrayList<TVEntity> movieArrayList = new ArrayList<>();
+        /*ArrayList<TVEntity> movieArrayList = new ArrayList<>();
         String[] projection = {
                 MovieEntry._ID,
                 MovieEntry.COLUMN_NAME_VOTE_COUNT,
@@ -350,12 +372,13 @@ public class DBMovieService {
             movieArrayList.add(tvShow);
         }
         cursor.close();
-        return movieArrayList;
+        return movieArrayList;*/
+        return new ArrayList<>();
 
     }
 
     public TVEntity getFavouriteTVShowByID(Integer id) {
-        String[] projection = {
+        /*String[] projection = {
                 MovieEntry._ID,
                 MovieEntry.COLUMN_NAME_VOTE_COUNT,
                 MovieEntry.COLUMN_NAME_VOTE_AVERAGE,
@@ -385,63 +408,66 @@ public class DBMovieService {
             tvShow.setVoteAverage(cursor.getDouble(cursor.getColumnIndexOrThrow(MovieEntry.COLUMN_NAME_VOTE_AVERAGE)));
             tvShow.setType(TVEntity.TYPE.TV_SHOW);
         }
-        cursor.close();
-        return tvShow;
+        cursor.close();*/
+        return dumbTVEntity(TVEntity.TYPE.TV_SHOW);
     }
 
 
     public void setFavourite(Integer id) {
-        ContentValues cv = new ContentValues();
+        /*ContentValues cv = new ContentValues();
         cv.put(MovieEntry.COLUMN_NAME_FAVOURITE, 1);
-        database.update(MovieEntry.TABLE_NAME, cv, MovieEntry._ID + "= " + id, null);
+        database.update(MovieEntry.TABLE_NAME, cv, MovieEntry._ID + "= " + id, null);*/
     }
 
     public void cancelFavourite(Integer id) {
-        ContentValues cv = new ContentValues();
+        /*ContentValues cv = new ContentValues();
         cv.put(MovieEntry.COLUMN_NAME_FAVOURITE, 0);
-        database.update(MovieEntry.TABLE_NAME, cv, MovieEntry._ID + "= " + id, null);
+        database.update(MovieEntry.TABLE_NAME, cv, MovieEntry._ID + "= " + id, null);*/
     }
 
     public int getMoviesSize() {
-        Cursor cursor = database.rawQuery("SELECT count(*) FROM " + MovieEntry.TABLE_NAME + " WHERE " + MovieEntry.COLUMN_NAME_TYPE + " = " + CONTENT_TYPE_MOVIE, null);
+       /* Cursor cursor = database.rawQuery("SELECT count(*) FROM " + MovieEntry.TABLE_NAME + " WHERE " + MovieEntry.COLUMN_NAME_TYPE + " = " + CONTENT_TYPE_MOVIE, null);
         cursor.moveToFirst();
         int size = cursor.getInt(0);
         cursor.close();
-        return size;
+        return size;*/
+       return 0;
     }
 
     public int getTVShowsSize() {
-        Cursor cursor = database.rawQuery("SELECT count(*) FROM " + MovieEntry.TABLE_NAME + " WHERE " + MovieEntry.COLUMN_NAME_TYPE + " = " + CONTENT_TYPE_TVSHOW, null);
+        /*Cursor cursor = database.rawQuery("SELECT count(*) FROM " + MovieEntry.TABLE_NAME + " WHERE " + MovieEntry.COLUMN_NAME_TYPE + " = " + CONTENT_TYPE_TVSHOW, null);
         cursor.moveToFirst();
         int size = cursor.getInt(0);
         cursor.close();
-        return size;
+        return size;*/
+        return 0;
     }
 
     public int getMoviesSizeWithGenre(Integer genre) {
-        Cursor cursor = database.rawQuery("SELECT count(*) FROM " + MovieEntry.TABLE_NAME + ", " + GenreEntry.TABLE_NAME
+        /*Cursor cursor = database.rawQuery("SELECT count(*) FROM " + MovieEntry.TABLE_NAME + ", " + GenreEntry.TABLE_NAME
                 + " WHERE " + MovieEntry.COLUMN_NAME_TYPE + " = " + CONTENT_TYPE_MOVIE
                 + " AND " + GenreEntry.TABLE_NAME + "." + GenreEntry._ID + " = " + genre
                 + " AND " + MovieEntry.TABLE_NAME + "." + MovieEntry._ID + " = " + GenreEntry.COLUMN_NAME_MOVIE_ID, null);
         cursor.moveToFirst();
         int size = cursor.getInt(0);
         cursor.close();
-        return size;
+        return size;*/
+        return 0;
     }
 
     private void insertGenresIfNotExists(Integer id_movie, List<Integer> genres) {
-        for (Integer genre :
+        /*for (Integer genre :
                 genres) {
             ContentValues cv = new ContentValues();
             cv.put(GenreEntry._ID, genre);
             cv.put(GenreEntry.COLUMN_NAME_MOVIE_ID, id_movie);
             long i = database.insert(GenreEntry.TABLE_NAME, null, cv);
             Log.w("SQL", "" + i);
-        }
+        }*/
     }
 
     private List<Integer> getMovieGenres(Integer id) {
-        ArrayList<Integer> genres = new ArrayList<>();
+        /*ArrayList<Integer> genres = new ArrayList<>();
         String[] projection = {GenreEntry._ID};
         Cursor cursor = database.query(
                 GenreEntry.TABLE_NAME,
@@ -456,7 +482,8 @@ public class DBMovieService {
             genres.add(cursor.getColumnIndexOrThrow(GenreEntry._ID));
         }
         cursor.close();
-        return genres;
+        return genres;*/
+        return new ArrayList<>();
     }
 
 }

@@ -7,7 +7,7 @@ import movies.test.softserve.movies.entity.TVEntity;
  */
 
 public class DBHelperService {
-    DBMovieService service;
+    private DBMovieService service;
 
     public DBHelperService() {
         service = DBMovieService.getInstance();

@@ -95,6 +95,6 @@ public interface MoviesService {
     Call<Page> getSimilarMovies(@Path("movie_id") Integer movie_id,
                                 @Query("api_key") String apiKey,
                                 @Query("language") String language,
-                                @Query("page") Integer page );
+                                @Query("page") Integer page);
 
 }

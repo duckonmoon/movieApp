@@ -18,7 +18,6 @@ import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.Page;
 import movies.test.softserve.movies.entity.PosterContainer;
 import movies.test.softserve.movies.entity.Rating;
-import movies.test.softserve.movies.entity.TVPage;
 import movies.test.softserve.movies.entity.VideoContainer;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnListOfGenresGetListener;
@@ -343,11 +342,11 @@ public class MovieService {
         onPostersGetListeners.remove(listener);
     }
 
-    public void addOnSimilarTVEntitiesGetListener(OnSimilarTVEntitiesGetListener listener){
+    public void addOnSimilarTVEntitiesGetListener(OnSimilarTVEntitiesGetListener listener) {
         onSimilarTVEntitiesGetListeners.add(listener);
     }
 
-    public void removeOnSimilarTVEntitiesGetListener(OnSimilarTVEntitiesGetListener listener){
+    public void removeOnSimilarTVEntitiesGetListener(OnSimilarTVEntitiesGetListener listener) {
         onSimilarTVEntitiesGetListeners.remove(listener);
     }
 }

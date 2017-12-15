@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import movies.test.softserve.movies.db.entity.Genre;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.entity.TVShow;
@@ -16,6 +17,9 @@ import movies.test.softserve.movies.entity.TVShow;
 public final class Mapper {
     private Mapper() {
     }
+
+    public static final Boolean FAVOURITE = true;
+    public static final Boolean NOT_FAVOURITE = false;
 
     public static List<TVEntity> mapFromMovieToTVEntity(@NonNull List<? extends Movie> movies) {
         List<TVEntity> entities = new ArrayList<>();
@@ -55,5 +59,32 @@ public final class Mapper {
 
         }
         return entities;
+    }
+
+    public static movies.test.softserve.movies.db.entity.Movie mapFromTVEntityToDbMovie(TVEntity entity,boolean isFavourite){
+        movies.test.softserve.movies.db.entity.Movie movie = new movies.test.softserve.movies.db.entity.Movie();
+        movie.setId(entity.getId());
+        movie.setFavourite(isFavourite);
+        movie.setWatched(true);
+        movie.setImage(entity.getPosterPath());
+        movie.setVoteCount(entity.getVoteCount());
+        movie.setOverview(entity.getOverview());
+        movie.setVoteAverage(entity.getVoteAverage());
+        movie.setReleaseDate(entity.getReleaseDate());
+        movie.setType(entity.getType().toString());
+        movie.setTitle(entity.getTitle());
+        return movie;
+    }
+
+    public static List<Genre> mapFromIntegersToDbGenres(List<Integer> genres,TVEntity tvEntity){
+        List<Genre> genreList = new ArrayList<>();
+        for (Integer genr:
+             genres) {
+            Genre genre = new Genre();
+            genre.setMovieId(tvEntity.getId());
+            genre.setGenreId(genr);
+            genreList.add(genre);
+        }
+        return genreList;
     }
 }

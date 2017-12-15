@@ -2,7 +2,7 @@ package movies.test.softserve.movies.controller;
 
 import android.app.Activity;
 import android.app.Application;
-import android.database.sqlite.SQLiteDatabase;
+import android.arch.persistence.room.Room;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +25,7 @@ import movies.test.softserve.movies.event.OnAchievementDoneListener;
 import movies.test.softserve.movies.event.OnSessionGetListener;
 import movies.test.softserve.movies.repository.MoviesRepository;
 import movies.test.softserve.movies.repository.TVShowsRepository;
-import movies.test.softserve.movies.service.MovieReaderDbHelper;
+import movies.test.softserve.movies.service.AppRoomDatabase;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.util.AchievementService;
 
@@ -40,12 +40,13 @@ public class MainController extends Application implements Observer, OnAchieveme
     private Integer page;
     private MoviesRepository moviesRepository;
     private AddedItemsEvent eventListener;
-    private MovieReaderDbHelper movieReaderDbHelper;
+    //private MovieReaderDbHelper movieReaderDbHelper;
     private AchievementService achievementService;
-    private SQLiteDatabase database;
+    //private SQLiteDatabase database;
     private MovieService movieService;
     private GuestSession guestSession;
     private Activity currentContext;
+    private AppRoomDatabase database;
 
     public static MainController getInstance() {
         return INSTANCE;
@@ -54,11 +55,14 @@ public class MainController extends Application implements Observer, OnAchieveme
     @Override
     public void onCreate() {
         super.onCreate();
+        database = Room.databaseBuilder(getApplicationContext(), AppRoomDatabase.class,
+                "movies").build();
+
         INSTANCE = this;
         movies = new ArrayList<>();
         page = 1;
-        movieReaderDbHelper = new MovieReaderDbHelper(getApplicationContext());
-        database = movieReaderDbHelper.getWritableDatabase();
+        //movieReaderDbHelper = new MovieReaderDbHelper(getApplicationContext());
+        //database = movieReaderDbHelper.getWritableDatabase();
         moviesRepository = MoviesRepository.getInstance();
         achievementService = AchievementService.getInstance();
         achievementService.addListener(this);
@@ -112,7 +116,11 @@ public class MainController extends Application implements Observer, OnAchieveme
         moviesRepository.tryToGetAllMovies();
     }
 
-    public SQLiteDatabase getDatabase() {
+   /* public SQLiteDatabase getDatabase() {
+        return database;
+    }*/
+
+    public AppRoomDatabase getDatabase(){
         return database;
     }
 

@@ -35,24 +35,22 @@ class AchievementsRecyclerViewAdapter(private val mValues: List<Achievement>) : 
         holder.mImageView.setImageResource(mValues[position].resourceId)
         val handler = Handler()
         Thread {
-            Runnable {
-                if (service.getAchievementStatus(mValues[position])) {
-                    handler.post({
-                        holder.mImageView.alpha = VISIBLE
-                    })
-                } else {
-                    handler.post({
-                        holder.mImageView.alpha = INVISIBLE
-                    })
-                }
+            if (service.getAchievementStatus(mValues[position])) {
+                handler.post({
+                    holder.mImageView.alpha = VISIBLE
+                })
+            } else {
+                handler.post({
+                    holder.mImageView.alpha = INVISIBLE
+                })
             }
-        }
+        }.start()
 
     }
 
     override fun getItemCount(): Int = mValues.size
 
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
+    inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         val mImageView: ImageView = mView.findViewById(R.id.imageV)
         val mIdView: TextView = mView.findViewById<View>(R.id.id) as TextView
         val mContentView: TextView = mView.findViewById<View>(R.id.content) as TextView

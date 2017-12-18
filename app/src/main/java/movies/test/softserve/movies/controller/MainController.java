@@ -40,9 +40,7 @@ public class MainController extends Application implements Observer, OnAchieveme
     private Integer page;
     private MoviesRepository moviesRepository;
     private AddedItemsEvent eventListener;
-    //private MovieReaderDbHelper movieReaderDbHelper;
     private AchievementService achievementService;
-    //private SQLiteDatabase database;
     private MovieService movieService;
     private GuestSession guestSession;
     private Activity currentContext;
@@ -61,8 +59,6 @@ public class MainController extends Application implements Observer, OnAchieveme
         INSTANCE = this;
         movies = new ArrayList<>();
         page = 1;
-        //movieReaderDbHelper = new MovieReaderDbHelper(getApplicationContext());
-        //database = movieReaderDbHelper.getWritableDatabase();
         moviesRepository = MoviesRepository.getInstance();
         achievementService = AchievementService.getInstance();
         achievementService.addListener(this);

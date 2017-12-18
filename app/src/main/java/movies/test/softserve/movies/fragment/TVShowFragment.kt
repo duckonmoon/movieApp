@@ -50,7 +50,6 @@ class TVShowFragment : Fragment() {
                     StartActivityClass.startDetailsActivity(activity, mov)
                 }, MovieRecyclerViewAdapter.OnFavouriteClick { movie,position ->
             Thread {
-                Runnable {
                     if (helperService.toDoWithFavourite(movie)) {
                         handler.post({
                             Snackbar.make(view, R.string.added_to_favourite, Snackbar.LENGTH_SHORT)
@@ -62,7 +61,6 @@ class TVShowFragment : Fragment() {
                             buildAlertDialog(movie,position)
                         })
                     }
-                }
             }.start()
 
 

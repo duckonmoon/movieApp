@@ -149,14 +149,14 @@ class SimilarActivity : BaseActivity() {
         AlertDialog.Builder(this)
                 .setMessage(R.string.delete_from_watched)
                 .setPositiveButton(R.string.yes) { _, _ ->
-                    Thread { Runnable { dbService.deleteFromDb(movie) } }.start()
+                    Thread { dbService.deleteFromDb(movie) }.start()
 
                     Snackbar.make(view, R.string.mark_unwatched,
                             Snackbar.LENGTH_LONG).show()
                     view.adapter.notifyItemChanged(position)
                 }
                 .setNegativeButton(R.string.no) { _, _ ->
-                    Thread { Runnable { dbService.cancelFavourite(movie) } }.start()
+                    Thread { dbService.cancelFavourite(movie)  }.start()
 
                     Snackbar.make(view, R.string.removed_from_favourite,
                             Snackbar.LENGTH_LONG).show()

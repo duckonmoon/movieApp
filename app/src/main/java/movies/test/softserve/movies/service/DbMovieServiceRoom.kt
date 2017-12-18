@@ -5,7 +5,9 @@ import movies.test.softserve.movies.dao.GenreDao
 import movies.test.softserve.movies.dao.MovieDao
 import movies.test.softserve.movies.db.entity.Movie
 import movies.test.softserve.movies.entity.TVEntity
+import movies.test.softserve.movies.util.AchievementService
 import movies.test.softserve.movies.util.Mapper
+import movies.test.softserve.movies.util.RatingService
 
 /**need to be asynchronous*/
 class DbMovieServiceRoom private constructor() {
@@ -21,6 +23,8 @@ class DbMovieServiceRoom private constructor() {
     }
 
 
+    private var ratingService : RatingService
+
     private var database: AppRoomDatabase = MainController.getInstance().database
     private var movieDao: MovieDao
     private var genreDao: GenreDao
@@ -28,6 +32,7 @@ class DbMovieServiceRoom private constructor() {
     init {
         movieDao = database.movieDao()
         genreDao = database.genreDao()
+        ratingService = RatingService.getInstance()
     }
 
     /**need to be asynchronous*/
@@ -35,6 +40,8 @@ class DbMovieServiceRoom private constructor() {
         val movie: Movie = Mapper.mapFromTVEntityToDbMovie(tvEntity, Mapper.FAVOURITE)
         movieDao.insertMovie(movie)
         genreDao.insertGenres(Mapper.mapFromIntegersToDbGenres(tvEntity.genreIds, tvEntity))
+        AchievementService.getInstance().checkWhatAchievementsIsDone()
+        ratingService.change(tvEntity.voteAverage.toFloat(),RatingService.ADD)
     }
 
     /**need to be asynchronous*/
@@ -42,11 +49,14 @@ class DbMovieServiceRoom private constructor() {
         val movie: Movie = Mapper.mapFromTVEntityToDbMovie(tvEntity, Mapper.NOT_FAVOURITE)
         movieDao.insertMovie(movie)
         genreDao.insertGenres(Mapper.mapFromIntegersToDbGenres(tvEntity.genreIds, tvEntity))
+        AchievementService.getInstance().checkWhatAchievementsIsDone()
+        ratingService.change(tvEntity.voteAverage.toFloat(),RatingService.ADD)
     }
 
     /**need to be asynchronous*/
     fun deleteFromDb(tvEntity: TVEntity) {
         movieDao.deleteMovie(tvEntity.id)
+        ratingService.change(tvEntity.voteAverage.toFloat(),RatingService.SUB)
     }
 
     /**need to be asynchronous*/

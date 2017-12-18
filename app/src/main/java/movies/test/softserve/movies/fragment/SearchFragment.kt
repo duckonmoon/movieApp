@@ -99,21 +99,19 @@ class SearchFragment : Fragment() {
             StartActivityClass.startDetailsActivity(activity, mov)
         }, MovieRecyclerViewAdapter.OnFavouriteClick { movie, position ->
             Thread {
-                Runnable {
-                    if (helperService.toDoWithFavourite(movie)) {
-                        handler.post({
-                            Snackbar.make(view.list, R.string.add_to_favourite, Snackbar.LENGTH_SHORT)
-                                    .show()
-                        })
-                    } else {
-                        handler.post({
-                            buildAlertDialog(movie, position, view.list)
-                        })
-                    }
+                if (helperService.toDoWithFavourite(movie)) {
                     handler.post({
-                        view.list.adapter.notifyItemChanged(position)
+                        Snackbar.make(view.list, R.string.add_to_favourite, Snackbar.LENGTH_SHORT)
+                                .show()
+                    })
+                } else {
+                    handler.post({
+                        buildAlertDialog(movie, position, view.list)
                     })
                 }
+                handler.post({
+                    view.list.adapter.notifyItemChanged(position)
+                })
             }.start()
 
         }), object : MovieListWrapper.OnEndReachListener {

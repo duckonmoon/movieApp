@@ -44,7 +44,7 @@ import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnMovieInformationGet;
 import movies.test.softserve.movies.service.DBHelperService;
-import movies.test.softserve.movies.service.DBMovieService;
+import movies.test.softserve.movies.service.DbMovieServiceRoom;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.util.BudgetFormatter;
 import movies.test.softserve.movies.util.StartActivityClass;
@@ -55,7 +55,7 @@ public class MovieDetailsActivity extends BaseActivity {
     public static final String TV_ENTITY = "tv entity";
 
     private MovieService service = MovieService.getInstance();
-    private DBMovieService dbService = DBMovieService.getInstance();
+    private DbMovieServiceRoom dbService = DbMovieServiceRoom.Companion.getInstance();
     private DBHelperService helperService = new DBHelperService();
 
 
@@ -128,9 +128,12 @@ public class MovieDetailsActivity extends BaseActivity {
         });
         releaseDateView.setText(getString(R.string.release_date, movie.getReleaseDate()));
         voteCountView.setText(getString(R.string.vote_count, movie.getVoteAverage(), movie.getVoteCount()));
-        if (dbService.checkIfIsFavourite(movie.getId())) {
-            fab.setImageResource(R.drawable.ic_stars_black_24dp);
-        }
+        new Thread(() -> {
+            if (dbService.checkIfIsFavourite(movie)) {
+                fab.setImageResource(R.drawable.ic_stars_black_24dp);
+            }
+        }).start();
+
 
         share.setOnClickListener(v -> {
             ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
@@ -139,9 +142,13 @@ public class MovieDetailsActivity extends BaseActivity {
                     .build();
             ShareDialog.show(MovieDetailsActivity.this, shareLinkContent);
         });
-        watched.setImageResource(dbService.checkIfExists(movie.getId()) ? R.mipmap.checked : R.mipmap.not_checked);
+        new Thread(() -> {
+            final boolean ifExists = dbService.checkIfExists(movie);
+            runOnUiThread(() -> watched.setImageResource(ifExists ? R.mipmap.checked : R.mipmap.not_checked));
+        }).start();
+
         watched.setOnClickListener(v -> {
-            new Thread(()-> {
+            new Thread(() -> {
                 switch (helperService.toDoWithWatched(movie)) {
                     case WATCHED:
                         runOnUiThread(() -> {
@@ -160,7 +167,9 @@ public class MovieDetailsActivity extends BaseActivity {
                             AlertDialog.Builder builder = new AlertDialog.Builder(MovieDetailsActivity.this);
                             builder.setMessage(R.string.confirm)
                                     .setPositiveButton(R.string.yes, (dialog, id) -> {
-                                        dbService.deleteFromDb(movie.getId());
+                                        new Thread(() -> {
+                                            dbService.deleteFromDb(movie);
+                                        }).start();
                                         watched.setImageResource(R.mipmap.not_checked);
                                         Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.mark_unwatched), Snackbar.LENGTH_SHORT).show();
                                     })
@@ -248,7 +257,7 @@ public class MovieDetailsActivity extends BaseActivity {
                         });
 
                     } else {
-                        handler.post(()->{
+                        handler.post(() -> {
                             fab.setImageResource(R.drawable.ic_star_border_black_24dp);
                             Snackbar.make(view, R.string.removed_from_favourite, Snackbar.LENGTH_LONG)
                                     .show();

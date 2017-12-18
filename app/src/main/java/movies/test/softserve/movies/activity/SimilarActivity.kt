@@ -15,7 +15,7 @@ import movies.test.softserve.movies.entity.TVEntity
 import movies.test.softserve.movies.event.OnSimilarTVEntitiesGetListener
 import movies.test.softserve.movies.repository.TVShowsRepository
 import movies.test.softserve.movies.service.DBHelperService
-import movies.test.softserve.movies.service.DBMovieService
+import movies.test.softserve.movies.service.DbMovieServiceRoom
 import movies.test.softserve.movies.service.MovieService
 import movies.test.softserve.movies.util.StartActivityClass
 import java.io.Serializable
@@ -27,7 +27,7 @@ class SimilarActivity : BaseActivity() {
     }
 
     private var helperService: DBHelperService = DBHelperService()
-    private var dbService: DBMovieService = DBMovieService.getInstance()
+    private var dbService: DbMovieServiceRoom = DbMovieServiceRoom.getInstance()
     private var tvShowsRepository: TVShowsRepository = TVShowsRepository.getInstance()
     private var movieService: MovieService = MovieService.getInstance()
 
@@ -80,7 +80,7 @@ class SimilarActivity : BaseActivity() {
                 MovieRecyclerViewAdapter.OnMovieSelect { mov ->
                     StartActivityClass.startDetailsActivity(this, mov)
                 },
-                MovieRecyclerViewAdapter.OnFavouriteClick { movie ->
+                MovieRecyclerViewAdapter.OnFavouriteClick { movie,position ->
                     Thread {
                         Runnable {
                             if (helperService.toDoWithFavourite(movie)) {
@@ -90,11 +90,11 @@ class SimilarActivity : BaseActivity() {
                                 })
                             } else {
                                 handler.post({
-                                    buildAlertDialog(movie, recyclerview)
+                                    buildAlertDialog(movie,position, recyclerview)
                                 })
                             }
                             handler.post({
-                                recyclerview.adapter.notifyDataSetChanged()
+                                recyclerview.adapter.notifyItemChanged(position)
                             })
                         }
                     }.start()
@@ -145,20 +145,22 @@ class SimilarActivity : BaseActivity() {
         tvShowsRepository.removeOnSimilarTVEntitiesGetListener(listener)
     }
 
-    private fun buildAlertDialog(movie: TVEntity, view: RecyclerView) {
+    private fun buildAlertDialog(movie: TVEntity,position : Int, view: RecyclerView) {
         AlertDialog.Builder(this)
                 .setMessage(R.string.delete_from_watched)
                 .setPositiveButton(R.string.yes) { _, _ ->
-                    dbService.deleteFromDb(movie.id)
+                    Thread { Runnable { dbService.deleteFromDb(movie) } }.start()
+
                     Snackbar.make(view, R.string.mark_unwatched,
                             Snackbar.LENGTH_LONG).show()
-                    view.adapter.notifyDataSetChanged()
+                    view.adapter.notifyItemChanged(position)
                 }
                 .setNegativeButton(R.string.no) { _, _ ->
-                    dbService.cancelFavourite(movie.id)
+                    Thread { Runnable { dbService.cancelFavourite(movie) } }.start()
+
                     Snackbar.make(view, R.string.removed_from_favourite,
                             Snackbar.LENGTH_LONG).show()
-                    view.adapter.notifyDataSetChanged()
+                    view.adapter.notifyItemChanged(position)
                 }.create()
                 .show()
     }

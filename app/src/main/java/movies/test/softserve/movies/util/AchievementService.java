@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import movies.test.softserve.movies.entity.Achievement;
+import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.event.OnAchievementDoneListener;
-import movies.test.softserve.movies.service.DBMovieService;
+import movies.test.softserve.movies.service.DbMovieServiceRoom;
 
 /**
  * Created by rkrit on 16.11.17.
@@ -14,18 +15,20 @@ import movies.test.softserve.movies.service.DBMovieService;
 public class AchievementService {
 
     private static AchievementService INSTANCE;
-    private DBMovieService service = DBMovieService.getInstance();
+    private DbMovieServiceRoom service = DbMovieServiceRoom.Companion.getInstance();
     private List<Achievement> achievements = new ArrayList<>();
     private List<OnAchievementDoneListener> listeners = new ArrayList<>();
 
     private AchievementService() {
-        for (Achievement achievement :
-                Achievement.Companion.getAchievements()) {
-            if (!getAchievementStatus(achievement)) {
-                achievements.add(achievement);
+        new Thread(() -> {
+            for (Achievement achievement :
+                    Achievement.Companion.getAchievements()) {
+                if (!getAchievementStatus(achievement)) {
+                    achievements.add(achievement);
+                }
             }
+        }).start();
 
-        }
     }
 
     public static AchievementService getInstance() {
@@ -34,6 +37,7 @@ public class AchievementService {
         }
         return INSTANCE;
     }
+
 
     public boolean getAchievementStatus(Achievement achievement) {
         if (achievement.getGenre() != null) {
@@ -87,11 +91,11 @@ public class AchievementService {
     }
 
     private boolean getTVShowAchievementWithoutGenre(Achievement achievement) {
-        return service.getTVShowsSize() >= achievement.getNumber();
+        return service.getMovieCount(TVEntity.TYPE.TV_SHOW) >= achievement.getNumber();
     }
 
     private boolean getMovieAchievementWithoutGenre(Achievement achievement) {
-        return service.getMoviesSize() >= achievement.getNumber();
+        return service.getMovieCount(TVEntity.TYPE.MOVIE) >= achievement.getNumber();
     }
 
     private boolean getTVShowAchievement(Achievement achievement) {
@@ -99,7 +103,7 @@ public class AchievementService {
     }
 
     private boolean getMovieAchievement(Achievement achievement) {
-        return service.getMoviesSizeWithGenre(achievement.getGenre()) >= achievement.getNumber();
+        return service.getMoviesSizeWithGenre(achievement.getGenre(),TVEntity.TYPE.MOVIE) >= achievement.getNumber();
     }
 
 }

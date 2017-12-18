@@ -14,7 +14,9 @@ public class DBHelperService {
     }
 
 
-    /**need to be asynchronous*/
+    /**
+     * need to be asynchronous
+     */
     public boolean toDoWithFavourite(TVEntity movie) {
         if (!service.checkIfIsFavourite(movie)) {
             if (!service.checkIfExists(movie)) {
@@ -30,7 +32,9 @@ public class DBHelperService {
         }
     }
 
-    /**need to be asynchronous*/
+    /**
+     * need to be asynchronous
+     */
     public Watched toDoWithWatched(TVEntity movie) {
         if (!service.checkIfExists(movie)) {
             service.insertTVEntity(movie);

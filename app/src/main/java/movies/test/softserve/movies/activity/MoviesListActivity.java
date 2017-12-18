@@ -38,7 +38,7 @@ import movies.test.softserve.movies.fragment.SearchFragment;
 import movies.test.softserve.movies.fragment.TVShowFragment;
 import movies.test.softserve.movies.fragment.WatchedFragment;
 import movies.test.softserve.movies.service.DBHelperService;
-import movies.test.softserve.movies.service.DBMovieService;
+import movies.test.softserve.movies.service.DbMovieServiceRoom;
 import movies.test.softserve.movies.util.RatingService;
 import movies.test.softserve.movies.util.StartActivityClass;
 import movies.test.softserve.movies.view.RatingView;
@@ -58,7 +58,7 @@ public class MoviesListActivity extends BaseActivity
                 mRecyclerView.getAdapter().notifyDataSetChanged();
             });
     private DBHelperService helperService = new DBHelperService();
-    private DBMovieService dbService = DBMovieService.getInstance();
+    private DbMovieServiceRoom dbService = DbMovieServiceRoom.Companion.getInstance();
     private MainController mainController = MainController.getInstance();
     private RatingService ratingService = RatingService.getInstance();
     private RatingService.OnRatingChangeListener onRatingChangeListener
@@ -89,13 +89,13 @@ public class MoviesListActivity extends BaseActivity
                     }
                 }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
-            public void onFavouriteClick(final TVEntity mov) {
+            public void onFavouriteClick(final TVEntity mov,final Integer position) {
                 new Thread(() -> {
                     if (helperService.toDoWithFavourite(mov)) {
                         handler.post(() -> {
                             Snackbar.make(mRecyclerView, getString(R.string.added_to_favourite),
                                     Snackbar.LENGTH_LONG).show();
-                            mRecyclerView.getAdapter().notifyDataSetChanged();
+                            mRecyclerView.getAdapter().notifyItemChanged(position);
                         });
 
                     } else {
@@ -104,18 +104,19 @@ public class MoviesListActivity extends BaseActivity
                                     .setMessage(R.string.delete_from_watched)
                                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            dbService.deleteFromDb(mov.getId());
+                                            new Thread(() -> dbService.deleteFromDb(mov)).start();
+
                                             Snackbar.make(mRecyclerView, R.string.mark_unwatched,
                                                     Snackbar.LENGTH_LONG).show();
-                                            mRecyclerView.getAdapter().notifyDataSetChanged();
+                                            mRecyclerView.getAdapter().notifyItemChanged(position);
                                         }
                                     })
                                     .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            dbService.cancelFavourite(mov.getId());
+                                            new Thread(() -> dbService.cancelFavourite(mov)).start();
                                             Snackbar.make(mRecyclerView, R.string.removed_from_favourite,
                                                     Snackbar.LENGTH_LONG).show();
-                                            mRecyclerView.getAdapter().notifyDataSetChanged();
+                                            mRecyclerView.getAdapter().notifyItemChanged(position);
                                         }
                                     }).create()
                                     .show();

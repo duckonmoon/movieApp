@@ -45,7 +45,7 @@ import movies.test.softserve.movies.event.OnFullTVShowGetListener;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.repository.TVShowsRepository;
 import movies.test.softserve.movies.service.DBHelperService;
-import movies.test.softserve.movies.service.DBMovieService;
+import movies.test.softserve.movies.service.DbMovieServiceRoom;
 import movies.test.softserve.movies.util.StartActivityClass;
 import movies.test.softserve.movies.viewmodel.FullTVSeriesViewModel;
 
@@ -60,7 +60,7 @@ public class TVShowDetailsActivity extends BaseActivity {
     private FullTVSeriesViewModel viewModel;
 
     private DBHelperService helperService = new DBHelperService();
-    private DBMovieService dbService = DBMovieService.getInstance();
+    private DbMovieServiceRoom dbService = DbMovieServiceRoom.Companion.getInstance();
     private TVShowsRepository repository = TVShowsRepository.getInstance();
 
     private Animator mCurrentAnimator;
@@ -232,7 +232,6 @@ public class TVShowDetailsActivity extends BaseActivity {
         if (getIntent() != null && tvShow == null) {
             tvShow = (TVEntity) getIntent().getExtras().getSerializable(TV_ENTITY);
         }
-        watched.setImageResource((dbService.checkIfExists(tvShow.getId())) ? R.mipmap.checked : R.mipmap.not_checked);
         watched.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -258,7 +257,7 @@ public class TVShowDetailsActivity extends BaseActivity {
                                         .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                dbService.deleteFromDb(tvShow.getId());
+                                                new Thread(() -> dbService.deleteFromDb(tvShow)).start();
                                                 watched.setImageResource(R.mipmap.not_checked);
                                                 Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.mark_unwatched), Snackbar.LENGTH_SHORT).show();
                                             }
@@ -275,9 +274,17 @@ public class TVShowDetailsActivity extends BaseActivity {
 
             }
         });
-        if (dbService.checkIfIsFavourite(tvShow.getId())) {
-            fab.setImageResource(R.drawable.ic_stars_black_24dp);
-        }
+        new Thread(() -> {
+            if (dbService.checkIfIsFavourite(tvShow)) {
+                runOnUiThread(() -> {
+                    fab.setImageResource(R.drawable.ic_stars_black_24dp);
+                    watched.setImageResource(R.mipmap.checked);
+                });
+            } else {
+                runOnUiThread(() -> watched.setImageResource(R.mipmap.not_checked));
+            }
+        }).start();
+
     }
 
     private void initView() {

@@ -5,14 +5,16 @@ import android.arch.persistence.room.RoomDatabase;
 
 import movies.test.softserve.movies.dao.GenreDao;
 import movies.test.softserve.movies.dao.MovieDao;
-import movies.test.softserve.movies.db.entity.*;
+import movies.test.softserve.movies.db.entity.Genre;
+import movies.test.softserve.movies.db.entity.Movie;
 
 /**
  * Created by root on 15.12.17.
  */
 
-@Database(entities = {Movie.class, Genre.class}, version = 1,exportSchema = false)
+@Database(entities = {Movie.class, Genre.class}, version = 1, exportSchema = false)
 public abstract class AppRoomDatabase extends RoomDatabase {
     public abstract MovieDao movieDao();
+
     public abstract GenreDao genreDao();
 }

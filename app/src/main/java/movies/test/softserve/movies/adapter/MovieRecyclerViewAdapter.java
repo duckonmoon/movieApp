@@ -1,6 +1,7 @@
 package movies.test.softserve.movies.adapter;
 
 import android.annotation.SuppressLint;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +14,7 @@ import java.util.List;
 
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.entity.TVEntity;
-import movies.test.softserve.movies.service.DBMovieService;
+import movies.test.softserve.movies.service.DbMovieServiceRoom;
 import movies.test.softserve.movies.viewholder.MainViewHolder;
 
 public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolder> implements MainViewHolder.Delegate {
@@ -47,7 +48,15 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolde
                 tvEntity.getVoteAverage(),
                 tvEntity.getVoteCount()));
         holder.mRatingBar.setRating(tvEntity.getVoteAverage().floatValue() / 2);
-        holder.mFavourite.setImageResource(DBMovieService.getInstance().checkIfIsFavourite(tvEntity.getId()) ? R.drawable.ic_stary_black_24dp : R.drawable.ic_star_border_black_24dp);
+        Handler handler = new Handler();
+        new Thread(() -> {
+            final boolean isFavourite = DbMovieServiceRoom.Companion.getInstance().checkIfIsFavourite(tvEntity);
+            handler.post(() -> {
+                holder.mFavourite.setImageResource(isFavourite ? R.drawable.ic_stary_black_24dp : R.drawable.ic_star_border_black_24dp);
+            });
+
+        }).start();
+
         Picasso
                 .with(holder.mImageView.getContext())
                 .load("https://image.tmdb.org/t/p/w500" + tvEntity
@@ -71,7 +80,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolde
 
     @Override
     public void onFavouriteClick(int position) {
-        favouriteClick.onFavouriteClick(movies.get(position));
+        favouriteClick.onFavouriteClick(movies.get(position),position);
     }
 
 
@@ -80,6 +89,6 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolde
     }
 
     public interface OnFavouriteClick {
-        void onFavouriteClick(TVEntity movie);
+        void onFavouriteClick(TVEntity movie,Integer position);
     }
 }

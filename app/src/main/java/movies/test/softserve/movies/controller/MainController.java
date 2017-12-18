@@ -120,7 +120,7 @@ public class MainController extends Application implements Observer, OnAchieveme
         return database;
     }*/
 
-    public AppRoomDatabase getDatabase(){
+    public AppRoomDatabase getDatabase() {
         return database;
     }
 

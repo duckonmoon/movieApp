@@ -21,7 +21,7 @@ import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.event.OnListOfMoviesGetListener;
 import movies.test.softserve.movies.service.DBHelperService;
-import movies.test.softserve.movies.service.DBMovieService;
+import movies.test.softserve.movies.service.DbMovieServiceRoom;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.util.StartActivityClass;
 import movies.test.softserve.movies.viewmodel.PageViewModel;
@@ -46,7 +46,7 @@ public class SearchActivity extends BaseActivity {
 
     private DBHelperService helperService = new DBHelperService();
     private MovieService movieService = MovieService.getInstance();
-    private DBMovieService dbService = DBMovieService.getInstance();
+    private DbMovieServiceRoom dbService = DbMovieServiceRoom.Companion.getInstance();
     private String message = null;
     private OnListOfMoviesGetListener onListOfMoviesGetListener = new OnListOfMoviesGetListener() {
         @Override
@@ -86,17 +86,17 @@ public class SearchActivity extends BaseActivity {
             }
         }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
-            public void onFavouriteClick(final TVEntity movie) {
+            public void onFavouriteClick(final TVEntity movie,final Integer position) {
                 new Thread(() -> {
                     if (helperService.toDoWithFavourite(movie)) {
                         handler.post(() -> {
                             Snackbar.make(mRecyclerView, getString(R.string.added_to_favourite), Snackbar.LENGTH_SHORT)
                                     .show();
-                            mRecyclerView.getAdapter().notifyDataSetChanged();
+                            mRecyclerView.getAdapter().notifyItemChanged(position);
                         });
 
                     } else {
-                        handler.post(() -> buildAlertDialog(movie));
+                        handler.post(() -> buildAlertDialog(movie,position));
 
                     }
                 }).start();
@@ -150,23 +150,23 @@ public class SearchActivity extends BaseActivity {
         movieService.removeOnListOfMoviesGetListener(onListOfMoviesGetListener);
     }
 
-    private void buildAlertDialog(final TVEntity movie) {
+    private void buildAlertDialog(final TVEntity movie,final Integer position) {
         new AlertDialog.Builder(SearchActivity.this)
                 .setMessage(R.string.delete_from_watched)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        dbService.deleteFromDb(movie.getId());
+                        new Thread(() -> dbService.deleteFromDb(movie)).start();
                         Snackbar.make(mRecyclerView, R.string.mark_unwatched,
                                 Snackbar.LENGTH_LONG).show();
-                        mRecyclerView.getAdapter().notifyDataSetChanged();
+                        mRecyclerView.getAdapter().notifyItemChanged(position);
                     }
                 })
                 .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        dbService.cancelFavourite(movie.getId());
+                        new Thread(() -> dbService.cancelFavourite(movie)).start();
                         Snackbar.make(mRecyclerView, R.string.removed_from_favourite,
                                 Snackbar.LENGTH_LONG).show();
-                        mRecyclerView.getAdapter().notifyDataSetChanged();
+                        mRecyclerView.getAdapter().notifyItemChanged(position);
                     }
                 }).create()
                 .show();

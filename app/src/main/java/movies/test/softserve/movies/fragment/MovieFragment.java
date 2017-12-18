@@ -2,6 +2,7 @@ package movies.test.softserve.movies.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,7 +19,7 @@ import java.util.List;
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
 import movies.test.softserve.movies.entity.TVEntity;
-import movies.test.softserve.movies.service.DBMovieService;
+import movies.test.softserve.movies.service.DbMovieServiceRoom;
 import movies.test.softserve.movies.util.StartActivityClass;
 
 
@@ -28,7 +29,9 @@ public class MovieFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
 
-    private DBMovieService dbService = DBMovieService.getInstance();
+    private Handler handler = new Handler();
+
+    private DbMovieServiceRoom dbService = DbMovieServiceRoom.Companion.getInstance();
 
     public MovieFragment() {
 
@@ -54,8 +57,6 @@ public class MovieFragment extends Fragment {
 
         }
         List<TVEntity> listOfMovies = new ArrayList<>();
-        listOfMovies.addAll(dbService.getFavouriteMovies());
-        listOfMovies.addAll(dbService.getFavouriteTVShows());
         mRecyclerView.setAdapter(new MovieRecyclerViewAdapter(listOfMovies, new MovieRecyclerViewAdapter.OnMovieSelect() {
             @Override
             public void OnMovieSelected(TVEntity mov) {
@@ -63,10 +64,18 @@ public class MovieFragment extends Fragment {
             }
         }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
-            public void onFavouriteClick(TVEntity movie) {
+            public void onFavouriteClick(TVEntity movie,Integer position) {
 
             }
         }));
+
+        new Thread(() -> {
+            listOfMovies.addAll(dbService.getAll(TVEntity.TYPE.MOVIE));
+            listOfMovies.addAll(dbService.getAll(TVEntity.TYPE.TV_SHOW));
+            handler.post(() -> mRecyclerView.getAdapter().notifyDataSetChanged());
+
+        }).start();
+
         return view;
     }
 
@@ -98,10 +107,15 @@ public class MovieFragment extends Fragment {
 
     private void setAdapter() {
         List<TVEntity> listOfMovies = new ArrayList<>();
-        listOfMovies.addAll(dbService.getFavouriteMovies());
-        listOfMovies.addAll(dbService.getFavouriteTVShows());
-        ((MovieRecyclerViewAdapter) mRecyclerView.getAdapter()).setMovies(listOfMovies);
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        new Thread(() -> {
+            listOfMovies.addAll(dbService.getAll(TVEntity.TYPE.MOVIE));
+            listOfMovies.addAll(dbService.getAll(TVEntity.TYPE.TV_SHOW));
+            handler.post(() -> {
+                ((MovieRecyclerViewAdapter) mRecyclerView.getAdapter()).setMovies(listOfMovies);
+                mRecyclerView.getAdapter().notifyDataSetChanged();
+            });
+
+        }).start();
 
 
     }

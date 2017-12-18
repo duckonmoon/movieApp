@@ -1,5 +1,6 @@
 package movies.test.softserve.movies.adapter
 
+import android.os.Handler
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -32,12 +33,21 @@ class AchievementsRecyclerViewAdapter(private val mValues: List<Achievement>) : 
         holder.mIdView.text = mValues[position].title
         holder.mContentView.text = mValues[position].description
         holder.mImageView.setImageResource(mValues[position].resourceId)
-
-        if (service.getAchievementStatus(mValues[position])) {
-            holder.mImageView.alpha = VISIBLE
-        } else {
-            holder.mImageView.alpha = INVISIBLE
+        val handler = Handler()
+        Thread {
+            Runnable {
+                if (service.getAchievementStatus(mValues[position])) {
+                    handler.post({
+                        holder.mImageView.alpha = VISIBLE
+                    })
+                } else {
+                    handler.post({
+                        holder.mImageView.alpha = INVISIBLE
+                    })
+                }
+            }
         }
+
     }
 
     override fun getItemCount(): Int = mValues.size

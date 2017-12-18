@@ -24,7 +24,7 @@ import movies.test.softserve.movies.entity.TVEntity
 import movies.test.softserve.movies.entity.TVPage
 import movies.test.softserve.movies.repository.TVShowsRepository
 import movies.test.softserve.movies.service.DBHelperService
-import movies.test.softserve.movies.service.DBMovieService
+import movies.test.softserve.movies.service.DbMovieServiceRoom
 import movies.test.softserve.movies.service.MovieService
 import movies.test.softserve.movies.util.Mapper
 import movies.test.softserve.movies.util.StartActivityClass
@@ -38,7 +38,7 @@ class SearchFragment : Fragment() {
 
     private var service: MovieService = MovieService.getInstance()
     private var repository: TVShowsRepository = TVShowsRepository.getInstance()
-    private var dbService: DBMovieService = DBMovieService.getInstance()
+    private var dbService: DbMovieServiceRoom = DbMovieServiceRoom.getInstance()
     private var helperService: DBHelperService = DBHelperService()
 
     private val comp: String = "comp"
@@ -97,7 +97,7 @@ class SearchFragment : Fragment() {
         }
         view.list.adapter = MovieListWrapper(MovieRecyclerViewAdapter(transfer.list, MovieRecyclerViewAdapter.OnMovieSelect { mov ->
             StartActivityClass.startDetailsActivity(activity, mov)
-        }, MovieRecyclerViewAdapter.OnFavouriteClick { movie ->
+        }, MovieRecyclerViewAdapter.OnFavouriteClick { movie, position ->
             Thread {
                 Runnable {
                     if (helperService.toDoWithFavourite(movie)) {
@@ -107,11 +107,11 @@ class SearchFragment : Fragment() {
                         })
                     } else {
                         handler.post({
-                            buildAlertDialog(movie, view.list)
+                            buildAlertDialog(movie, position, view.list)
                         })
                     }
                     handler.post({
-                        view.list.adapter.notifyDataSetChanged()
+                        view.list.adapter.notifyItemChanged(position)
                     })
                 }
             }.start()
@@ -179,20 +179,26 @@ class SearchFragment : Fragment() {
         mRecyclerView.adapter.notifyDataSetChanged()
     }
 
-    private fun buildAlertDialog(movie: TVEntity, view: RecyclerView) {
+    private fun buildAlertDialog(movie: TVEntity, position: Int, view: RecyclerView) {
         AlertDialog.Builder(activity!!)
                 .setMessage(R.string.delete_from_watched)
                 .setPositiveButton(R.string.yes) { _, _ ->
-                    dbService.deleteFromDb(movie.id)
+                    Thread {
+                        Runnable { dbService.deleteFromDb(movie) }
+                    }.start()
                     Snackbar.make(view, R.string.mark_unwatched,
                             Snackbar.LENGTH_LONG).show()
-                    view.adapter.notifyDataSetChanged()
+                    view.adapter.notifyItemChanged(position)
                 }
                 .setNegativeButton(R.string.no) { _, _ ->
-                    dbService.cancelFavourite(movie.id)
+                    Thread {
+                        Runnable {
+                            dbService.cancelFavourite(movie)
+                        }
+                    }.start()
                     Snackbar.make(view, R.string.removed_from_favourite,
                             Snackbar.LENGTH_LONG).show()
-                    view.adapter.notifyDataSetChanged()
+                    view.adapter.notifyItemChanged(position)
                 }.create()
                 .show()
     }

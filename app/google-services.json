@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "458530491767",
+    "firebase_url": "https://movies-aab44.firebaseio.com",
+    "project_id": "movies-aab44",
+    "storage_bucket": "movies-aab44.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:458530491767:android:10988abd49bf7752",
+        "android_client_info": {
+          "package_name": "movies.test.softserve.movies"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "458530491767-t6qh06rrrvs5274s6iqk2k7hdpvbh1ci.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "movies.test.softserve.movies",
+            "certificate_hash": "9347c37affb08558376a8850c4cb88f27f0f26a9"
+          }
+        },
+        {
+          "client_id": "458530491767-1boobm0bpeobtg7hlvt058illfrq0ka8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyXSdOFrajLyXDuexUwUXzKfMW6M8Ez3I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "458530491767-1boobm0bpeobtg7hlvt058illfrq0ka8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

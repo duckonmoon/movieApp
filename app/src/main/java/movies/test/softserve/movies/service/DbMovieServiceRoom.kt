@@ -4,13 +4,10 @@ import movies.test.softserve.movies.controller.MainController
 import movies.test.softserve.movies.dao.GenreDao
 import movies.test.softserve.movies.dao.MovieDao
 import movies.test.softserve.movies.db.entity.Movie
-import movies.test.softserve.movies.db.entity.MovieWithTheGenre
 import movies.test.softserve.movies.entity.TVEntity
 import movies.test.softserve.movies.util.Mapper
 
-/**
- * Created by root on 15.12.17.
- */
+/**need to be asynchronous*/
 class DbMovieServiceRoom private constructor() {
     companion object {
         private var INSTANCE: DbMovieServiceRoom? = null
@@ -33,37 +30,33 @@ class DbMovieServiceRoom private constructor() {
         genreDao = database.genreDao()
     }
 
+    /**need to be asynchronous*/
     fun insertFavouriteTVEntity(tvEntity: TVEntity) {
-        Thread(Runnable {
-            val movie: Movie = Mapper.mapFromTVEntityToDbMovie(tvEntity, Mapper.FAVOURITE)
-            movieDao.insertMovie(movie)
-            genreDao.insertGenres(Mapper.mapFromIntegersToDbGenres(tvEntity.genreIds, tvEntity))
-        }).start()
+        val movie: Movie = Mapper.mapFromTVEntityToDbMovie(tvEntity, Mapper.FAVOURITE)
+        movieDao.insertMovie(movie)
+        genreDao.insertGenres(Mapper.mapFromIntegersToDbGenres(tvEntity.genreIds, tvEntity))
     }
 
+    /**need to be asynchronous*/
     fun insertTVEntity(tvEntity: TVEntity) {
-        Thread(Runnable {
-            val movie: Movie = Mapper.mapFromTVEntityToDbMovie(tvEntity, Mapper.NOT_FAVOURITE)
-            movieDao.insertMovie(movie)
-            genreDao.insertGenres(Mapper.mapFromIntegersToDbGenres(tvEntity.genreIds, tvEntity))
-        }).start()
-
+        val movie: Movie = Mapper.mapFromTVEntityToDbMovie(tvEntity, Mapper.NOT_FAVOURITE)
+        movieDao.insertMovie(movie)
+        genreDao.insertGenres(Mapper.mapFromIntegersToDbGenres(tvEntity.genreIds, tvEntity))
     }
 
+    /**need to be asynchronous*/
     fun deleteFromDb(tvEntity: TVEntity) {
-        Thread(Runnable {
-            movieDao.deleteMovie(tvEntity.id)
-        }).start()
+        movieDao.deleteMovie(tvEntity.id)
     }
 
     /**need to be asynchronous*/
-    fun getAll(type: TVEntity.TYPE): List<MovieWithTheGenre> {
-        return movieDao.loadAllMovies(type.toString())
+    fun getAll(type: TVEntity.TYPE): List<TVEntity> {
+        return Mapper.mapFromMovieWithGenreToTVEntity(movieDao.loadAllMovies(type.toString()))
     }
 
     /**need to be asynchronous*/
-    fun getAllFavourite(type: TVEntity.TYPE): List<MovieWithTheGenre> {
-        return movieDao.loadAllFavouriteMovies(type.toString())
+    fun getAllFavourite(type: TVEntity.TYPE): List<TVEntity> {
+        return Mapper.mapFromMovieWithGenreToTVEntity(movieDao.loadAllFavouriteMovies(type.toString()))
     }
 
     /**need to be asynchronous*/

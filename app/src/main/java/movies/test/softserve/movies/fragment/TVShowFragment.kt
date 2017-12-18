@@ -18,16 +18,16 @@ import movies.test.softserve.movies.entity.TVEntity
 import movies.test.softserve.movies.event.OnListOfTVShowsGetListener
 import movies.test.softserve.movies.repository.TVShowsRepository
 import movies.test.softserve.movies.service.DBHelperService
-import movies.test.softserve.movies.service.DBMovieService
+import movies.test.softserve.movies.service.DbMovieServiceRoom
 import movies.test.softserve.movies.util.StartActivityClass
 
 class TVShowFragment : Fragment() {
 
     private lateinit var mRecyclerView: RecyclerView
     private var repository: TVShowsRepository = TVShowsRepository.getInstance()
-    private var dbService: DBMovieService = DBMovieService.getInstance()
+    private var dbService: DbMovieServiceRoom = DbMovieServiceRoom.getInstance()
     private var helperService: DBHelperService = DBHelperService()
-    private var handler:Handler  = Handler()
+    private var handler: Handler = Handler()
     private var listener: OnListOfTVShowsGetListener = object : OnListOfTVShowsGetListener {
         override fun onListOfTVShowsGet() {
             mRecyclerView.adapter.notifyDataSetChanged()
@@ -48,18 +48,18 @@ class TVShowFragment : Fragment() {
         view.adapter = MovieListWrapper(MovieRecyclerViewAdapter(repository.tvShows,
                 MovieRecyclerViewAdapter.OnMovieSelect { mov ->
                     StartActivityClass.startDetailsActivity(activity, mov)
-                }, MovieRecyclerViewAdapter.OnFavouriteClick { movie ->
+                }, MovieRecyclerViewAdapter.OnFavouriteClick { movie,position ->
             Thread {
                 Runnable {
                     if (helperService.toDoWithFavourite(movie)) {
                         handler.post({
                             Snackbar.make(view, R.string.added_to_favourite, Snackbar.LENGTH_SHORT)
                                     .show()
-                            view.adapter.notifyDataSetChanged()
+                            view.adapter.notifyItemChanged(position)
                         })
                     } else {
                         handler.post({
-                            buildAlertDialog(movie)
+                            buildAlertDialog(movie,position)
                         })
                     }
                 }
@@ -91,20 +91,26 @@ class TVShowFragment : Fragment() {
         repository.removeOnListOfTVShowsGetListener(listener)
     }
 
-    private fun buildAlertDialog(movie: TVEntity) {
+    private fun buildAlertDialog(movie: TVEntity,position: Int) {
         AlertDialog.Builder(activity!!)
                 .setMessage(R.string.delete_from_watched)
                 .setPositiveButton(R.string.yes) { _, _ ->
-                    dbService.deleteFromDb(movie.id)
+                    Thread {
+                        Runnable { dbService.deleteFromDb(movie) }
+                    }.start()
                     Snackbar.make(mRecyclerView, R.string.mark_unwatched,
                             Snackbar.LENGTH_LONG).show()
-                    mRecyclerView.adapter.notifyDataSetChanged()
+                    mRecyclerView.adapter.notifyItemChanged(position)
                 }
                 .setNegativeButton(R.string.no) { _, _ ->
-                    dbService.cancelFavourite(movie.id)
+                    Thread {
+                        Runnable {
+                            dbService.cancelFavourite(movie)
+                        }
+                    }.start()
                     Snackbar.make(mRecyclerView, R.string.removed_from_favourite,
                             Snackbar.LENGTH_LONG).show()
-                    mRecyclerView.adapter.notifyDataSetChanged()
+                    mRecyclerView.adapter.notifyItemChanged(position)
                 }.create()
                 .show()
     }

@@ -11,7 +11,7 @@ import android.arch.persistence.room.PrimaryKey;
  */
 
 @Entity(tableName = "genre", foreignKeys = @ForeignKey(entity = Movie.class,
-        parentColumns = "id", childColumns = "movie_id", onDelete = 5 ), indices = {@Index(value = {"genre_id"})})
+        parentColumns = "id", childColumns = "movie_id", onDelete = 5), indices = {@Index(value = {"genre_id"})})
 public class Genre {
     @PrimaryKey(autoGenerate = true)
     private int id;

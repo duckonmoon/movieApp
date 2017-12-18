@@ -1,6 +1,7 @@
 package movies.test.softserve.movies.activity
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.GridLayoutManager
@@ -30,6 +31,8 @@ class SimilarActivity : BaseActivity() {
     private var tvShowsRepository: TVShowsRepository = TVShowsRepository.getInstance()
     private var movieService: MovieService = MovieService.getInstance()
 
+    private var handler: Handler = Handler()
+
 
     private lateinit var movie: TVEntity
     private lateinit var transfer: Transfer
@@ -40,7 +43,7 @@ class SimilarActivity : BaseActivity() {
         transfer.list.addAll(tvEntities)
         transfer.page += 1
         recyclerview.adapter.notifyDataSetChanged()
-        if (tvEntities.isEmpty()){
+        if (tvEntities.isEmpty()) {
             all = true
         }
     }
@@ -78,13 +81,23 @@ class SimilarActivity : BaseActivity() {
                     StartActivityClass.startDetailsActivity(this, mov)
                 },
                 MovieRecyclerViewAdapter.OnFavouriteClick { movie ->
-                    if (helperService.toDoWithFavourite(movie)) {
-                        Snackbar.make(recyclerview, R.string.add_to_favourite, Snackbar.LENGTH_SHORT)
-                                .show()
-                    } else {
-                        buildAlertDialog(movie, recyclerview)
-                    }
-                    recyclerview.adapter.notifyDataSetChanged()
+                    Thread {
+                        Runnable {
+                            if (helperService.toDoWithFavourite(movie)) {
+                                handler.post({
+                                    Snackbar.make(recyclerview, R.string.add_to_favourite, Snackbar.LENGTH_SHORT)
+                                            .show()
+                                })
+                            } else {
+                                handler.post({
+                                    buildAlertDialog(movie, recyclerview)
+                                })
+                            }
+                            handler.post({
+                                recyclerview.adapter.notifyDataSetChanged()
+                            })
+                        }
+                    }.start()
                 }),
                 object : MovieListWrapper.OnEndReachListener {
                     override fun onEndReach(): MovieListWrapper.State {

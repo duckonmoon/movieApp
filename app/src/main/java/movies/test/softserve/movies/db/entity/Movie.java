@@ -26,10 +26,10 @@ public class Movie {
     private String overview;
 
     @ColumnInfo(name = "watched")
-    private Boolean watched;
+    private Integer watched;
 
     @ColumnInfo(name = "favourite")
-    private Boolean favourite;
+    private Integer favourite;
 
     @ColumnInfo(name = "type")
     private String type;
@@ -81,19 +81,19 @@ public class Movie {
         this.overview = overview;
     }
 
-    public Boolean getWatched() {
+    public Integer getWatched() {
         return watched;
     }
 
-    public void setWatched(Boolean watched) {
+    public void setWatched(Integer watched) {
         this.watched = watched;
     }
 
-    public Boolean getFavourite() {
+    public Integer getFavourite() {
         return favourite;
     }
 
-    public void setFavourite(Boolean favourite) {
+    public void setFavourite(Integer favourite) {
         this.favourite = favourite;
     }
 

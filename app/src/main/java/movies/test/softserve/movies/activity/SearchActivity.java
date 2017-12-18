@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -40,6 +41,8 @@ public class SearchActivity extends BaseActivity {
 
     private PageViewModel mPageViewModel;
 
+    private Handler handler;
+
 
     private DBHelperService helperService = new DBHelperService();
     private MovieService movieService = MovieService.getInstance();
@@ -62,6 +65,7 @@ public class SearchActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        handler = new Handler();
         try {
             setTitle(getIntent().getStringExtra(NAME));
         } catch (Exception ignored) {
@@ -83,13 +87,20 @@ public class SearchActivity extends BaseActivity {
         }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
             public void onFavouriteClick(final TVEntity movie) {
-                if (helperService.toDoWithFavourite(movie)) {
-                    Snackbar.make(mRecyclerView, getString(R.string.added_to_favourite), Snackbar.LENGTH_SHORT)
-                            .show();
-                    mRecyclerView.getAdapter().notifyDataSetChanged();
-                } else {
-                    buildAlertDialog(movie);
-                }
+                new Thread(() -> {
+                    if (helperService.toDoWithFavourite(movie)) {
+                        handler.post(() -> {
+                            Snackbar.make(mRecyclerView, getString(R.string.added_to_favourite), Snackbar.LENGTH_SHORT)
+                                    .show();
+                            mRecyclerView.getAdapter().notifyDataSetChanged();
+                        });
+
+                    } else {
+                        handler.post(() -> buildAlertDialog(movie));
+
+                    }
+                }).start();
+
             }
         }), new MovieListWrapper.OnEndReachListener() {
             @Override

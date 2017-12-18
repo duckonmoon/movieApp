@@ -1,14 +1,15 @@
 package movies.test.softserve.movies.dao;
 
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Transaction;
 
 import java.util.List;
 
 import movies.test.softserve.movies.db.entity.Movie;
+import movies.test.softserve.movies.db.entity.MovieWithTheGenre;
 
 /**
  * Created by root on 15.12.17.
@@ -19,8 +20,16 @@ public interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovie(Movie... movies);
 
-    @Query("Select * from movie")
-    List<Movie> loadAllMovies();
+    @Transaction
+    @Query("Select * from movie where type = :type")
+    List<MovieWithTheGenre> loadAllMovies(String type);
+
+    @Transaction
+    @Query("Select * from movie where type = :type and favourite != 0")
+    List<MovieWithTheGenre> loadAllFavouriteMovies(String type);
+
+    @Query("Update movie set favourite = :favourite where id = :id")
+    int updateFavorite(Integer id, Integer favourite);
 
     @Query("SELECT id FROM movie WHERE id = :id limit 1")
     int checkIfMovieExists(Integer id);
@@ -28,6 +37,13 @@ public interface MovieDao {
     @Query("Select id from movie where id = :id and favourite != 0")
     int checkIfIsFavourite(Integer id);
 
-    @Delete
-    void deleteMovie(Movie ... movies);
+    @Query("Delete from movie where id = :id")
+    void deleteMovie(Integer id);
+
+    @Query("Select count(*) from movie where type = :type")
+    int moviesSize(String type);
+
+    @Query("SELECT count(*) FROM movie , genre WHERE type = :type AND genre_id  = :id AND movie.id  = genre.movie_id")
+    int getMoviesSizeWithGenre(String type, Integer id);
+
 }

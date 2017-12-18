@@ -64,8 +64,8 @@ public final class Mapper {
     public static movies.test.softserve.movies.db.entity.Movie mapFromTVEntityToDbMovie(TVEntity entity,boolean isFavourite){
         movies.test.softserve.movies.db.entity.Movie movie = new movies.test.softserve.movies.db.entity.Movie();
         movie.setId(entity.getId());
-        movie.setFavourite(isFavourite);
-        movie.setWatched(true);
+        movie.setFavourite(isFavourite ? 1:0);
+        movie.setWatched(1);
         movie.setImage(entity.getPosterPath());
         movie.setVoteCount(entity.getVoteCount());
         movie.setOverview(entity.getOverview());

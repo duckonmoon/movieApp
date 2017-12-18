@@ -2,6 +2,7 @@ package movies.test.softserve.movies.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -45,6 +46,7 @@ class SearchFragment : Fragment() {
 
 
     private lateinit var mRecyclerView: RecyclerView
+    private var handler = Handler()
 
     private var transfer: Transfer = Transfer()
 
@@ -96,13 +98,24 @@ class SearchFragment : Fragment() {
         view.list.adapter = MovieListWrapper(MovieRecyclerViewAdapter(transfer.list, MovieRecyclerViewAdapter.OnMovieSelect { mov ->
             StartActivityClass.startDetailsActivity(activity, mov)
         }, MovieRecyclerViewAdapter.OnFavouriteClick { movie ->
-            if (helperService.toDoWithFavourite(movie)) {
-                Snackbar.make(view.list, R.string.add_to_favourite, Snackbar.LENGTH_SHORT)
-                        .show()
-            } else {
-                buildAlertDialog(movie, view.list)
-            }
-            view.list.adapter.notifyDataSetChanged()
+            Thread {
+                Runnable {
+                    if (helperService.toDoWithFavourite(movie)) {
+                        handler.post({
+                            Snackbar.make(view.list, R.string.add_to_favourite, Snackbar.LENGTH_SHORT)
+                                    .show()
+                        })
+                    } else {
+                        handler.post({
+                            buildAlertDialog(movie, view.list)
+                        })
+                    }
+                    handler.post({
+                        view.list.adapter.notifyDataSetChanged()
+                    })
+                }
+            }.start()
+
         }), object : MovieListWrapper.OnEndReachListener {
             override fun onEndButtonClick() {
             }

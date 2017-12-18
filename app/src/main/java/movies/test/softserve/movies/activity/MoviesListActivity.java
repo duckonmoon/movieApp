@@ -3,6 +3,7 @@ package movies.test.softserve.movies.activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
@@ -63,10 +64,13 @@ public class MoviesListActivity extends BaseActivity
     private RatingService.OnRatingChangeListener onRatingChangeListener
             = (lvl, rating) -> navigationMenuStart();
 
+    private Handler handler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
+        handler = new Handler();
         mRecyclerView = findViewById(R.id.recyclerview);
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
         if (isTablet) {
@@ -86,31 +90,39 @@ public class MoviesListActivity extends BaseActivity
                 }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
             public void onFavouriteClick(final TVEntity mov) {
-                if (helperService.toDoWithFavourite(mov)) {
-                    Snackbar.make(mRecyclerView, getString(R.string.added_to_favourite),
-                            Snackbar.LENGTH_LONG).show();
-                    mRecyclerView.getAdapter().notifyDataSetChanged();
-                } else {
-                    new AlertDialog.Builder(MoviesListActivity.this)
-                            .setMessage(R.string.delete_from_watched)
-                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dbService.deleteFromDb(mov.getId());
-                                    Snackbar.make(mRecyclerView, R.string.mark_unwatched,
-                                            Snackbar.LENGTH_LONG).show();
-                                    mRecyclerView.getAdapter().notifyDataSetChanged();
-                                }
-                            })
-                            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dbService.cancelFavourite(mov.getId());
-                                    Snackbar.make(mRecyclerView, R.string.removed_from_favourite,
-                                            Snackbar.LENGTH_LONG).show();
-                                    mRecyclerView.getAdapter().notifyDataSetChanged();
-                                }
-                            }).create()
-                            .show();
-                }
+                new Thread(() -> {
+                    if (helperService.toDoWithFavourite(mov)) {
+                        handler.post(() -> {
+                            Snackbar.make(mRecyclerView, getString(R.string.added_to_favourite),
+                                    Snackbar.LENGTH_LONG).show();
+                            mRecyclerView.getAdapter().notifyDataSetChanged();
+                        });
+
+                    } else {
+                        handler.post(() -> {
+                            new AlertDialog.Builder(MoviesListActivity.this)
+                                    .setMessage(R.string.delete_from_watched)
+                                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dbService.deleteFromDb(mov.getId());
+                                            Snackbar.make(mRecyclerView, R.string.mark_unwatched,
+                                                    Snackbar.LENGTH_LONG).show();
+                                            mRecyclerView.getAdapter().notifyDataSetChanged();
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dbService.cancelFavourite(mov.getId());
+                                            Snackbar.make(mRecyclerView, R.string.removed_from_favourite,
+                                                    Snackbar.LENGTH_LONG).show();
+                                            mRecyclerView.getAdapter().notifyDataSetChanged();
+                                        }
+                                    }).create()
+                                    .show();
+                        });
+                    }
+                }).start();
+
             }
         }), new MovieListWrapper.OnEndReachListener() {
             @Override

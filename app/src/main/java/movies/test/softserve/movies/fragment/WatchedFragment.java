@@ -2,6 +2,7 @@ package movies.test.softserve.movies.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -33,6 +34,8 @@ public class WatchedFragment extends Fragment {
     private DBMovieService dbService = DBMovieService.getInstance();
     private DBHelperService helperService = new DBHelperService();
 
+    private Handler handler = new Handler();
+
     public WatchedFragment() {
     }
 
@@ -62,18 +65,17 @@ public class WatchedFragment extends Fragment {
             public void OnMovieSelected(TVEntity mov) {
                 StartActivityClass.startDetailsActivity(getActivity(), mov);
             }
-        }, movie -> {
+        }, movie -> new Thread(() -> {
             if (helperService.toDoWithFavourite(movie)) {
-                Snackbar.make(mRecyclerView, R.string.added_to_favourite, Snackbar.LENGTH_SHORT)
-                        .show();
+                handler.post(() -> Snackbar.make(mRecyclerView, R.string.added_to_favourite, Snackbar.LENGTH_SHORT)
+                        .show());
+
             } else {
-                Snackbar.make(mRecyclerView, R.string.removed_from_favourite, Snackbar.LENGTH_SHORT)
-                        .show();
-
-
+                handler.post(() -> Snackbar.make(mRecyclerView, R.string.removed_from_favourite, Snackbar.LENGTH_SHORT)
+                        .show());
             }
-            mRecyclerView.getAdapter().notifyDataSetChanged();
-        }));
+            handler.post(() -> mRecyclerView.getAdapter().notifyDataSetChanged());
+        }).start()));
         return view;
     }
 

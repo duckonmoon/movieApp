@@ -13,6 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -70,6 +71,8 @@ public class MovieDetailsActivity extends BaseActivity {
 
     private Button trailersButton;
 
+    private Handler handler;
+
     private FullMovieViewModel viewModel;
     private TVEntity movie;
 
@@ -100,6 +103,7 @@ public class MovieDetailsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
+        handler = new Handler();
         viewModel = ViewModelProviders.of(this).get(FullMovieViewModel.class);
         initView();
         getIntentInfo();
@@ -137,27 +141,37 @@ public class MovieDetailsActivity extends BaseActivity {
         });
         watched.setImageResource(dbService.checkIfExists(movie.getId()) ? R.mipmap.checked : R.mipmap.not_checked);
         watched.setOnClickListener(v -> {
-            switch (helperService.toDoWithWatched(movie)) {
-                case WATCHED:
-                    watched.setImageResource(R.mipmap.checked);
-                    Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.added_to_watched), Snackbar.LENGTH_SHORT).show();
-                    break;
-                case FAVOURITE:
-                    Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.you_cant_favourrite), Snackbar.LENGTH_SHORT).show();
-                    break;
-                case CANCELED:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MovieDetailsActivity.this);
-                    builder.setMessage(R.string.confirm)
-                            .setPositiveButton(R.string.yes, (dialog, id) -> {
-                                dbService.deleteFromDb(movie.getId());
-                                watched.setImageResource(R.mipmap.not_checked);
-                                Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.mark_unwatched), Snackbar.LENGTH_SHORT).show();
-                            })
-                            .setNegativeButton(R.string.no, (dialog, id) -> {
-                            });
-                    builder.create().show();
-                    break;
-            }
+            new Thread(()-> {
+                switch (helperService.toDoWithWatched(movie)) {
+                    case WATCHED:
+                        runOnUiThread(() -> {
+                            watched.setImageResource(R.mipmap.checked);
+                            Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.added_to_watched), Snackbar.LENGTH_SHORT).show();
+                        });
+
+                        break;
+                    case FAVOURITE:
+                        runOnUiThread(() -> {
+                            Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.you_cant_favourrite), Snackbar.LENGTH_SHORT).show();
+                        });
+                        break;
+                    case CANCELED:
+                        runOnUiThread(() -> {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MovieDetailsActivity.this);
+                            builder.setMessage(R.string.confirm)
+                                    .setPositiveButton(R.string.yes, (dialog, id) -> {
+                                        dbService.deleteFromDb(movie.getId());
+                                        watched.setImageResource(R.mipmap.not_checked);
+                                        Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.mark_unwatched), Snackbar.LENGTH_SHORT).show();
+                                    })
+                                    .setNegativeButton(R.string.no, (dialog, id) -> {
+                                    });
+                            builder.create().show();
+                        });
+                        break;
+                }
+            }).start();
+
         });
 
         trailersButton.setOnClickListener(view -> StartActivityClass.startVideosActivity(this, movie));
@@ -224,16 +238,24 @@ public class MovieDetailsActivity extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (helperService.toDoWithFavourite(movie)) {
-                    fab.setImageResource(R.drawable.ic_stars_black_24dp);
-                    Snackbar.make(view, getString(R.string.added_to_favourite), Snackbar.LENGTH_LONG)
-                            .show();
-                    watched.setImageResource(R.mipmap.checked);
-                } else {
-                    fab.setImageResource(R.drawable.ic_star_border_black_24dp);
-                    Snackbar.make(view, R.string.removed_from_favourite, Snackbar.LENGTH_LONG)
-                            .show();
-                }
+                new Thread(() -> {
+                    if (helperService.toDoWithFavourite(movie)) {
+                        handler.post(() -> {
+                            fab.setImageResource(R.drawable.ic_stars_black_24dp);
+                            Snackbar.make(view, getString(R.string.added_to_favourite), Snackbar.LENGTH_LONG)
+                                    .show();
+                            watched.setImageResource(R.mipmap.checked);
+                        });
+
+                    } else {
+                        handler.post(()->{
+                            fab.setImageResource(R.drawable.ic_star_border_black_24dp);
+                            Snackbar.make(view, R.string.removed_from_favourite, Snackbar.LENGTH_LONG)
+                                    .show();
+                        });
+                    }
+                }).start();
+
             }
         });
         ratingBar = findViewById(R.id.ratingBar);

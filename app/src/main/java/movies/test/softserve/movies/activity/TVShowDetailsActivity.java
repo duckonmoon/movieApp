@@ -14,6 +14,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -80,12 +81,15 @@ public class TVShowDetailsActivity extends BaseActivity {
     private TextView links;
     private RecyclerView seasons;
 
+    private Handler handler;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(FullTVSeriesViewModel.class);
 
+        handler = new Handler();
         mShortAnimationDuration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
         initView();
         getIntentInfo();
@@ -232,33 +236,43 @@ public class TVShowDetailsActivity extends BaseActivity {
         watched.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (helperService.toDoWithWatched(tvShow)) {
-                    case WATCHED:
-                        watched.setImageResource(R.mipmap.checked);
-                        Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.added_to_watched), Snackbar.LENGTH_SHORT).show();
-                        break;
-                    case FAVOURITE:
-                        Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.you_cant_favourrite), Snackbar.LENGTH_SHORT).show();
-                        break;
-                    case CANCELED:
-                        AlertDialog.Builder builder = new AlertDialog.Builder(TVShowDetailsActivity.this);
-                        builder.setMessage(getString(R.string.confirm))
-                                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                new Thread(() -> {
+                    switch (helperService.toDoWithWatched(tvShow)) {
+                        case WATCHED:
+                            runOnUiThread(() -> {
+                                watched.setImageResource(R.mipmap.checked);
+                                Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.added_to_watched), Snackbar.LENGTH_SHORT).show();
+                            });
+
+                            break;
+                        case FAVOURITE:
+                            runOnUiThread(() -> {
+                                Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.you_cant_favourrite), Snackbar.LENGTH_SHORT).show();
+                            });
+
+                            break;
+                        case CANCELED:
+                            runOnUiThread(() -> {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(TVShowDetailsActivity.this);
+                                builder.setMessage(getString(R.string.confirm))
+                                        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dbService.deleteFromDb(tvShow.getId());
+                                                watched.setImageResource(R.mipmap.not_checked);
+                                                Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.mark_unwatched), Snackbar.LENGTH_SHORT).show();
+                                            }
+                                        }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        dbService.deleteFromDb(tvShow.getId());
-                                        watched.setImageResource(R.mipmap.not_checked);
-                                        Snackbar.make(findViewById(R.id.nested_scroll_view), getString(R.string.mark_unwatched), Snackbar.LENGTH_SHORT).show();
                                     }
-                                }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        });
-                        builder.create().show();
-                        break;
+                                });
+                                builder.create().show();
+                            });
+                            break;
+                    }
+                }).start();
 
-                }
             }
         });
         if (dbService.checkIfIsFavourite(tvShow.getId())) {
@@ -281,16 +295,24 @@ public class TVShowDetailsActivity extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (helperService.toDoWithFavourite(tvShow)) {
-                    fab.setImageResource(R.drawable.ic_stars_black_24dp);
-                    Snackbar.make(v, getString(R.string.added_to_favourite), Snackbar.LENGTH_SHORT)
-                            .show();
-                    watched.setImageResource(R.mipmap.checked);
-                } else {
-                    fab.setImageResource(R.drawable.ic_star_border_black_24dp);
-                    Snackbar.make(v, getString(R.string.removed_from_favourite), Snackbar.LENGTH_SHORT)
-                            .show();
-                }
+                new Thread(() -> {
+                    if (helperService.toDoWithFavourite(tvShow)) {
+                        runOnUiThread(() -> {
+                            fab.setImageResource(R.drawable.ic_stars_black_24dp);
+                            Snackbar.make(v, getString(R.string.added_to_favourite), Snackbar.LENGTH_SHORT)
+                                    .show();
+                            watched.setImageResource(R.mipmap.checked);
+                        });
+
+                    } else {
+                        runOnUiThread(() -> {
+                            fab.setImageResource(R.drawable.ic_star_border_black_24dp);
+                            Snackbar.make(v, getString(R.string.removed_from_favourite), Snackbar.LENGTH_SHORT)
+                                    .show();
+                        });
+                    }
+                }).start();
+
             }
         });
         Button similarButton = findViewById(R.id.similar_button);

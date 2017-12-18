@@ -1,6 +1,7 @@
 package movies.test.softserve.movies.fragment
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -26,6 +27,7 @@ class TVShowFragment : Fragment() {
     private var repository: TVShowsRepository = TVShowsRepository.getInstance()
     private var dbService: DBMovieService = DBMovieService.getInstance()
     private var helperService: DBHelperService = DBHelperService()
+    private var handler:Handler  = Handler()
     private var listener: OnListOfTVShowsGetListener = object : OnListOfTVShowsGetListener {
         override fun onListOfTVShowsGet() {
             mRecyclerView.adapter.notifyDataSetChanged()
@@ -47,14 +49,21 @@ class TVShowFragment : Fragment() {
                 MovieRecyclerViewAdapter.OnMovieSelect { mov ->
                     StartActivityClass.startDetailsActivity(activity, mov)
                 }, MovieRecyclerViewAdapter.OnFavouriteClick { movie ->
-
-            if (helperService.toDoWithFavourite(movie)) {
-                Snackbar.make(view, R.string.added_to_favourite, Snackbar.LENGTH_SHORT)
-                        .show()
-                view.adapter.notifyDataSetChanged()
-            } else {
-                buildAlertDialog(movie)
-            }
+            Thread {
+                Runnable {
+                    if (helperService.toDoWithFavourite(movie)) {
+                        handler.post({
+                            Snackbar.make(view, R.string.added_to_favourite, Snackbar.LENGTH_SHORT)
+                                    .show()
+                            view.adapter.notifyDataSetChanged()
+                        })
+                    } else {
+                        handler.post({
+                            buildAlertDialog(movie)
+                        })
+                    }
+                }
+            }.start()
 
 
         }),

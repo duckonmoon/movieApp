@@ -7,64 +7,36 @@ import movies.test.softserve.movies.entity.TVEntity;
  */
 
 public class DBHelperService {
-    private DBMovieService service;
+    private DbMovieServiceRoom service;
 
     public DBHelperService() {
-        service = DBMovieService.getInstance();
+        service = DbMovieServiceRoom.Companion.getInstance();
     }
 
+
+    /**need to be asynchronous*/
     public boolean toDoWithFavourite(TVEntity movie) {
-        if (!service.checkIfIsFavourite(movie.getId())) {
-            if (!service.checkIfExists(movie.getId())) {
-                if (movie.getType() == TVEntity.TYPE.MOVIE) {
-                    service.insertMovieToFavourite(movie.getId(),
-                            movie.getTitle(),
-                            movie.getVoteAverage().floatValue(),
-                            movie.getVoteCount(),
-                            movie.getOverview(),
-                            movie.getReleaseDate(),
-                            movie.getPosterPath(),
-                            movie.getGenreIds());
-                } else {
-                    service.insertTVShowToFavourite(movie.getId(),
-                            movie.getTitle(),
-                            movie.getVoteAverage().floatValue(),
-                            movie.getVoteCount(),
-                            movie.getOverview(),
-                            movie.getPosterPath());
-                }
+        if (!service.checkIfIsFavourite(movie)) {
+            if (!service.checkIfExists(movie)) {
+                service.insertFavouriteTVEntity(movie);
             } else {
-                service.setFavourite(movie.getId());
+                service.setFavourite(movie);
             }
+
             return true;
         } else {
-            service.cancelFavourite(movie.getId());
+            service.cancelFavourite(movie);
             return false;
         }
     }
 
+    /**need to be asynchronous*/
     public Watched toDoWithWatched(TVEntity movie) {
-        if (!service.checkIfExists(movie.getId())) {
-            if (movie.getType() == TVEntity.TYPE.MOVIE) {
-                service.addMovieToDb(movie.getId(),
-                        movie.getTitle(),
-                        movie.getVoteAverage().floatValue(),
-                        movie.getVoteCount(),
-                        movie.getOverview(),
-                        movie.getReleaseDate(),
-                        movie.getPosterPath(),
-                        movie.getGenreIds());
-            } else {
-                service.addTVShowToDb(movie.getId(),
-                        movie.getTitle(),
-                        movie.getVoteAverage().floatValue(),
-                        movie.getVoteCount(),
-                        movie.getOverview(),
-                        movie.getPosterPath());
-            }
+        if (!service.checkIfExists(movie)) {
+            service.insertTVEntity(movie);
             return Watched.WATCHED;
         } else {
-            if (service.checkIfIsFavourite(movie.getId())) {
+            if (service.checkIfIsFavourite(movie)) {
                 return Watched.FAVOURITE;
             } else {
                 return Watched.CANCELED;

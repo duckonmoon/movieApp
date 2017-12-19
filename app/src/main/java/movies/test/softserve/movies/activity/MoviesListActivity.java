@@ -64,13 +64,10 @@ public class MoviesListActivity extends BaseActivity
     private RatingService.OnRatingChangeListener onRatingChangeListener
             = (lvl, rating) -> navigationMenuStart();
 
-    private Handler handler;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
-        handler = new Handler();
         mRecyclerView = findViewById(R.id.recyclerview);
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
         if (isTablet) {
@@ -92,14 +89,14 @@ public class MoviesListActivity extends BaseActivity
             public void onFavouriteClick(final TVEntity mov,final Integer position) {
                 new Thread(() -> {
                     if (helperService.toDoWithFavourite(mov)) {
-                        handler.post(() -> {
+                        runOnUiThread(() -> {
                             Snackbar.make(mRecyclerView, getString(R.string.added_to_favourite),
                                     Snackbar.LENGTH_LONG).show();
                             mRecyclerView.getAdapter().notifyItemChanged(position);
                         });
 
                     } else {
-                        handler.post(() -> {
+                        runOnUiThread(() -> {
                             new AlertDialog.Builder(MoviesListActivity.this)
                                     .setMessage(R.string.delete_from_watched)
                                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {

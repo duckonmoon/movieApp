@@ -281,7 +281,11 @@ public class TVShowDetailsActivity extends BaseActivity {
                     watched.setImageResource(R.mipmap.checked);
                 });
             } else {
-                runOnUiThread(() -> watched.setImageResource(R.mipmap.not_checked));
+                if (!dbService.checkIfExists(tvShow)){
+                    runOnUiThread(() -> watched.setImageResource(R.mipmap.not_checked));
+                } else {
+                    watched.setImageResource(R.mipmap.checked);
+                }
             }
         }).start();
 

@@ -35,6 +35,7 @@ import movies.test.softserve.movies.util.AchievementService;
 
 public class MainController extends Application implements Observer, OnAchievementDoneListener {
     private static MainController INSTANCE;
+
     private List<TVEntity> movies;
     private List<Genre> genres = new ArrayList<>();
     private Integer page;

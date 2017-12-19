@@ -182,7 +182,7 @@ class SearchFragment : Fragment() {
                 .setMessage(R.string.delete_from_watched)
                 .setPositiveButton(R.string.yes) { _, _ ->
                     Thread {
-                        Runnable { dbService.deleteFromDb(movie) }
+                        dbService.deleteFromDb(movie)
                     }.start()
                     Snackbar.make(view, R.string.mark_unwatched,
                             Snackbar.LENGTH_LONG).show()
@@ -190,9 +190,7 @@ class SearchFragment : Fragment() {
                 }
                 .setNegativeButton(R.string.no) { _, _ ->
                     Thread {
-                        Runnable {
-                            dbService.cancelFavourite(movie)
-                        }
+                        dbService.cancelFavourite(movie)
                     }.start()
                     Snackbar.make(view, R.string.removed_from_favourite,
                             Snackbar.LENGTH_LONG).show()

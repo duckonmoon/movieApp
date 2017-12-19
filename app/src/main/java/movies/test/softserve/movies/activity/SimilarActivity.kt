@@ -80,23 +80,22 @@ class SimilarActivity : BaseActivity() {
                 MovieRecyclerViewAdapter.OnMovieSelect { mov ->
                     StartActivityClass.startDetailsActivity(this, mov)
                 },
-                MovieRecyclerViewAdapter.OnFavouriteClick { movie,position ->
+                MovieRecyclerViewAdapter.OnFavouriteClick { movie, position ->
                     Thread {
-                        Runnable {
-                            if (helperService.toDoWithFavourite(movie)) {
-                                handler.post({
-                                    Snackbar.make(recyclerview, R.string.add_to_favourite, Snackbar.LENGTH_SHORT)
-                                            .show()
-                                })
-                            } else {
-                                handler.post({
-                                    buildAlertDialog(movie,position, recyclerview)
-                                })
-                            }
+                        if (helperService.toDoWithFavourite(movie)) {
                             handler.post({
-                                recyclerview.adapter.notifyItemChanged(position)
+                                Snackbar.make(recyclerview, R.string.add_to_favourite, Snackbar.LENGTH_SHORT)
+                                        .show()
+                            })
+                        } else {
+                            handler.post({
+                                buildAlertDialog(movie, position, recyclerview)
                             })
                         }
+                        handler.post({
+                            recyclerview.adapter.notifyItemChanged(position)
+                        })
+
                     }.start()
                 }),
                 object : MovieListWrapper.OnEndReachListener {
@@ -145,7 +144,7 @@ class SimilarActivity : BaseActivity() {
         tvShowsRepository.removeOnSimilarTVEntitiesGetListener(listener)
     }
 
-    private fun buildAlertDialog(movie: TVEntity,position : Int, view: RecyclerView) {
+    private fun buildAlertDialog(movie: TVEntity, position: Int, view: RecyclerView) {
         AlertDialog.Builder(this)
                 .setMessage(R.string.delete_from_watched)
                 .setPositiveButton(R.string.yes) { _, _ ->
@@ -156,7 +155,7 @@ class SimilarActivity : BaseActivity() {
                     view.adapter.notifyItemChanged(position)
                 }
                 .setNegativeButton(R.string.no) { _, _ ->
-                    Thread { dbService.cancelFavourite(movie)  }.start()
+                    Thread { dbService.cancelFavourite(movie) }.start()
 
                     Snackbar.make(view, R.string.removed_from_favourite,
                             Snackbar.LENGTH_LONG).show()

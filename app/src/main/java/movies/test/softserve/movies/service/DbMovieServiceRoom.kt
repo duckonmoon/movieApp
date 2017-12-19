@@ -23,7 +23,7 @@ class DbMovieServiceRoom private constructor() {
     }
 
 
-    private var ratingService : RatingService
+    private var ratingService: RatingService
 
     private var database: AppRoomDatabase = MainController.getInstance().database
     private var movieDao: MovieDao
@@ -41,7 +41,7 @@ class DbMovieServiceRoom private constructor() {
         movieDao.insertMovie(movie)
         genreDao.insertGenres(Mapper.mapFromIntegersToDbGenres(tvEntity.genreIds, tvEntity))
         AchievementService.getInstance().checkWhatAchievementsIsDone()
-        ratingService.change(tvEntity.voteAverage.toFloat(),RatingService.ADD)
+        ratingService.change(tvEntity.voteAverage.toFloat(), RatingService.ADD)
     }
 
     /**need to be asynchronous*/
@@ -50,13 +50,13 @@ class DbMovieServiceRoom private constructor() {
         movieDao.insertMovie(movie)
         genreDao.insertGenres(Mapper.mapFromIntegersToDbGenres(tvEntity.genreIds, tvEntity))
         AchievementService.getInstance().checkWhatAchievementsIsDone()
-        ratingService.change(tvEntity.voteAverage.toFloat(),RatingService.ADD)
+        ratingService.change(tvEntity.voteAverage.toFloat(), RatingService.ADD)
     }
 
     /**need to be asynchronous*/
     fun deleteFromDb(tvEntity: TVEntity) {
         movieDao.deleteMovie(tvEntity.id)
-        ratingService.change(tvEntity.voteAverage.toFloat(),RatingService.SUB)
+        ratingService.change(tvEntity.voteAverage.toFloat(), RatingService.SUB)
     }
 
     /**need to be asynchronous*/

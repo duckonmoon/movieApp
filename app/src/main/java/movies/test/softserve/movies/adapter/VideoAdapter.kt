@@ -38,6 +38,7 @@ class VideoAdapter(private var videos: List<Video>
         onItemClickListener.onItemClick(videos[position])
     }
 
+    @FunctionalInterface
     interface OnItemClickListener {
         fun onItemClick(video: Video)
     }

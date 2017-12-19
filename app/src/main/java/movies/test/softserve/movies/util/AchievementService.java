@@ -103,7 +103,7 @@ public class AchievementService {
     }
 
     private boolean getMovieAchievement(Achievement achievement) {
-        return service.getMoviesSizeWithGenre(achievement.getGenre(),TVEntity.TYPE.MOVIE) >= achievement.getNumber();
+        return service.getMoviesSizeWithGenre(achievement.getGenre(), TVEntity.TYPE.MOVIE) >= achievement.getNumber();
     }
 
 }

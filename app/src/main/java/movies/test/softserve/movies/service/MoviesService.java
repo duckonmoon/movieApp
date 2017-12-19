@@ -78,13 +78,19 @@ public interface MoviesService {
             @Query("without_keywords") String without_keywords);
 
     @GET("3/genre/movie/list")
-    Call<GenresContainer> getAllGenres(@Query("api_key") String apiKey, @Query("language") String language);
+    Call<GenresContainer> getAllGenres(@Query("api_key") String apiKey,
+                                       @Query("language") String language);
 
     @GET("3/search/movie")
-    Call<Page> getMovieByKeyword(@Query("api_key") String apiKey, @Query("query") Uri uri, @Query("page") Integer page, @Query("language") String language);
+    Call<Page> getMovieByKeyword(@Query("api_key") String apiKey,
+                                 @Query("query") Uri uri,
+                                 @Query("page") Integer page,
+                                 @Query("language") String language);
 
     @GET("3/movie/{movie_id}/videos")
-    Call<VideoContainer> getVideosForMovie(@Path("movie_id") Integer movie_id, @Query("api_key") String apiKey, @Query("language") String language);
+    Call<VideoContainer> getVideosForMovie(@Path("movie_id") Integer movie_id,
+                                           @Query("api_key") String apiKey,
+                                           @Query("language") String language);
 
     @GET("3/movie/{movie_id}/images")
     Call<PosterContainer> getMoviePosters(@Path("movie_id") Integer movie_id,

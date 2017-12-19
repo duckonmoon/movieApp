@@ -1,8 +1,6 @@
 package movies.test.softserve.movies.event
 
-/**
- * Created by rkrit on 07.11.17.
- */
+@FunctionalInterface
 interface OnListOfTVShowsGetListener {
     fun onListOfTVShowsGet()
 }

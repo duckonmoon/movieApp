@@ -3,7 +3,6 @@ package movies.test.softserve.movies.activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
@@ -86,7 +85,7 @@ public class MoviesListActivity extends BaseActivity
                     }
                 }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
-            public void onFavouriteClick(final TVEntity mov,final Integer position) {
+            public void onFavouriteClick(final TVEntity mov, final Integer position) {
                 new Thread(() -> {
                     if (helperService.toDoWithFavourite(mov)) {
                         runOnUiThread(() -> {

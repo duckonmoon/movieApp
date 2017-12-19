@@ -18,6 +18,7 @@ import movies.test.softserve.movies.entity.TVShow;
 public final class Mapper {
     public static final Boolean FAVOURITE = true;
     public static final Boolean NOT_FAVOURITE = false;
+
     private Mapper() {
     }
 

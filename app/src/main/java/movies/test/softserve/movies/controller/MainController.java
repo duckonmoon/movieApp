@@ -2,6 +2,7 @@ package movies.test.softserve.movies.controller;
 
 import android.app.Activity;
 import android.app.Application;
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Room;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -47,6 +49,8 @@ public class MainController extends Application implements Observer, OnAchieveme
     private Activity currentContext;
     private AppRoomDatabase database;
 
+    private LiveData<Integer> favourite;
+
     public static MainController getInstance() {
         return INSTANCE;
     }
@@ -73,7 +77,10 @@ public class MainController extends Application implements Observer, OnAchieveme
         });
         movieService.tryToGetSession();
         TVShowsRepository.getInstance().tryToGetTVShows();
-
+        favourite = database.movieDao().loadAllFavouriteMovies();
+        favourite.observeForever(integer -> {
+            Log.e("Changed", integer.toString());
+        });
     }
 
     @Override

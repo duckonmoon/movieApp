@@ -119,6 +119,8 @@ public class MovieDetailsActivity extends BaseActivity {
 
     private void useIntentInfo() {
         getSupportActionBar().setTitle(movie.getTitle());
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         overViewView.setText(movie.getOverview());
         ratingBar.setRating(movie.getVoteAverage().floatValue() / 2);
         ratingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
@@ -242,6 +244,7 @@ public class MovieDetailsActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbarLayout = findViewById(R.id.toolbar_layout);
         setSupportActionBar(toolbar);
+
         watched = findViewById(R.id.watched);
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -421,5 +424,9 @@ public class MovieDetailsActivity extends BaseActivity {
         });
     }
 
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

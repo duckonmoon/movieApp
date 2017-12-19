@@ -2,9 +2,7 @@ package movies.test.softserve.movies.event
 
 import movies.test.softserve.movies.entity.TVEntity
 
-/**
- * Created by rkrit on 06.11.17.
- */
+@FunctionalInterface
 interface OnListOfMoviesGetListener {
     fun onListOfMoviesGetListener(movies: List<TVEntity>)
 }

@@ -33,7 +33,7 @@ class VideoActivity : BaseActivity() {
 
     private var movieId = 0
 
-    private var firsttry = true
+    private var firstTry = true
 
     private var onVideoGetListener = object : OnVideoGetListener {
         override fun onVideoGet(videos: List<Video>) {
@@ -42,9 +42,9 @@ class VideoActivity : BaseActivity() {
                 recycler.adapter.notifyDataSetChanged()
                 empty.visibility = View.GONE
             }
-            if (videos.isEmpty() && Locale.getDefault().language == "uk" && firsttry) {
+            if (videos.isEmpty() && Locale.getDefault().language == "uk" && firstTry) {
                 service.tryToGetVideos(movieId, null)
-                firsttry = false
+                firstTry = false
             }
         }
     }

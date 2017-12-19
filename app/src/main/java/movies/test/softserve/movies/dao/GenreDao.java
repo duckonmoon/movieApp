@@ -16,7 +16,4 @@ import movies.test.softserve.movies.db.entity.Genre;
 public interface GenreDao {
     @Insert
     void insertGenres(List<Genre> genres);
-
-    @Query("Select count(*) from genre where genre_id = :genre_id")
-    int getGenreCount(Integer genre_id);
 }

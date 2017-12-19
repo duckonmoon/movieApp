@@ -86,7 +86,7 @@ public class SearchActivity extends BaseActivity {
             }
         }, new MovieRecyclerViewAdapter.OnFavouriteClick() {
             @Override
-            public void onFavouriteClick(final TVEntity movie,final Integer position) {
+            public void onFavouriteClick(final TVEntity movie, final Integer position) {
                 new Thread(() -> {
                     if (helperService.toDoWithFavourite(movie)) {
                         handler.post(() -> {
@@ -96,7 +96,7 @@ public class SearchActivity extends BaseActivity {
                         });
 
                     } else {
-                        handler.post(() -> buildAlertDialog(movie,position));
+                        handler.post(() -> buildAlertDialog(movie, position));
 
                     }
                 }).start();
@@ -150,7 +150,7 @@ public class SearchActivity extends BaseActivity {
         movieService.removeOnListOfMoviesGetListener(onListOfMoviesGetListener);
     }
 
-    private void buildAlertDialog(final TVEntity movie,final Integer position) {
+    private void buildAlertDialog(final TVEntity movie, final Integer position) {
         new AlertDialog.Builder(SearchActivity.this)
                 .setMessage(R.string.delete_from_watched)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {

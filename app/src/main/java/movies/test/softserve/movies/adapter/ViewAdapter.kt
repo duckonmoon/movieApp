@@ -34,6 +34,7 @@ class ViewAdapter(private val mValues: List<Item>, private val onItemClickListen
 
     }
 
+    @FunctionalInterface
     interface OnItemClickListener {
         fun onItemClick(genre: Item)
     }

@@ -162,6 +162,8 @@ public class TVShowDetailsActivity extends BaseActivity {
     private void useIntentInfo() {
         toolbarLayout = findViewById(R.id.toolbar_layout);
         toolbarLayout.setTitle(tvShow.getTitle());
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         ratingBar = findViewById(R.id.ratingBar);
         toolbarLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,7 +283,7 @@ public class TVShowDetailsActivity extends BaseActivity {
                     watched.setImageResource(R.mipmap.checked);
                 });
             } else {
-                if (!dbService.checkIfExists(tvShow)){
+                if (!dbService.checkIfExists(tvShow)) {
                     runOnUiThread(() -> watched.setImageResource(R.mipmap.not_checked));
                 } else {
                     watched.setImageResource(R.mipmap.checked);
@@ -430,6 +432,12 @@ public class TVShowDetailsActivity extends BaseActivity {
                 mCurrentAnimator = set;
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }
 

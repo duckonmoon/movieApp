@@ -80,15 +80,17 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolde
 
     @Override
     public void onFavouriteClick(int position) {
-        favouriteClick.onFavouriteClick(movies.get(position),position);
+        favouriteClick.onFavouriteClick(movies.get(position), position);
     }
 
 
+    @FunctionalInterface
     public interface OnMovieSelect {
         void OnMovieSelected(TVEntity movie);
     }
 
+    @FunctionalInterface
     public interface OnFavouriteClick {
-        void onFavouriteClick(TVEntity movie,Integer position);
+        void onFavouriteClick(TVEntity movie, Integer position);
     }
 }

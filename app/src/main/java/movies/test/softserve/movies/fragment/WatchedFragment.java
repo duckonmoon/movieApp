@@ -63,7 +63,7 @@ public class WatchedFragment extends Fragment {
             public void OnMovieSelected(TVEntity mov) {
                 StartActivityClass.startDetailsActivity(getActivity(), mov);
             }
-        }, (movie , position) -> new Thread(() -> {
+        }, (movie, position) -> new Thread(() -> {
             if (helperService.toDoWithFavourite(movie)) {
                 handler.post(() -> Snackbar.make(mRecyclerView, R.string.added_to_favourite, Snackbar.LENGTH_SHORT)
                         .show());

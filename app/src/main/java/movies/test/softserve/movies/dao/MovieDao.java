@@ -1,5 +1,6 @@
 package movies.test.softserve.movies.dao;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -46,4 +47,6 @@ public interface MovieDao {
     @Query("SELECT count(*) FROM movie , genre WHERE type = :type AND genre_id  = :id AND movie.id  = genre.movie_id")
     int getMoviesSizeWithGenre(String type, Integer id);
 
+    @Query("Select count(*) from movie where favourite != 0")
+    LiveData<Integer> loadAllFavouriteMovies();
 }

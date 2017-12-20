@@ -18,6 +18,7 @@ import java.util.List;
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.adapter.MovieListWrapper;
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
+import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.event.OnListOfMoviesGetListener;
 import movies.test.softserve.movies.service.DBHelperService;
@@ -47,6 +48,8 @@ public class SearchActivity extends BaseActivity {
     private DBHelperService helperService = new DBHelperService();
     private MovieService movieService = MovieService.getInstance();
     private DbMovieServiceRoom dbService = DbMovieServiceRoom.Companion.getInstance();
+    private MainController controller = MainController.getInstance();
+
     private String message = null;
     private OnListOfMoviesGetListener onListOfMoviesGetListener = new OnListOfMoviesGetListener() {
         @Override
@@ -143,7 +146,10 @@ public class SearchActivity extends BaseActivity {
 
         movieService.addOnListOfMoviesGetListener(onListOfMoviesGetListener);
 
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        if (controller.check(this)) {
+            mRecyclerView.getAdapter().notifyDataSetChanged();
+            controller.unCheck(this);
+        }
     }
 
     @Override

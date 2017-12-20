@@ -15,10 +15,12 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Switch
+import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.fragment_tventity_list.view.*
 import movies.test.softserve.movies.R
 import movies.test.softserve.movies.adapter.MovieListWrapper
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter
+import movies.test.softserve.movies.controller.MainController
 import movies.test.softserve.movies.entity.Page
 import movies.test.softserve.movies.entity.TVEntity
 import movies.test.softserve.movies.entity.TVPage
@@ -34,12 +36,13 @@ import retrofit2.Response
 import java.io.Serializable
 
 
-class SearchFragment : Fragment() {
+class SearchFragment : BaseFragment() {
 
     private var service: MovieService = MovieService.getInstance()
     private var repository: TVShowsRepository = TVShowsRepository.getInstance()
     private var dbService: DbMovieServiceRoom = DbMovieServiceRoom.getInstance()
     private var helperService: DBHelperService = DBHelperService()
+    private val controller: MainController = MainController.getInstance()
 
     private val comp: String = "comp"
     private val typeMovie = false
@@ -174,7 +177,11 @@ class SearchFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        mRecyclerView.adapter.notifyDataSetChanged()
+
+        if (controller.check(this)) {
+            recyclerview.adapter.notifyDataSetChanged()
+            controller.unCheck(this)
+        }
     }
 
     private fun buildAlertDialog(movie: TVEntity, position: Int, view: RecyclerView) {

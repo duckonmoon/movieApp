@@ -18,12 +18,13 @@ import java.util.List;
 
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
+import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.service.DbMovieServiceRoom;
 import movies.test.softserve.movies.util.StartActivityClass;
 
 
-public class MovieFragment extends Fragment {
+public class MovieFragment extends BaseFragment {
 
     private static final String BUNDLE_RECYCLER_LAYOUT = "fragment.recycler.layout";
 
@@ -32,6 +33,7 @@ public class MovieFragment extends Fragment {
     private Handler handler = new Handler();
 
     private DbMovieServiceRoom dbService = DbMovieServiceRoom.Companion.getInstance();
+    private MainController controller = MainController.getInstance();
 
     public MovieFragment() {
 
@@ -123,6 +125,10 @@ public class MovieFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        setAdapter();
+        if (controller.check(this)) {
+            setAdapter();
+            controller.unCheck(this);
+        }
+
     }
 }

@@ -180,7 +180,10 @@ public class MoviesListActivity extends BaseActivity
 
         navigationMenuStart();
 
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        if (mainController.check(this)) {
+            mRecyclerView.getAdapter().notifyDataSetChanged();
+            mainController.unCheck(this);
+        }
     }
 
 

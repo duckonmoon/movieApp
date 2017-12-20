@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_search.*
 import movies.test.softserve.movies.R
 import movies.test.softserve.movies.adapter.MovieListWrapper
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter
+import movies.test.softserve.movies.controller.MainController
 import movies.test.softserve.movies.entity.TVEntity
 import movies.test.softserve.movies.event.OnSimilarTVEntitiesGetListener
 import movies.test.softserve.movies.repository.TVShowsRepository
@@ -30,6 +31,7 @@ class SimilarActivity : BaseActivity() {
     private var dbService: DbMovieServiceRoom = DbMovieServiceRoom.getInstance()
     private var tvShowsRepository: TVShowsRepository = TVShowsRepository.getInstance()
     private var movieService: MovieService = MovieService.getInstance()
+    private var controller : MainController = MainController.getInstance()
 
     private var handler: Handler = Handler()
 
@@ -138,6 +140,11 @@ class SimilarActivity : BaseActivity() {
         super.onResume()
         movieService.addOnSimilarTVEntitiesGetListener(listener)
         tvShowsRepository.addOnSimilarTVEntitiesGetListener(listener)
+
+        if (controller.check(this)) {
+            recyclerview.adapter.notifyDataSetChanged()
+            controller.unCheck(this)
+        }
     }
 
     override fun onPause() {

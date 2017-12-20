@@ -51,6 +51,9 @@ public class MainController extends Application implements Observer, OnAchieveme
 
     private LiveData<Integer> favourite;
 
+    private int previousValue = 0;
+    private HashMap<Object, BooleanHolder> dbObservers = new HashMap<>();
+
     public static MainController getInstance() {
         return INSTANCE;
     }
@@ -77,8 +80,17 @@ public class MainController extends Application implements Observer, OnAchieveme
         });
         movieService.tryToGetSession();
         TVShowsRepository.getInstance().tryToGetTVShows();
+        //TODO add map that will show what activities need to be updated
+        //TODO add normal system of updaters
         favourite = database.movieDao().loadAllFavouriteMovies();
         favourite.observeForever(integer -> {
+            if (integer != previousValue) {
+                for (BooleanHolder b :
+                        dbObservers.values()) {
+                    b.aBoolean = Boolean.TRUE;
+                }
+                previousValue = integer;
+            }
             Log.e("Changed", integer.toString());
         });
     }
@@ -119,10 +131,6 @@ public class MainController extends Application implements Observer, OnAchieveme
     public void requestMore() {
         moviesRepository.tryToGetAllMovies();
     }
-
-   /* public SQLiteDatabase getDatabase() {
-        return database;
-    }*/
 
     public AppRoomDatabase getDatabase() {
         return database;
@@ -179,6 +187,26 @@ public class MainController extends Application implements Observer, OnAchieveme
         } catch (Exception e) {
             Log.e("Smth went wrong", e.getMessage());
         }
+    }
 
+    public void addDbObserver(Object observer) {
+        dbObservers.put(observer, new BooleanHolder());
+    }
+
+    public void removeDbObserver(Object observer) {
+        dbObservers.remove(observer);
+    }
+
+    public boolean check(Object observer) {
+        return dbObservers.get(observer).aBoolean;
+    }
+
+    public void unCheck(Object observer) {
+        dbObservers.get(observer).aBoolean = false;
+    }
+
+
+    private class BooleanHolder {
+        boolean aBoolean;
     }
 }

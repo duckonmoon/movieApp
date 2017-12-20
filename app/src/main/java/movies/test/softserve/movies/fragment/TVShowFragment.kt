@@ -11,9 +11,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.activity_search.*
 import movies.test.softserve.movies.R
 import movies.test.softserve.movies.adapter.MovieListWrapper
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter
+import movies.test.softserve.movies.controller.MainController
 import movies.test.softserve.movies.entity.TVEntity
 import movies.test.softserve.movies.event.OnListOfTVShowsGetListener
 import movies.test.softserve.movies.repository.TVShowsRepository
@@ -21,12 +23,14 @@ import movies.test.softserve.movies.service.DBHelperService
 import movies.test.softserve.movies.service.DbMovieServiceRoom
 import movies.test.softserve.movies.util.StartActivityClass
 
-class TVShowFragment : Fragment() {
+class TVShowFragment : BaseFragment() {
 
     private lateinit var mRecyclerView: RecyclerView
     private var repository: TVShowsRepository = TVShowsRepository.getInstance()
     private var dbService: DbMovieServiceRoom = DbMovieServiceRoom.getInstance()
     private var helperService: DBHelperService = DBHelperService()
+    private val controller = MainController.getInstance()
+
     private var handler: Handler = Handler()
     private var listener: OnListOfTVShowsGetListener = object : OnListOfTVShowsGetListener {
         override fun onListOfTVShowsGet() {
@@ -80,8 +84,12 @@ class TVShowFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        mRecyclerView.adapter.notifyDataSetChanged()
         repository.addOnListOfTVShowsGetListener(listener)
+
+        if (controller.check(this)) {
+            recyclerview.adapter.notifyDataSetChanged()
+            controller.unCheck(this)
+        }
     }
 
     override fun onPause() {

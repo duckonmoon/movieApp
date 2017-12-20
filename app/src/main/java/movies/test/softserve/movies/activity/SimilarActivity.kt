@@ -53,6 +53,8 @@ class SimilarActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
         movie = intent.extras[MOVIE] as TVEntity
         transfer = Transfer()
         val isTablet = resources.getBoolean(R.bool.isTablet)
@@ -164,8 +166,14 @@ class SimilarActivity : BaseActivity() {
                 .show()
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     private class Transfer : Serializable {
         var page: Int = 1
         var list: ArrayList<TVEntity> = ArrayList()
     }
+
 }

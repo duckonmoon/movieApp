@@ -52,6 +52,8 @@ class VideoActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
         frame = findViewById(R.id.frame)
         recycler = findViewById(R.id.recycler)
 
@@ -100,5 +102,10 @@ class VideoActivity : BaseActivity() {
             return
         }
         super.onBackPressed()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

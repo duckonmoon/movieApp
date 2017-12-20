@@ -65,6 +65,8 @@ public class SearchActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         handler = new Handler();
         try {
             setTitle(getIntent().getStringExtra(NAME));
@@ -170,5 +172,11 @@ public class SearchActivity extends BaseActivity {
                     }
                 }).create()
                 .show();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

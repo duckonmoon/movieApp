@@ -24,6 +24,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import java.util.List;
+
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.adapter.MovieListWrapper;
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
@@ -188,7 +190,17 @@ public class MoviesListActivity extends BaseActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+            if (fragmentList.size() > 0){
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                for (Fragment fragment
+                        : fragmentList){
+                    transaction.remove(fragment);
+                }
+                transaction.commit();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 

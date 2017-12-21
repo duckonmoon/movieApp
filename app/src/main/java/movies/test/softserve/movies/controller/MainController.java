@@ -31,10 +31,6 @@ import movies.test.softserve.movies.service.AppRoomDatabase;
 import movies.test.softserve.movies.service.MovieService;
 import movies.test.softserve.movies.util.AchievementService;
 
-/**
- * Created by rkrit on 25.10.17.
- */
-
 public class MainController extends Application implements Observer, OnAchievementDoneListener {
     private static MainController INSTANCE;
 
@@ -80,8 +76,8 @@ public class MainController extends Application implements Observer, OnAchieveme
         });
         movieService.tryToGetSession();
         TVShowsRepository.getInstance().tryToGetTVShows();
-        //TODO add map that will show what activities need to be updated
-        //TODO add normal system of updaters
+
+
         favourite = database.movieDao().loadAllFavouriteMovies();
         favourite.observeForever(integer -> {
             if (integer != previousValue) {
@@ -148,22 +144,13 @@ public class MainController extends Application implements Observer, OnAchieveme
         this.genres = genres;
     }
 
-    public Activity getCurrentContext() {
-        return currentContext;
-    }
-
     public void setCurrentContext(Activity currentContext) {
         this.currentContext = currentContext;
     }
 
     @Override
     public void onAchievementDone(final Achievement achievement) {
-        currentContext.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                show(achievement);
-            }
-        });
+        currentContext.runOnUiThread(() -> show(achievement));
 
     }
 

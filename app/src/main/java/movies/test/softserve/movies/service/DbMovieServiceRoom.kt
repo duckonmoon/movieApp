@@ -38,8 +38,14 @@ class DbMovieServiceRoom private constructor() {
     /**need to be asynchronous*/
     fun insertFavouriteTVEntity(tvEntity: TVEntity) {
         val movie: Movie = Mapper.mapFromTVEntityToDbMovie(tvEntity, Mapper.FAVOURITE)
-        movieDao.insertMovie(movie)
-        genreDao.insertGenres(Mapper.mapFromIntegersToDbGenres(tvEntity.genreIds, tvEntity))
+        database.beginTransaction()
+        try {
+            movieDao.insertMovie(movie)
+            genreDao.insertGenres(Mapper.mapFromIntegersToDbGenres(tvEntity.genreIds, tvEntity))
+            database.setTransactionSuccessful()
+        } finally {
+            database.endTransaction()
+        }
         AchievementService.getInstance().checkWhatAchievementsIsDone()
         ratingService.change(tvEntity.voteAverage.toFloat(), RatingService.ADD)
     }
@@ -47,8 +53,14 @@ class DbMovieServiceRoom private constructor() {
     /**need to be asynchronous*/
     fun insertTVEntity(tvEntity: TVEntity) {
         val movie: Movie = Mapper.mapFromTVEntityToDbMovie(tvEntity, Mapper.NOT_FAVOURITE)
-        movieDao.insertMovie(movie)
-        genreDao.insertGenres(Mapper.mapFromIntegersToDbGenres(tvEntity.genreIds, tvEntity))
+        database.beginTransaction()
+        try {
+            movieDao.insertMovie(movie)
+            genreDao.insertGenres(Mapper.mapFromIntegersToDbGenres(tvEntity.genreIds, tvEntity))
+            database.setTransactionSuccessful()
+        } finally {
+            database.endTransaction()
+        }
         AchievementService.getInstance().checkWhatAchievementsIsDone()
         ratingService.change(tvEntity.voteAverage.toFloat(), RatingService.ADD)
     }

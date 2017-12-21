@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 
 import movies.test.softserve.movies.LoginActivity;
+import movies.test.softserve.movies.RegistrationActivity;
 import movies.test.softserve.movies.activity.MovieDetailsActivity;
 import movies.test.softserve.movies.activity.MoviesListActivity;
 import movies.test.softserve.movies.activity.SearchActivity;
@@ -79,5 +80,9 @@ public class StartActivityClass {
         MainController.getInstance().signOut();
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(intent);
+    }
+
+    public static void startRegistrationActivity(Activity activity){
+        activity.startActivity(new Intent(activity, RegistrationActivity.class));
     }
 }

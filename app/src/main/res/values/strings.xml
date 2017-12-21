@@ -49,7 +49,6 @@
     <string name="similar">Similar</string>
 
 
-
     <string name="action_sign_in_short">Register</string>
     <string name="email">Email</string>
     <string name="minimum_password">Password too short, enter minimum 6 characters!</string>
@@ -79,4 +78,5 @@
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
     <string name="sign_out">Sign out</string>
+    <string name="repeat_password">Repeat password</string>
 </resources>

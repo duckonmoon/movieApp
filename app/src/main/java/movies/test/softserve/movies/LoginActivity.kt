@@ -1,6 +1,7 @@
 package movies.test.softserve.movies
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
@@ -24,7 +25,7 @@ class LoginActivity : AppCompatActivity() {
         mAuth = controller.getmAuth()
         mUser = controller.user
 
-        if (mUser != null) {
+        if (mUser != null && mUser!!.isEmailVerified) {
             StartActivityClass.startMoviesListActivity(this)
         }
         btn_login.setOnClickListener({
@@ -38,9 +39,13 @@ class LoginActivity : AppCompatActivity() {
                         .addOnCompleteListener(this@LoginActivity) { task ->
                             if (task.isSuccessful) {
                                 mUser = mAuth.currentUser
-                                controller.user = mUser
-                                Toast.makeText(this@LoginActivity, "Success", Toast.LENGTH_LONG).show()
-                                StartActivityClass.startMoviesListActivity(this)
+                                if (mUser!!.isEmailVerified) {
+
+                                    Toast.makeText(this@LoginActivity, "Success", Toast.LENGTH_LONG).show()
+                                    StartActivityClass.startMoviesListActivity(this)
+                                } else {
+                                    Snackbar.make(container,"Pls verify your acccount on " + mUser!!.email,Snackbar.LENGTH_LONG).show();
+                                }
                             } else {
                                 Toast.makeText(this@LoginActivity, "Fail", Toast.LENGTH_LONG).show()
                             }
@@ -54,6 +59,10 @@ class LoginActivity : AppCompatActivity() {
                 spinner.visibility = View.GONE
                 btn_login.visibility = View.VISIBLE
             }
+        })
+
+        btn_signup.setOnClickListener({
+            StartActivityClass.startRegistrationActivity(this@LoginActivity)
         })
     }
 }

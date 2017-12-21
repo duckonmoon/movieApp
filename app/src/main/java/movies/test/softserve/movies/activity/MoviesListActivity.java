@@ -272,6 +272,8 @@ public class MoviesListActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.btn_sign_out:
+                StartActivityClass.startActivitySignOut(this);
             default:
                 return super.onOptionsItemSelected(item);
         }

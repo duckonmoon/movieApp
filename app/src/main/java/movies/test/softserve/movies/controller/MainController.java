@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +48,10 @@ public class MainController extends Application implements Observer, OnAchieveme
     private Activity currentContext;
     private AppRoomDatabase database;
 
+
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
+
     private LiveData<Integer> favourite;
 
     private int previousValue = 0;
@@ -60,6 +67,7 @@ public class MainController extends Application implements Observer, OnAchieveme
         database = Room.databaseBuilder(getApplicationContext(), AppRoomDatabase.class,
                 "movies").build();
 
+        mAuth = FirebaseAuth.getInstance();
         INSTANCE = this;
         movies = new ArrayList<>();
         page = 1;
@@ -89,6 +97,8 @@ public class MainController extends Application implements Observer, OnAchieveme
             }
             Log.e("Changed", integer.toString());
         });
+
+        user = mAuth.getCurrentUser();
     }
 
     @Override
@@ -192,6 +202,26 @@ public class MainController extends Application implements Observer, OnAchieveme
         dbObservers.get(observer).aBoolean = false;
     }
 
+    public FirebaseAuth getmAuth() {
+        return mAuth;
+    }
+
+    public void setmAuth(FirebaseAuth mAuth) {
+        this.mAuth = mAuth;
+    }
+
+    public FirebaseUser getUser() {
+        return user;
+    }
+
+    public void setUser(FirebaseUser user) {
+        this.user = user;
+    }
+
+    public void signOut() {
+        mAuth.signOut();
+        user = mAuth.getCurrentUser();
+    }
 
     private class BooleanHolder {
         boolean aBoolean;

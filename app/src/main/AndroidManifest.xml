@@ -12,13 +12,7 @@
         android:roundIcon="@mipmap/ic_video_of_my_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MoviesListActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activity.MoviesListActivity"/>
         <activity
             android:name=".activity.MovieDetailsActivity"
             android:label="@string/title_activity_movie_details"
@@ -47,6 +41,13 @@
         <activity
             android:name=".activity.SimilarActivity"
             android:theme="@style/SearchTheme" />
+        <activity android:name=".LoginActivity" android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

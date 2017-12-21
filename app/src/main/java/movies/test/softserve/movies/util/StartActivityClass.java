@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 
+import movies.test.softserve.movies.LoginActivity;
 import movies.test.softserve.movies.activity.MovieDetailsActivity;
+import movies.test.softserve.movies.activity.MoviesListActivity;
 import movies.test.softserve.movies.activity.SearchActivity;
 import movies.test.softserve.movies.activity.SimilarActivity;
 import movies.test.softserve.movies.activity.TVShowDetailsActivity;
 import movies.test.softserve.movies.activity.VideoActivity;
+import movies.test.softserve.movies.controller.MainController;
 import movies.test.softserve.movies.entity.Genre;
 import movies.test.softserve.movies.entity.ProductionCompany;
 import movies.test.softserve.movies.entity.TVEntity;
@@ -64,6 +67,17 @@ public class StartActivityClass {
     public static void startSimilarActivity(Activity activity, TVEntity tvEntity) {
         Intent intent = new Intent(activity, SimilarActivity.class);
         intent.putExtra(SimilarActivity.Companion.getMOVIE(), tvEntity);
+        activity.startActivity(intent);
+    }
+
+    public static void startMoviesListActivity(Activity activity){
+        activity.startActivity(new Intent(activity, MoviesListActivity.class));
+    }
+
+    public static void startActivitySignOut(Activity activity){
+        Intent intent = new Intent(activity.getApplicationContext(), LoginActivity.class);
+        MainController.getInstance().signOut();
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(intent);
     }
 }

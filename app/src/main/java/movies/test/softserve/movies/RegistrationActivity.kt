@@ -2,9 +2,9 @@ package movies.test.softserve.movies
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_registration.*
 import movies.test.softserve.movies.controller.MainController
@@ -34,18 +34,20 @@ class RegistrationActivity : AppCompatActivity() {
                                 if (task.isSuccessful) {
                                     controller.user = mAuth.currentUser
                                     controller.user.sendEmailVerification()
-                                    Toast.makeText(applicationContext, "Verification email was sent to " + mAuth.currentUser!!.email, Toast.LENGTH_LONG).show()
-                                    onBackPressed()
+                                    AlertDialog.Builder(this)
+                                            .setTitle(R.string.info)
+                                            .setMessage(getString(R.string.sent_to_email,mAuth.currentUser!!.email))
+                                            .show()
                                 } else {
-                                    Snackbar.make(container, "Fail", Snackbar.LENGTH_LONG).show()
+                                    Snackbar.make(container, R.string.fail, Snackbar.LENGTH_LONG).show()
                                 }
                             }
                 } catch (e: Exception) {
-                    Snackbar.make(container, "Fail", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(container,  R.string.fail, Snackbar.LENGTH_LONG).show()
                 }
 
             } else {
-                Snackbar.make(container, "Fail", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(container,  R.string.fail, Snackbar.LENGTH_LONG).show()
             }
 
 

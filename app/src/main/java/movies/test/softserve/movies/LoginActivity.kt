@@ -40,21 +40,19 @@ class LoginActivity : AppCompatActivity() {
                             if (task.isSuccessful) {
                                 mUser = mAuth.currentUser
                                 if (mUser!!.isEmailVerified) {
-
-                                    Toast.makeText(this@LoginActivity, "Success", Toast.LENGTH_LONG).show()
                                     StartActivityClass.startMoviesListActivity(this)
                                 } else {
-                                    Snackbar.make(container,"Pls verify your acccount on " + mUser!!.email,Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(container,getString(R.string.verification, mUser!!.email),Snackbar.LENGTH_LONG).show()
                                 }
                             } else {
-                                Toast.makeText(this@LoginActivity, "Fail", Toast.LENGTH_LONG).show()
+                                Toast.makeText(this@LoginActivity, R.string.fail, Toast.LENGTH_LONG).show()
                             }
 
                             spinner.visibility = View.GONE
                             btn_login.visibility = View.VISIBLE
                         }
             } catch (e: Exception) {
-                Toast.makeText(this@LoginActivity, "Fail", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@LoginActivity, R.string.fail, Toast.LENGTH_LONG).show()
 
                 spinner.visibility = View.GONE
                 btn_login.visibility = View.VISIBLE

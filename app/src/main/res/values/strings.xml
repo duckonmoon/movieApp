@@ -79,4 +79,8 @@
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
     <string name="sign_out">Sign out</string>
     <string name="repeat_password">Repeat password</string>
+    <string name="fail">Fail</string>
+    <string name="info">Info</string>
+    <string name="sent_to_email">Verification email was sent to %s</string>
+    <string name="verification">Pls verify your account on %s</string>
 </resources>

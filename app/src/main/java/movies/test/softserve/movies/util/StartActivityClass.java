@@ -72,7 +72,10 @@ public class StartActivityClass {
     }
 
     public static void startMoviesListActivity(Activity activity){
-        activity.startActivity(new Intent(activity, MoviesListActivity.class));
+        Intent intent = new Intent(activity, MoviesListActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        activity.startActivity(intent);
+        activity.finish();
     }
 
     public static void startActivitySignOut(Activity activity){

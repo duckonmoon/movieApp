@@ -37,4 +37,27 @@
     <string name="trailers">Трейлери</string>
     <string name="it_s_empty">Тут порожньо</string>
     <string name="similar">Схожі</string>
+    <string name="repeat_password">Повторіть пароль</string>
+    <string name="sign_out">Вийти</string>
+    <string name="lbl_forgot_password">Забули пароль?</string>
+    <string name="btn_sign_out">Вийти</string>
+    <string name="btn_remove">Забрати</string>
+    <string name="btn_send">Надіслати</string>
+    <string name="btn_change">Змінити</string>
+    <string name="hint_new_email">Новий email</string>
+    <string name="btn_reset_password">скинути пароль</string>
+    <string name="btn_forgot_password">забули пароль?</string>
+    <string name="btn_link_to_login">Уже зареєстровані. Заходьте!</string>
+    <string name="btn_link_to_register">Не зареєстровані? Вам сюди</string>
+    <string name="btn_login">Ввійти</string>
+    <string name="hint_name">Повне ім\'я</string>
+    <string name="hint_password">Пароль</string>
+    <string name="hint_email">Пошта</string>
+    <string name="title_activity_login">Ввійти</string>
+    <string name="new_pass">Новий пароль</string>
+    <string name="fail">Помилка</string>
+    <string name="info">Важливо</string>
+    <string name="verification">Будь ласка, підтвердіть свою пошту %s</string>
+    <string name="sent_to_email">Верифікаційний лист був відправлений на %s</string>
+    <string name="action_sign_in_short">Зареєструватись</string>
 </resources>

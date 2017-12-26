@@ -31,7 +31,7 @@ class SimilarActivity : BaseActivity() {
     private var dbService: DbMovieServiceRoom = DbMovieServiceRoom.getInstance()
     private var tvShowsRepository: TVShowsRepository = TVShowsRepository.getInstance()
     private var movieService: MovieService = MovieService.getInstance()
-    private var controller : MainController = MainController.getInstance()
+    private var controller: MainController = MainController.getInstance()
 
     private var handler: Handler = Handler()
 

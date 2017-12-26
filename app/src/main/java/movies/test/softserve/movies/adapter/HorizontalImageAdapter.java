@@ -47,7 +47,7 @@ public class HorizontalImageAdapter extends RecyclerView.Adapter<HorizontalImage
     public int getItemCount() {
         return items.size();
     }
-    
+
     @FunctionalInterface
     public interface OnClickListener {
         void onClick(ImageView imageView);

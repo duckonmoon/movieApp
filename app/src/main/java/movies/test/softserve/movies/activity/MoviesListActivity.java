@@ -194,10 +194,10 @@ public class MoviesListActivity extends BaseActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
-            if (fragmentList.size() > 0){
+            if (fragmentList.size() > 0) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 for (Fragment fragment
-                        : fragmentList){
+                        : fragmentList) {
                     transaction.remove(fragment);
                 }
                 transaction.commit();

@@ -42,7 +42,7 @@
             android:name=".activity.SimilarActivity"
             android:theme="@style/SearchTheme" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,8 +50,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegistrationActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.RegistrationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PasswordRestoreActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
     </application>
 
 </manifest>

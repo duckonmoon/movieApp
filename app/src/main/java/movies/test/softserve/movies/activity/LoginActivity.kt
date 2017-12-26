@@ -1,4 +1,4 @@
-package movies.test.softserve.movies
+package movies.test.softserve.movies.activity
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_login.*
+import movies.test.softserve.movies.R
 import movies.test.softserve.movies.controller.MainController
 import movies.test.softserve.movies.util.StartActivityClass
 
@@ -25,6 +26,8 @@ class LoginActivity : AppCompatActivity() {
         mAuth = controller.getmAuth()
         mUser = controller.user
 
+        btn_reset_password.setOnClickListener { StartActivityClass.passwordRestoreActivityStart(this) }
+
         if (mUser != null && mUser!!.isEmailVerified) {
             StartActivityClass.startMoviesListActivity(this)
         }
@@ -33,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
                 spinner.visibility = View.VISIBLE
                 btn_login.visibility = View.GONE
 
-                val emailString = email.text.toString()
+                val emailString = email.text.toString().trim()
                 val passwordString = password.text.toString()
                 mAuth.signInWithEmailAndPassword(emailString, passwordString)
                         .addOnCompleteListener(this@LoginActivity) { task ->
@@ -42,17 +45,17 @@ class LoginActivity : AppCompatActivity() {
                                 if (mUser!!.isEmailVerified) {
                                     StartActivityClass.startMoviesListActivity(this)
                                 } else {
-                                    Snackbar.make(container,getString(R.string.verification, mUser!!.email),Snackbar.LENGTH_LONG).show()
+                                    Snackbar.make(container, getString(R.string.verification, mUser!!.email), Snackbar.LENGTH_LONG).show()
                                 }
                             } else {
-                                Toast.makeText(this@LoginActivity, R.string.fail, Toast.LENGTH_LONG).show()
+                                Toast.makeText(this@LoginActivity, R.string.wrong_email_or_password, Toast.LENGTH_LONG).show()
                             }
 
                             spinner.visibility = View.GONE
                             btn_login.visibility = View.VISIBLE
                         }
             } catch (e: Exception) {
-                Toast.makeText(this@LoginActivity, R.string.fail, Toast.LENGTH_LONG).show()
+                Toast.makeText(this@LoginActivity, R.string.email_cant_be_empty, Toast.LENGTH_LONG).show()
 
                 spinner.visibility = View.GONE
                 btn_login.visibility = View.VISIBLE

@@ -56,7 +56,9 @@
     <string name="title_activity_login">Ввійти</string>
     <string name="new_pass">Новий пароль</string>
     <string name="fail">Помилка</string>
+    <string name="forgot_password_msg">Нам лише потрібно ваш Email Id, щоб надіслати інструкції по відновленню паролю</string>
     <string name="info">Важливо</string>
+    <string name="btn_back"><![CDATA[<< Назад]]></string>
     <string name="verification">Будь ласка, підтвердіть свою пошту %s</string>
     <string name="sent_to_email">Верифікаційний лист був відправлений на %s</string>
     <string name="action_sign_in_short">Зареєструватись</string>

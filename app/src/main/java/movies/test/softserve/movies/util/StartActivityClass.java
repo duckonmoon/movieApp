@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 
-import movies.test.softserve.movies.LoginActivity;
-import movies.test.softserve.movies.RegistrationActivity;
+import movies.test.softserve.movies.activity.LoginActivity;
+import movies.test.softserve.movies.activity.PasswordRestoreActivity;
+import movies.test.softserve.movies.activity.RegistrationActivity;
 import movies.test.softserve.movies.activity.MovieDetailsActivity;
 import movies.test.softserve.movies.activity.MoviesListActivity;
 import movies.test.softserve.movies.activity.SearchActivity;
@@ -71,21 +72,25 @@ public class StartActivityClass {
         activity.startActivity(intent);
     }
 
-    public static void startMoviesListActivity(Activity activity){
+    public static void startMoviesListActivity(Activity activity) {
         Intent intent = new Intent(activity, MoviesListActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(intent);
         activity.finish();
     }
 
-    public static void startActivitySignOut(Activity activity){
+    public static void startActivitySignOut(Activity activity) {
         Intent intent = new Intent(activity.getApplicationContext(), LoginActivity.class);
         MainController.getInstance().signOut();
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(intent);
     }
 
-    public static void startRegistrationActivity(Activity activity){
+    public static void startRegistrationActivity(Activity activity) {
         activity.startActivity(new Intent(activity, RegistrationActivity.class));
+    }
+
+    public static void passwordRestoreActivityStart(Activity activity) {
+        activity.startActivity(new Intent(activity, PasswordRestoreActivity.class));
     }
 }

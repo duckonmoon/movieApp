@@ -7,7 +7,7 @@ import movies.test.softserve.movies.controller.MainController
 /**
  * Created by root on 20.12.17.
  */
-abstract class BaseFragment : Fragment(){
+abstract class BaseFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MainController.getInstance().addDbObserver(this)

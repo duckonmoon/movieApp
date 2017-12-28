@@ -21,13 +21,24 @@ public interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovie(Movie... movies);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertMovie(List<Movie> movies);
+
     @Transaction
     @Query("Select * from movie where type = :type")
     List<MovieWithTheGenre> loadAllMovies(String type);
 
     @Transaction
+    @Query("Select * from movie")
+    List<MovieWithTheGenre> loadAllMovies();
+
+    @Transaction
     @Query("Select * from movie where type = :type and favourite != 0")
     List<MovieWithTheGenre> loadAllFavouriteMovies(String type);
+
+    @Transaction
+    @Query("Select * from movie where favourite != 0")
+    List<MovieWithTheGenre> loadAllFavouriteMoviess();
 
     @Query("Update movie set favourite = :favourite where id = :id")
     int updateFavorite(Integer id, Integer favourite);
@@ -46,6 +57,12 @@ public interface MovieDao {
 
     @Query("SELECT count(*) FROM movie , genre WHERE type = :type AND genre_id  = :id AND movie.id  = genre.movie_id")
     int getMoviesSizeWithGenre(String type, Integer id);
+
+    @Query("Select id from movie")
+    List<Integer> getAllId();
+
+    @Query("Select id from movie where favourite != 0")
+    List<Integer> getAllFavouriteId();
 
     @Query("Select count(*) from movie where favourite != 0")
     LiveData<Integer> loadAllFavouriteMovies();

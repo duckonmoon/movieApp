@@ -69,6 +69,7 @@ public class MoviesListActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
+        mainController.updateInfoFirebase();
         mRecyclerView = findViewById(R.id.recyclerview);
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
         if (isTablet) {

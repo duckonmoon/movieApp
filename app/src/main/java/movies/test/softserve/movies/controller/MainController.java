@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Room;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.api.client.util.DateTime;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -23,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +34,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import movies.test.softserve.movies.R;
+import movies.test.softserve.movies.db.entity.MovieFirebaseDTO;
 import movies.test.softserve.movies.db.entity.MovieWithTheGenre;
 import movies.test.softserve.movies.entity.Achievement;
 import movies.test.softserve.movies.entity.Genre;
@@ -47,6 +52,8 @@ import movies.test.softserve.movies.util.AchievementService;
 public class MainController extends Application implements Observer, OnAchievementDoneListener {
     private static MainController INSTANCE;
 
+    private static final String LAST_DATE_EDIT_SHARED_PREFERENCES = "LAST_DATE_EDIT";
+
     private List<TVEntity> movies;
     private List<Genre> genres = new ArrayList<>();
     private Integer page;
@@ -58,6 +65,7 @@ public class MainController extends Application implements Observer, OnAchieveme
     private Activity currentContext;
     private AppRoomDatabase database;
     private DatabaseReference databaseReference;
+    private SharedPreferences preferences;
 
 
     private FirebaseAuth mAuth;
@@ -111,7 +119,9 @@ public class MainController extends Application implements Observer, OnAchieveme
 
         user = mAuth.getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
-
+        preferences = getSharedPreferences(LAST_DATE_EDIT_SHARED_PREFERENCES,
+                Context.MODE_PRIVATE);
+        getLastUpdates();
     }
 
     @Override
@@ -238,26 +248,37 @@ public class MainController extends Application implements Observer, OnAchieveme
 
     public void updateInfoFirebase(){
         new Thread(()-> {
-            databaseReference.child("allMovie").setValue(database.movieDao().loadAllMovies());
-            databaseReference.child("favouriteMovie").setValue(database.movieDao().loadAllFavouriteMoviess());
-            ValueEventListener l = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
-                    List<MovieWithTheGenre> list = new ArrayList<>();
-                    while (iterator.hasNext()){
-                        list.add(iterator.next().getValue(MovieWithTheGenre.class));
-                    }
-                    databaseReference.removeEventListener(this);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            };
-            databaseReference.child("allMovie").addValueEventListener(l);
+            databaseReference.child("allMovie").setValue(database.movieDao().getAllId());
+            databaseReference.child("favouriteMovie").setValue(database.movieDao().getAllFavouriteId());
+            Long last_change = Calendar.getInstance().getTime().getTime();
+            databaseReference.child("last_date_edit").setValue(last_change);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong(LAST_DATE_EDIT_SHARED_PREFERENCES,last_change);
+            editor.apply();
         }).start();
+    }
+
+    public void getLastUpdates(){
+        databaseReference.child("last_date_edit").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Long lastDayEditRemote;
+                Long lastDayEditHere;
+                try {
+                    lastDayEditRemote = dataSnapshot.getValue(Long.class);
+                    lastDayEditHere = preferences.getLong(LAST_DATE_EDIT_SHARED_PREFERENCES ,0);
+                    databaseReference.child("last_date_edit").removeEventListener(this);
+                } finally {
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private class BooleanHolder {

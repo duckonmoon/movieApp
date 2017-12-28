@@ -25,7 +25,8 @@ class DbMovieServiceRoom private constructor() {
 
     private var ratingService: RatingService
 
-    private var database: AppRoomDatabase = MainController.getInstance().database
+    private var controller = MainController.getInstance()
+    private var database: AppRoomDatabase = controller.database
     private var movieDao: MovieDao
     private var genreDao: GenreDao
 
@@ -48,6 +49,7 @@ class DbMovieServiceRoom private constructor() {
         }
         AchievementService.getInstance().checkWhatAchievementsIsDone()
         ratingService.change(tvEntity.voteAverage.toFloat(), RatingService.ADD)
+        controller.updateInfoFirebase()
     }
 
     /**need to be asynchronous*/
@@ -63,12 +65,14 @@ class DbMovieServiceRoom private constructor() {
         }
         AchievementService.getInstance().checkWhatAchievementsIsDone()
         ratingService.change(tvEntity.voteAverage.toFloat(), RatingService.ADD)
+        controller.updateInfoFirebase()
     }
 
     /**need to be asynchronous*/
     fun deleteFromDb(tvEntity: TVEntity) {
         movieDao.deleteMovie(tvEntity.id)
         ratingService.change(tvEntity.voteAverage.toFloat(), RatingService.SUB)
+        controller.updateInfoFirebase()
     }
 
     /**need to be asynchronous*/
@@ -94,11 +98,14 @@ class DbMovieServiceRoom private constructor() {
     /**need to be asynchronous*/
     fun setFavourite(tvEntity: TVEntity) {
         movieDao.updateFavorite(tvEntity.id, 1)
+        controller.updateInfoFirebase()
     }
 
     /**need to be asynchronous*/
     fun cancelFavourite(tvEntity: TVEntity) {
         movieDao.updateFavorite(tvEntity.id, 0)
+        controller.updateInfoFirebase()
+
     }
 
 

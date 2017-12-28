@@ -69,7 +69,7 @@ public class MoviesListActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
-        mainController.updateInfoFirebase();
+        //TODO mainController.updateInfoFirebase();
         mRecyclerView = findViewById(R.id.recyclerview);
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
         if (isTablet) {
@@ -281,11 +281,15 @@ public class MoviesListActivity extends BaseActivity
     }
 
     private void navigationMenuStart() {
-        View navigationView = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
-        ProgressBar progressBar = navigationView.findViewById(R.id.rating_service_rating);
-        RatingView ratingView = navigationView.findViewById(R.id.rating_service_image);
-        ratingView.setLevel(ratingService.getLvl().ordinal() + 1);
-        progressBar.setProgress(ratingService.getProgress().intValue());
+        runOnUiThread(() -> {
+                    View navigationView = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
+                    ProgressBar progressBar = navigationView.findViewById(R.id.rating_service_rating);
+                    RatingView ratingView = navigationView.findViewById(R.id.rating_service_image);
+                    ratingView.setLevel(ratingService.getLvl().ordinal() + 1);
+                    progressBar.setProgress(ratingService.getProgress().intValue());
+                }
+        );
+
     }
 }
 

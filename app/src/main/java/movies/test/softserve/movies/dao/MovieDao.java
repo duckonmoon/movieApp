@@ -10,6 +10,7 @@ import android.arch.persistence.room.Transaction;
 import java.util.List;
 
 import movies.test.softserve.movies.db.entity.Movie;
+import movies.test.softserve.movies.db.entity.MovieFirebaseDTO;
 import movies.test.softserve.movies.db.entity.MovieWithTheGenre;
 
 /**
@@ -58,11 +59,11 @@ public interface MovieDao {
     @Query("SELECT count(*) FROM movie , genre WHERE type = :type AND genre_id  = :id AND movie.id  = genre.movie_id")
     int getMoviesSizeWithGenre(String type, Integer id);
 
-    @Query("Select id from movie")
-    List<Integer> getAllId();
+    @Query("Select id,type from movie")
+    List<MovieFirebaseDTO> getAllId();
 
-    @Query("Select id from movie where favourite != 0")
-    List<Integer> getAllFavouriteId();
+    @Query("Select id,type from movie where favourite != 0")
+    List<MovieFirebaseDTO> getAllFavouriteId();
 
     @Query("Select count(*) from movie where favourite != 0")
     LiveData<Integer> loadAllFavouriteMovies();

@@ -363,7 +363,7 @@ public class MainController extends Application implements Observer, OnAchieveme
                         tvShowsRepository.trytoGetFullTVShow(movie);
                     }
                 }
-                databaseReference.removeEventListener(this);
+                databaseReference.child("allMovie").removeEventListener(this);
             }
 
             @Override

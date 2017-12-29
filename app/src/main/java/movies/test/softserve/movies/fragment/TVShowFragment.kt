@@ -86,7 +86,7 @@ class TVShowFragment : BaseFragment() {
         repository.addOnListOfTVShowsGetListener(listener)
 
         if (controller.check(this)) {
-            recyclerview.adapter.notifyDataSetChanged()
+            mRecyclerView.adapter.notifyDataSetChanged()
             controller.unCheck(this)
         }
     }

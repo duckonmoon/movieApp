@@ -1,5 +1,6 @@
 package movies.test.softserve.movies.repository;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -11,6 +12,7 @@ import java.util.Locale;
 
 import movies.test.softserve.movies.constans.Constants;
 import movies.test.softserve.movies.controller.MainController;
+import movies.test.softserve.movies.db.entity.MovieFirebaseDTO;
 import movies.test.softserve.movies.entity.Code;
 import movies.test.softserve.movies.entity.FullTVShow;
 import movies.test.softserve.movies.entity.GuestSession;
@@ -18,7 +20,9 @@ import movies.test.softserve.movies.entity.Rating;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.entity.TVPage;
 import movies.test.softserve.movies.entity.VideoContainer;
+import movies.test.softserve.movies.event.OnFullMovieInformationGet;
 import movies.test.softserve.movies.event.OnFullTVShowGetListener;
+import movies.test.softserve.movies.event.OnFullTVShowInformationGetListener;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnListOfTVShowsGetListener;
 import movies.test.softserve.movies.event.OnSimilarTVEntitiesGetListener;
@@ -48,6 +52,7 @@ public class TVShowsRepository {
     private List<OnFullTVShowGetListener> onFullTVShowGetListeners;
     private List<OnInfoUpdatedListener> onInfoUpdatedList;
     private List<OnSimilarTVEntitiesGetListener> onSimilarTVEntitiesGetListeners;
+    private List<OnFullTVShowInformationGetListener> onFullTVShowInformationGetListeners;
 
 
     private TVShowsRepository() {
@@ -59,6 +64,7 @@ public class TVShowsRepository {
 
         tvShows = new ArrayList<>();
 
+        onFullTVShowInformationGetListeners = new ArrayList<>();
         listOfTVShowsGetListeners = new ArrayList<>();
         onFullTVShowGetListeners = new ArrayList<>();
         onInfoUpdatedList = new ArrayList<>();
@@ -109,6 +115,26 @@ public class TVShowsRepository {
                     for (OnFullTVShowGetListener listener :
                             onFullTVShowGetListeners) {
                         listener.onFullTVShowGet(response.body());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FullTVShow> call, Throwable t) {
+                Log.e("Smth went wrong", t.getMessage());
+            }
+        });
+    }
+
+    public void trytoGetFullTVShow(MovieFirebaseDTO movieFirebaseDTO) {
+        Call<FullTVShow> call = service.getTVShow(movieFirebaseDTO.getId(), Constants.API_KEY);
+        call.enqueue(new Callback<FullTVShow>() {
+            @Override
+            public void onResponse(Call<FullTVShow> call, Response<FullTVShow> response) {
+                if (response.body() != null) {
+                    for (OnFullTVShowInformationGetListener listener :
+                            onFullTVShowInformationGetListeners) {
+                        listener.onFullTVShowGet(response.body(),movieFirebaseDTO);
                     }
                 }
             }
@@ -205,6 +231,14 @@ public class TVShowsRepository {
 
     public void removeOnFullTVShowGetListeners(OnFullTVShowGetListener listener) {
         onFullTVShowGetListeners.remove(listener);
+    }
+
+    public void addOnFullTVShowGetListeners(OnFullTVShowInformationGetListener listener) {
+        onFullTVShowInformationGetListeners.add(listener);
+    }
+
+    public void removeOnFullTVShowGetListeners(OnFullTVShowInformationGetListener listener) {
+        onFullTVShowInformationGetListeners.remove(listener);
     }
 
     public void addOnInfoUpdatedListener(@NonNull OnInfoUpdatedListener listener) {

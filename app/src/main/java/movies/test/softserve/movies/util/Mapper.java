@@ -6,7 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import movies.test.softserve.movies.db.entity.Genre;
+import movies.test.softserve.movies.db.entity.MovieFirebaseDTO;
 import movies.test.softserve.movies.db.entity.MovieWithTheGenre;
+import movies.test.softserve.movies.entity.FullMovie;
+import movies.test.softserve.movies.entity.FullTVShow;
 import movies.test.softserve.movies.entity.Movie;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.entity.TVShow;
@@ -115,5 +118,48 @@ public final class Mapper {
             genreList.add(genre.getGenreId());
         }
         return genreList;
+    }
+
+    public static List<Genre> mapFromGenresToGenres(List<movies.test.softserve.movies.entity.Genre> genres, MovieFirebaseDTO movieDTO) {
+        List<Genre> genreList = new ArrayList<>();
+        for (movies.test.softserve.movies.entity.Genre genre :
+                genres) {
+            Genre dbGenre = new Genre();
+            dbGenre.setGenreId(genre.getId());
+            dbGenre.setMovieId(movieDTO.getId());
+            genreList.add(dbGenre);
+        }
+        return genreList;
+    }
+
+    public static movies.test.softserve.movies.db.entity.Movie mapFrom2EntitytoDbMovie(
+            FullMovie movie, MovieFirebaseDTO movieFirebaseDTO) {
+        movies.test.softserve.movies.db.entity.Movie tventity = new movies.test.softserve.movies.db.entity.Movie();
+        tventity.setWatched(1);
+        tventity.setFavourite(movieFirebaseDTO.getFavourite());
+        tventity.setType(movieFirebaseDTO.getType());
+        tventity.setId(movieFirebaseDTO.getId());
+        tventity.setTitle(movie.getTitle());
+        tventity.setOverview(movie.getOverview());
+        tventity.setImage(movie.getPosterPath());
+        tventity.setVoteCount(movie.getVoteCount());
+        tventity.setVoteAverage(movie.getVoteAverage());
+        tventity.setReleaseDate(movie.getReleaseDate());
+        return tventity;
+    }
+
+    public static movies.test.softserve.movies.db.entity.Movie mapFrom2EntitytoDbMovie(
+            FullTVShow movie, MovieFirebaseDTO movieFirebaseDTO) {
+        movies.test.softserve.movies.db.entity.Movie tventity = new movies.test.softserve.movies.db.entity.Movie();
+        tventity.setWatched(1);
+        tventity.setFavourite(movieFirebaseDTO.getFavourite());
+        tventity.setType(movieFirebaseDTO.getType());
+        tventity.setId(movieFirebaseDTO.getId());
+        tventity.setTitle(movie.getName());
+        tventity.setOverview(movie.getOverview());
+        tventity.setImage(movie.getPosterPath());
+        tventity.setVoteCount(movie.getVoteCount());
+        tventity.setVoteAverage(movie.getVoteAverage());
+        return tventity;
     }
 }

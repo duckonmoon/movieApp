@@ -59,11 +59,8 @@ public interface MovieDao {
     @Query("SELECT count(*) FROM movie , genre WHERE type = :type AND genre_id  = :id AND movie.id  = genre.movie_id")
     int getMoviesSizeWithGenre(String type, Integer id);
 
-    @Query("Select id,type from movie")
+    @Query("Select id,type,favourite from movie")
     List<MovieFirebaseDTO> getAllId();
-
-    @Query("Select id,type from movie where favourite != 0")
-    List<MovieFirebaseDTO> getAllFavouriteId();
 
     @Query("Select count(*) from movie where favourite != 0")
     LiveData<Integer> loadAllFavouriteMovies();

@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import movies.test.softserve.movies.constans.Constants;
 import movies.test.softserve.movies.controller.MainController;
+import movies.test.softserve.movies.db.entity.MovieFirebaseDTO;
 import movies.test.softserve.movies.entity.Code;
 import movies.test.softserve.movies.entity.FullMovie;
 import movies.test.softserve.movies.entity.GenresContainer;
@@ -19,6 +20,7 @@ import movies.test.softserve.movies.entity.Page;
 import movies.test.softserve.movies.entity.PosterContainer;
 import movies.test.softserve.movies.entity.Rating;
 import movies.test.softserve.movies.entity.VideoContainer;
+import movies.test.softserve.movies.event.OnFullMovieInformationGet;
 import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnListOfGenresGetListener;
 import movies.test.softserve.movies.event.OnListOfMoviesGetListener;
@@ -43,6 +45,7 @@ public class MovieService {
     private static MovieService INSTANCE;
     private MoviesService service;
     private List<OnMovieInformationGet> listOfListeners;
+    private List<OnFullMovieInformationGet> fullMovieInformationGetsListeners;
     private List<OnSessionGetListener> onSessionGetListenersList;
     private List<OnInfoUpdatedListener> onInfoUpdatedList;
     private List<OnListOfMoviesGetListener> onListOfMoviesGetListeners;
@@ -58,6 +61,7 @@ public class MovieService {
                 .build();
         service = retrofit.create(MoviesService.class);
         listOfListeners = new ArrayList<>();
+        fullMovieInformationGetsListeners = new ArrayList<>();
         onSessionGetListenersList = new ArrayList<>();
         onInfoUpdatedList = new ArrayList<>();
         onListOfMoviesGetListeners = new ArrayList<>();
@@ -88,6 +92,25 @@ public class MovieService {
                 for (OnMovieInformationGet listener :
                         listOfListeners) {
                     listener.onMovieGet(fullMovie);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<FullMovie> call, @NonNull Throwable t) {
+                Log.e("Smth went wrong", t.getMessage());
+            }
+        });
+    }
+
+    public synchronized void tryToGetMovie(Integer id, MovieFirebaseDTO movieFirebaseDTO) {
+        Call<FullMovie> call = service.getMovie(id, Constants.API_KEY, Locale.getDefault().getLanguage());
+        call.enqueue(new Callback<FullMovie>() {
+            @Override
+            public void onResponse(@NonNull Call<FullMovie> call, @NonNull Response<FullMovie> response) {
+                FullMovie fullMovie = response.body();
+                for (OnFullMovieInformationGet listener :
+                        fullMovieInformationGetsListeners) {
+                    listener.onMovieGet(fullMovie,movieFirebaseDTO);
                 }
             }
 
@@ -295,6 +318,14 @@ public class MovieService {
 
     public void removeListener(@NonNull OnMovieInformationGet listener) {
         listOfListeners.remove(listener);
+    }
+
+    public void addListener(@NonNull OnFullMovieInformationGet listener) {
+        fullMovieInformationGetsListeners.add(listener);
+    }
+
+    public void removeListener(@NonNull OnFullMovieInformationGet listener) {
+        fullMovieInformationGetsListeners.remove(listener);
     }
 
     public void addSessionListener(@NonNull OnSessionGetListener listener) {

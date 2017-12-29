@@ -7,6 +7,15 @@ package movies.test.softserve.movies.db.entity;
 public class MovieFirebaseDTO {
     private Integer id;
     private String type;
+    private Integer favourite;
+
+    public Integer getFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(Integer favourite) {
+        this.favourite = favourite;
+    }
 
     public Integer getId() {
         return id;

@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -118,10 +119,8 @@ public class MainController extends Application implements Observer, OnAchieveme
         });
 
         user = mAuth.getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
         preferences = getSharedPreferences(LAST_DATE_EDIT_SHARED_PREFERENCES,
                 Context.MODE_PRIVATE);
-        getLastUpdates();
     }
 
     @Override
@@ -259,6 +258,7 @@ public class MainController extends Application implements Observer, OnAchieveme
     }
 
     public void getLastUpdates(){
+        databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
         databaseReference.child("last_date_edit").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -267,9 +267,20 @@ public class MainController extends Application implements Observer, OnAchieveme
                 try {
                     lastDayEditRemote = dataSnapshot.getValue(Long.class);
                     lastDayEditHere = preferences.getLong(LAST_DATE_EDIT_SHARED_PREFERENCES ,0);
-                    databaseReference.child("last_date_edit").removeEventListener(this);
-                } finally {
+                    if (!Objects.equals(lastDayEditHere, lastDayEditRemote)){
+                        new Thread(()-> {
+                            database.genreDao().deleteEverything();
+                            database.movieDao().deleteEverything();
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putLong(LAST_DATE_EDIT_SHARED_PREFERENCES,lastDayEditRemote);
+                            editor.apply();
+                        }).start();
+                        Thread.sleep(2000);
 
+                    }
+                    databaseReference.child("last_date_edit").removeEventListener(this);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             }

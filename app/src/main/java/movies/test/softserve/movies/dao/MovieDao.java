@@ -67,4 +67,7 @@ public interface MovieDao {
 
     @Query("Select count(*) from movie where favourite != 0")
     LiveData<Integer> loadAllFavouriteMovies();
+
+    @Query("Delete from movie")
+    void deleteEverything();
 }

@@ -76,6 +76,7 @@ public class StartActivityClass {
         Intent intent = new Intent(activity, MoviesListActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(intent);
+        MainController.getInstance().getLastUpdates();
         activity.finish();
     }
 

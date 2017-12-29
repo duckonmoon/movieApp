@@ -43,6 +43,7 @@ class LoginActivity : AppCompatActivity() {
                             if (task.isSuccessful) {
                                 mUser = mAuth.currentUser
                                 if (mUser!!.isEmailVerified) {
+                                    controller.user = mUser
                                     StartActivityClass.startMoviesListActivity(this)
                                 } else {
                                     Snackbar.make(container, getString(R.string.verification, mUser!!.email), Snackbar.LENGTH_LONG).show()

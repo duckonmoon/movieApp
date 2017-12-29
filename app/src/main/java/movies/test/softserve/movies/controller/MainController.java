@@ -44,7 +44,6 @@ import movies.test.softserve.movies.event.InfoUpToDateListener;
 import movies.test.softserve.movies.event.OnAchievementDoneListener;
 import movies.test.softserve.movies.event.OnFullMovieInformationGet;
 import movies.test.softserve.movies.event.OnFullTVShowInformationGetListener;
-import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnSessionGetListener;
 import movies.test.softserve.movies.repository.MoviesRepository;
 import movies.test.softserve.movies.repository.TVShowsRepository;
@@ -81,8 +80,8 @@ public class MainController extends Application implements Observer, OnAchieveme
             Movie tvEntity = Mapper.mapFrom2EntitytoDbMovie(movie, movieDTO);
             new Thread(() -> {
                 database.movieDao().insertMovie(tvEntity);
-                database.genreDao().insertGenres(Mapper.mapFromGenresToGenres(movie.getGenres(),movieDTO));
-                RatingService.getInstance().change(movie.getVoteAverage().floatValue(),RatingService.ADD);
+                database.genreDao().insertGenres(Mapper.mapFromGenresToGenres(movie.getGenres(), movieDTO));
+                RatingService.getInstance().change(movie.getVoteAverage().floatValue(), RatingService.ADD);
 
             }).start();
 
@@ -97,7 +96,7 @@ public class MainController extends Application implements Observer, OnAchieveme
         public void onFullTVShowGet(FullTVShow fullTVShow, MovieFirebaseDTO movieDTO) {
             Movie tvEntity = Mapper.mapFrom2EntitytoDbMovie(fullTVShow, movieDTO);
             new Thread(() -> database.movieDao().insertMovie(tvEntity)).start();
-            RatingService.getInstance().change(fullTVShow.getVoteAverage().floatValue(),RatingService.ADD);
+            RatingService.getInstance().change(fullTVShow.getVoteAverage().floatValue(), RatingService.ADD);
             toDownload.decrementAndGet();
 
             checkIfAllDataIsTransported();
@@ -278,53 +277,66 @@ public class MainController extends Application implements Observer, OnAchieveme
     }
 
     public void signOut() {
-        mAuth.signOut();
-        user = mAuth.getCurrentUser();
+        new Thread(()-> {
+            mAuth.signOut();
+            user = mAuth.getCurrentUser();
+            database.genreDao().deleteEverything();
+            database.movieDao().deleteEverything();
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong(LAST_DATE_EDIT_SHARED_PREFERENCES, 0L);
+            editor.apply();
+        }).start();
     }
 
     public void updateInfoFirebase() {
         new Thread(() -> {
-            databaseReference.child("allMovie").setValue(database.movieDao().getAllId());
-            Long last_change = Calendar.getInstance().getTime().getTime();
-            databaseReference.child("last_date_edit").setValue(last_change);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putLong(LAST_DATE_EDIT_SHARED_PREFERENCES, last_change);
-            editor.apply();
+            if (databaseReference != null) {
+                databaseReference.child("allMovie").setValue(database.movieDao().getAllId());
+                Long last_change = Calendar.getInstance().getTime().getTime();
+                databaseReference.child("last_date_edit").setValue(last_change);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putLong(LAST_DATE_EDIT_SHARED_PREFERENCES, last_change);
+                editor.apply();
+            }
         }).start();
     }
 
     public void getLastUpdates(InfoUpToDateListener listen) {
         infoListener = listen;
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
-        databaseReference.child("last_date_edit").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                try {
-                    if (checkIfLastChangeDateChanged(dataSnapshot)) {
-                        new Thread(() -> {
-                            deleteEverythingFromDb();
+        if (databaseReference != null) {
+            databaseReference.child("last_date_edit").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    try {
+                        if (checkIfLastChangeDateChanged(dataSnapshot)) {
+                            new Thread(() -> {
+                                deleteEverythingFromDb();
 
-                            getNewInfo();
+                                getNewInfo();
 
-                        }).start();
-                        //TODO Thread.sleep(2000);
+                            }).start();
+                            //TODO Thread.sleep(2000);
+                        } else {
+                            infoListener.upToDate();
+                            infoListener = null;
+                        }
+                        databaseReference.child("last_date_edit").removeEventListener(this);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    else {
-                        infoListener.upToDate();
-                        infoListener = null;
-                    }
-                    databaseReference.child("last_date_edit").removeEventListener(this);
-                } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+                }
+            });
+        } else {
+            infoListener.upToDate();
+            infoListener = null;
+        }
     }
 
 

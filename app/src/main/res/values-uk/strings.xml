@@ -62,4 +62,12 @@
     <string name="verification">Будь ласка, підтвердіть свою пошту %s</string>
     <string name="sent_to_email">Верифікаційний лист був відправлений на %s</string>
     <string name="action_sign_in_short">Зареєструватись</string>
+    <string name="wrong_password">Паролі не співпадають</string>
+    <string name="wrong_email_or_password">Неправильна пошта або пароль</string>
+    <string name="wait_for_data_to_synchronize">Синхронізація даних! Зачекайте</string>
+    <string name="smth_wrong_with_email_or_password">Упс/././. Щось пішло не так</string>
+    <string name="email_cant_be_empty">Пошта не може бути пустою</string>
+    <string name="enter_email">Введіть існуючу пошту</string>
+    <string name="fail_sent_instructions">Не вдається відновити пошту</string>
+    <string name="sent_instruction">Ми надіслали вам інструкцію на пошту по відновленню пароля</string>
 </resources>

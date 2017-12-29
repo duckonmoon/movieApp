@@ -3,6 +3,8 @@ package movies.test.softserve.movies.activity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.transition.Scene
+import android.transition.TransitionManager
 import android.view.View
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
@@ -10,10 +12,12 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_login.*
 import movies.test.softserve.movies.R
 import movies.test.softserve.movies.controller.MainController
+import movies.test.softserve.movies.event.InfoUpToDateListener
 import movies.test.softserve.movies.util.StartActivityClass
 
 
 class LoginActivity : AppCompatActivity() {
+
 
     private var controller = MainController.getInstance()
 
@@ -44,7 +48,15 @@ class LoginActivity : AppCompatActivity() {
                                 mUser = mAuth.currentUser
                                 if (mUser!!.isEmailVerified) {
                                     controller.user = mUser
-                                    StartActivityClass.startMoviesListActivity(this)
+
+                                    val scene = Scene.getSceneForLayout(container, R.layout.loading_screen_layout, this)
+                                    TransitionManager.go(scene);
+                                    controller.getLastUpdates(object : InfoUpToDateListener {
+                                        override fun upToDate() {
+                                            StartActivityClass.startMoviesListActivity(this@LoginActivity)
+                                        }
+                                    })
+
                                 } else {
                                     Snackbar.make(container, getString(R.string.verification, mUser!!.email), Snackbar.LENGTH_LONG).show()
                                 }

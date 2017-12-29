@@ -40,9 +40,11 @@ import movies.test.softserve.movies.entity.Genre;
 import movies.test.softserve.movies.entity.GuestSession;
 import movies.test.softserve.movies.entity.TVEntity;
 import movies.test.softserve.movies.event.AddedItemsEvent;
+import movies.test.softserve.movies.event.InfoUpToDateListener;
 import movies.test.softserve.movies.event.OnAchievementDoneListener;
 import movies.test.softserve.movies.event.OnFullMovieInformationGet;
 import movies.test.softserve.movies.event.OnFullTVShowInformationGetListener;
+import movies.test.softserve.movies.event.OnInfoUpdatedListener;
 import movies.test.softserve.movies.event.OnSessionGetListener;
 import movies.test.softserve.movies.repository.MoviesRepository;
 import movies.test.softserve.movies.repository.TVShowsRepository;
@@ -70,6 +72,8 @@ public class MainController extends Application implements Observer, OnAchieveme
     private AppRoomDatabase database;
     private DatabaseReference databaseReference;
     private SharedPreferences preferences;
+
+    private InfoUpToDateListener infoListener;
 
     OnFullMovieInformationGet listener = new OnFullMovieInformationGet() {
         @Override
@@ -128,8 +132,6 @@ public class MainController extends Application implements Observer, OnAchieveme
         movies = new ArrayList<>();
         page = 1;
         moviesRepository = MoviesRepository.getInstance();
-        achievementService = AchievementService.getInstance();
-        achievementService.addListener(this);
         moviesRepository.addObserver(this);
         movieService = MovieService.getInstance();
         movieService.addSessionListener(new OnSessionGetListener() {
@@ -291,7 +293,8 @@ public class MainController extends Application implements Observer, OnAchieveme
         }).start();
     }
 
-    public void getLastUpdates() {
+    public void getLastUpdates(InfoUpToDateListener listen) {
+        infoListener = listen;
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
         databaseReference.child("last_date_edit").addValueEventListener(new ValueEventListener() {
             @Override
@@ -302,9 +305,13 @@ public class MainController extends Application implements Observer, OnAchieveme
                             deleteEverythingFromDb();
 
                             getNewInfo();
+
                         }).start();
                         //TODO Thread.sleep(2000);
-
+                    }
+                    else {
+                        infoListener.upToDate();
+                        infoListener = null;
                     }
                     databaseReference.child("last_date_edit").removeEventListener(this);
                 } catch (Exception e) {
@@ -378,8 +385,13 @@ public class MainController extends Application implements Observer, OnAchieveme
             movieService.removeListener(listener);
             tvShowsRepository.removeOnFullTVShowGetListeners(tvShowListener);
             saveNewChangeDateToSharedPreferences();
+            infoListener.upToDate();
+            infoListener = null;
+            achievementService = AchievementService.getInstance();
+            achievementService.addListener(this);
         }
     }
+
 
     private class BooleanHolder {
         boolean aBoolean;

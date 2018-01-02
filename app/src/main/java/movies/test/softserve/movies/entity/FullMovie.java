@@ -75,7 +75,7 @@ public class FullMovie implements Parcelable {
     private String releaseDate;
     @SerializedName("revenue")
     @Expose
-    private Integer revenue;
+    private Long revenue;
     @SerializedName("runtime")
     @Expose
     private Integer runtime;
@@ -118,7 +118,7 @@ public class FullMovie implements Parcelable {
         in.readList(this.productionCompanies, (movies.test.softserve.movies.entity.ProductionCompany.class.getClassLoader()));
         in.readList(this.productionCountries, (movies.test.softserve.movies.entity.ProductionCountry.class.getClassLoader()));
         this.releaseDate = ((String) in.readValue((String.class.getClassLoader())));
-        this.revenue = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.revenue = ((Long) in.readValue((Integer.class.getClassLoader())));
         this.runtime = ((Integer) in.readValue((Integer.class.getClassLoader())));
         in.readList(this.spokenLanguages, (movies.test.softserve.movies.entity.SpokenLanguage.class.getClassLoader()));
         this.status = ((String) in.readValue((String.class.getClassLoader())));
@@ -260,11 +260,11 @@ public class FullMovie implements Parcelable {
         this.releaseDate = releaseDate;
     }
 
-    public Integer getRevenue() {
+    public Long getRevenue() {
         return revenue;
     }
 
-    public void setRevenue(Integer revenue) {
+    public void setRevenue(Long revenue) {
         this.revenue = revenue;
     }
 

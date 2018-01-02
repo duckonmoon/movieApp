@@ -319,7 +319,6 @@ public class MainController extends Application implements Observer, OnAchieveme
                                 getNewInfo();
 
                             }).start();
-                            //TODO Thread.sleep(2000);
                         } else {
                             infoListener.upToDate();
                             infoListener = null;
@@ -415,5 +414,11 @@ public class MainController extends Application implements Observer, OnAchieveme
         boolean aBoolean;
     }
 
+
+     /*@Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }*/
 
 }

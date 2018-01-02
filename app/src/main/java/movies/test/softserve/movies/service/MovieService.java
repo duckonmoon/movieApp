@@ -106,8 +106,13 @@ public class MovieService {
         call.enqueue(new Callback<FullMovie>() {
             @Override
             public void onResponse(@NonNull Call<FullMovie> call, @NonNull Response<FullMovie> response) {
-                FullMovie fullMovie = response.body();
-                fullMovieInformationGetsListener.onMovieGet(fullMovie, movieFirebaseDTO);
+                if (response.body()!=null) {
+                    FullMovie fullMovie = response.body();
+                    fullMovieInformationGetsListener.onMovieGet(fullMovie, movieFirebaseDTO);
+                } else {
+                    Log.e("Error loading",movieFirebaseDTO.getId().toString());
+                    tryToGetMovie(id, movieFirebaseDTO);
+                }
             }
 
             @Override

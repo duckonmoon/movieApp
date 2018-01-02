@@ -157,6 +157,9 @@ public class MainController extends Application implements Observer, OnAchieveme
         user = mAuth.getCurrentUser();
         preferences = getSharedPreferences(LAST_DATE_EDIT_SHARED_PREFERENCES,
                 Context.MODE_PRIVATE);
+
+        movieService.addListener(listener);
+        tvShowsRepository.addOnFullTVShowGetListeners(tvShowListener);
     }
 
     @Override
@@ -277,7 +280,7 @@ public class MainController extends Application implements Observer, OnAchieveme
     }
 
     public void signOut() {
-        new Thread(()-> {
+        new Thread(() -> {
             mAuth.signOut();
             user = mAuth.getCurrentUser();
             database.genreDao().deleteEverything();
@@ -320,6 +323,7 @@ public class MainController extends Application implements Observer, OnAchieveme
                         } else {
                             infoListener.upToDate();
                             infoListener = null;
+                            subscribeToAchievementsNotification();
                         }
                         databaseReference.child("last_date_edit").removeEventListener(this);
                     } catch (Exception e) {
@@ -351,6 +355,7 @@ public class MainController extends Application implements Observer, OnAchieveme
     }
 
     private void deleteEverythingFromDb() {
+        RatingService.getInstance().clear();
         database.genreDao().deleteEverything();
         database.movieDao().deleteEverything();
     }
@@ -365,23 +370,18 @@ public class MainController extends Application implements Observer, OnAchieveme
         databaseReference.child("allMovie").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-                List<MovieFirebaseDTO> movies = new ArrayList<>();
-
-                movieService.addListener(listener);
-                tvShowsRepository.addOnFullTVShowGetListeners(tvShowListener);
                 toDownload = new AtomicInteger();
                 for (DataSnapshot data :
                         dataSnapshot.getChildren()) {
                     toDownload.incrementAndGet();
                     MovieFirebaseDTO movie = data.getValue(MovieFirebaseDTO.class);
-                    movies.add(movie);
                     if (movie.getType().contains("OV")) {
                         movieService.tryToGetMovie(movie.getId(), movie);
                     } else {
                         tvShowsRepository.trytoGetFullTVShow(movie);
                     }
                 }
+                checkIfAllDataIsTransported();
                 databaseReference.child("allMovie").removeEventListener(this);
             }
 
@@ -393,19 +393,27 @@ public class MainController extends Application implements Observer, OnAchieveme
     }
 
     private void checkIfAllDataIsTransported() {
-        if (toDownload.get() == 0) {
-            movieService.removeListener(listener);
-            tvShowsRepository.removeOnFullTVShowGetListeners(tvShowListener);
+        if (toDownload.get() < 1) {
             saveNewChangeDateToSharedPreferences();
             infoListener.upToDate();
             infoListener = null;
-            achievementService = AchievementService.getInstance();
-            achievementService.addListener(this);
+            subscribeToAchievementsNotification();
         }
+    }
+
+
+    private void subscribeToAchievementsNotification() {
+        if (achievementService != null) {
+            achievementService.removeListener(this);
+        }
+        achievementService = AchievementService.getInstance();
+        achievementService.addListener(this);
     }
 
 
     private class BooleanHolder {
         boolean aBoolean;
     }
+
+
 }

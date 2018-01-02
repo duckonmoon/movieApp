@@ -102,6 +102,11 @@ public class RatingService {
         listeners.remove(listener);
     }
 
+    public void clear() {
+        controller.getSharedPreferences(MAIN_SHARED_PREF, Context.MODE_PRIVATE).edit().putFloat(RATING, 0).apply();
+        rating = 0f;
+    }
+
     public enum Levels {
         ZERO(100),
         FIRST(200),

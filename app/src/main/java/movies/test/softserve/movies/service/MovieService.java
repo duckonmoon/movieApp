@@ -45,7 +45,7 @@ public class MovieService {
     private static MovieService INSTANCE;
     private MoviesService service;
     private List<OnMovieInformationGet> listOfListeners;
-    private List<OnFullMovieInformationGet> fullMovieInformationGetsListeners;
+    private OnFullMovieInformationGet fullMovieInformationGetsListener;
     private List<OnSessionGetListener> onSessionGetListenersList;
     private List<OnInfoUpdatedListener> onInfoUpdatedList;
     private List<OnListOfMoviesGetListener> onListOfMoviesGetListeners;
@@ -61,7 +61,6 @@ public class MovieService {
                 .build();
         service = retrofit.create(MoviesService.class);
         listOfListeners = new ArrayList<>();
-        fullMovieInformationGetsListeners = new ArrayList<>();
         onSessionGetListenersList = new ArrayList<>();
         onInfoUpdatedList = new ArrayList<>();
         onListOfMoviesGetListeners = new ArrayList<>();
@@ -108,15 +107,13 @@ public class MovieService {
             @Override
             public void onResponse(@NonNull Call<FullMovie> call, @NonNull Response<FullMovie> response) {
                 FullMovie fullMovie = response.body();
-                for (OnFullMovieInformationGet listener :
-                        fullMovieInformationGetsListeners) {
-                    listener.onMovieGet(fullMovie,movieFirebaseDTO);
-                }
+                fullMovieInformationGetsListener.onMovieGet(fullMovie, movieFirebaseDTO);
             }
 
             @Override
             public void onFailure(@NonNull Call<FullMovie> call, @NonNull Throwable t) {
                 Log.e("Smth went wrong", t.getMessage());
+                tryToGetMovie(id, movieFirebaseDTO);
             }
         });
     }
@@ -321,11 +318,11 @@ public class MovieService {
     }
 
     public void addListener(@NonNull OnFullMovieInformationGet listener) {
-        fullMovieInformationGetsListeners.add(listener);
+        fullMovieInformationGetsListener = listener;
     }
 
-    public void removeListener(@NonNull OnFullMovieInformationGet listener) {
-        fullMovieInformationGetsListeners.remove(listener);
+    public void removeListener() {
+        fullMovieInformationGetsListener = null;
     }
 
     public void addSessionListener(@NonNull OnSessionGetListener listener) {

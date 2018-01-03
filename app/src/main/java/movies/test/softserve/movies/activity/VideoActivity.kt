@@ -10,11 +10,15 @@ import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.activity_video.*
 import movies.test.softserve.movies.R
 import movies.test.softserve.movies.adapter.VideoAdapter
+import movies.test.softserve.movies.controller.MainController
 import movies.test.softserve.movies.entity.Video
 import movies.test.softserve.movies.event.OnVideoGetListener
 import movies.test.softserve.movies.fragment.YoutubeFragment
 import movies.test.softserve.movies.service.MovieService
 import java.util.*
+import android.content.Intent
+import android.net.Uri
+
 
 class VideoActivity : BaseActivity() {
 
@@ -23,6 +27,7 @@ class VideoActivity : BaseActivity() {
     }
 
     private var service = MovieService.getInstance()
+    private var controller = MainController.getInstance()
 
     private lateinit var frame: FrameLayout
     private lateinit var recycler: RecyclerView
@@ -68,10 +73,16 @@ class VideoActivity : BaseActivity() {
 
         recycler.adapter = VideoAdapter(list, object : VideoAdapter.OnItemClickListener {
             override fun onItemClick(video: Video) {
-                youtubeFragment = YoutubeFragment.newInstance(video.key)
-                val transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.frame, youtubeFragment)
-                transaction.commit()
+                if (controller.isAppInstalled("com.google.android.youtube")) {
+                    youtubeFragment = YoutubeFragment.newInstance(video.key)
+                    val transaction = supportFragmentManager.beginTransaction()
+                    transaction.replace(R.id.frame, youtubeFragment)
+                    transaction.commit()
+                } else {
+                    val webIntent = Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://www.youtube.com/watch?v=" + video.key))
+                    startActivity(webIntent)
+                }
             }
         })
 

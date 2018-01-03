@@ -57,7 +57,7 @@ class LoginActivity : AppCompatActivity() {
                                     controller.user = mUser
 
                                     val scene = Scene.getSceneForLayout(container, R.layout.loading_screen_layout, this)
-                                    TransitionManager.go(scene);
+                                    TransitionManager.go(scene)
                                     controller.getLastUpdates(object : InfoUpToDateListener {
                                         override fun upToDate() {
                                             StartActivityClass.startMoviesListActivity(this@LoginActivity)

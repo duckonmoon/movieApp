@@ -5,7 +5,9 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import movies.test.softserve.movies.R;
@@ -111,8 +114,6 @@ public class MainController extends Application implements Observer, OnAchieveme
     private FirebaseAuth mAuth;
     private FirebaseUser user;
 
-    private LiveData<Integer> favourite;
-
     private int previousValue = 0;
     private HashMap<Object, BooleanHolder> dbObservers = new HashMap<>();
 
@@ -142,7 +143,7 @@ public class MainController extends Application implements Observer, OnAchieveme
         movieService.tryToGetSession();
         tvShowsRepository = TVShowsRepository.getInstance();
 
-        favourite = database.movieDao().loadAllFavouriteMovies();
+        LiveData<Integer> favourite = database.movieDao().loadAllFavouriteMovies();
         favourite.observeForever(integer -> {
             if (integer != previousValue) {
                 for (BooleanHolder b :
@@ -415,10 +416,14 @@ public class MainController extends Application implements Observer, OnAchieveme
     }
 
 
-    /*@Override
+    @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
-    }*/
+    }
 
+    public boolean isAppInstalled(String packageName) {
+        Intent mIntent = getPackageManager().getLaunchIntentForPackage(packageName);
+        return mIntent != null;
+    }
 }

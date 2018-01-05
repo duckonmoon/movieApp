@@ -91,4 +91,8 @@
     <string name="wrong_password">Passwords don\'t match or password is too small</string>
     <string name="wrong_email_or_password">Wrong email or password</string>
     <string name="wait_for_data_to_synchronize">Wait for data to synchronize</string>
+    <string name="additional">Additional</string>
+    <string name="profile">Profile</string>
+    <string name="nickname">Nickname</string>
+    <string name="phone">Phone</string>
 </resources>

@@ -10,6 +10,10 @@
             android:icon="@drawable/ic_explore_black_24dp"
             android:title="@string/explore" />
         <item
+            android:id="@+id/tv_shows"
+            android:icon="@drawable/ic_local_movies_black_24dp"
+            android:title="@string/tv_shows" />
+        <item
             android:id="@+id/favourite"
             android:icon="@drawable/ic_star_black_24dp"
             android:title="@string/favourite" />
@@ -21,25 +25,25 @@
             android:id="@+id/genres"
             android:icon="@drawable/ic_voicemail_black_24dp"
             android:title="@string/genres" />
-        <item
-            android:id="@+id/search"
-            android:icon="@drawable/ic_search_black_24dp"
-            android:title="@string/search" />
     </group>
-    <item android:title="@string/tvshows">
+    <item android:title="@string/additional">
         <menu>
             <group
-                android:id="@+id/group2"
+                android:id="@+id/group3"
                 android:checkableBehavior="single">
 
                 <item
-                    android:id="@+id/tv_shows"
-                    android:icon="@drawable/ic_weekend_black_24dp"
-                    android:title="@string/explore" />
+                    android:id="@+id/profile"
+                    android:icon="@drawable/ic_person_black_24dp"
+                    android:title="@string/profile" />
                 <item
                     android:id="@+id/achievements"
-                    android:icon="@drawable/ic_search_black_24dp"
+                    android:icon="@drawable/ic_filter_vintage_black_24dp"
                     android:title="@string/achievements" />
+                <item
+                    android:id="@+id/search"
+                    android:icon="@drawable/ic_search_black_24dp"
+                    android:title="@string/search" />
             </group>
         </menu>
     </item>

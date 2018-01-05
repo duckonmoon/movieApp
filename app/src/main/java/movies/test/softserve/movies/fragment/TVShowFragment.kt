@@ -43,7 +43,7 @@ class TVShowFragment : BaseFragment() {
         mRecyclerView = view as RecyclerView
         val isTablet = resources.getBoolean(R.bool.isTablet)
         if (isTablet) {
-            mRecyclerView.layoutManager = GridLayoutManager(context, 2) as RecyclerView.LayoutManager
+            mRecyclerView.layoutManager = GridLayoutManager(context, 2)
         } else {
             mRecyclerView.layoutManager = LinearLayoutManager(context)
 

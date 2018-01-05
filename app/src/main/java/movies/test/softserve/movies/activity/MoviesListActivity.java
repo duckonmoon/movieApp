@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 
 import java.util.List;
 
+import movies.test.softserve.movies.PersonalCabinetFragment;
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.adapter.MovieListWrapper;
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
@@ -247,6 +248,11 @@ public class MoviesListActivity extends BaseActivity
                 viewModel.setAchievementsFragment(new AchievementsFragment());
             }
             transaction.replace(R.id.constraint_layout, viewModel.getAchievementsFragment());
+        } else if (id == R.id.profile){
+            if (viewModel.getPersonalCabinetFragment() == null){
+                viewModel.setPersonalCabinetFragment(new PersonalCabinetFragment());
+            }
+            transaction.replace(R.id.constraint_layout, viewModel.getPersonalCabinetFragment());
         }
         transaction.commit();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

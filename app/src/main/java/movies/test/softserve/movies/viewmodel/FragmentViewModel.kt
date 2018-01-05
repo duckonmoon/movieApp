@@ -1,6 +1,7 @@
 package movies.test.softserve.movies.viewmodel
 
 import android.arch.lifecycle.ViewModel
+import movies.test.softserve.movies.PersonalCabinetFragment
 import movies.test.softserve.movies.fragment.*
 
 /**
@@ -13,4 +14,5 @@ class FragmentViewModel : ViewModel() {
     var tvShowFragment: TVShowFragment? = null
     var searchFragment: SearchFragment? = null
     var achievementsFragment: AchievementsFragment? = null
+    var personalCabinetFragment: PersonalCabinetFragment? = null
 }

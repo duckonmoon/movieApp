@@ -95,4 +95,7 @@
     <string name="profile">Profile</string>
     <string name="nickname">Nickname</string>
     <string name="phone">Phone</string>
+    <string name="achievements_done">Achievements done : %d</string>
+    <string name="movies_watched">Movies Watched : %d</string>
+    <string name="tv_shows_watched">TVShows Watched : %d</string>
 </resources>

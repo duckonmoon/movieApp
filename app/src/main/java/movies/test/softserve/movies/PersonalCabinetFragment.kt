@@ -16,6 +16,10 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_personal_cabinet.view.*
 import movies.test.softserve.movies.controller.MainController
+import movies.test.softserve.movies.entity.Achievement
+import movies.test.softserve.movies.entity.TVEntity
+import movies.test.softserve.movies.service.DbMovieServiceRoom
+import movies.test.softserve.movies.util.AchievementService
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -27,6 +31,7 @@ class PersonalCabinetFragment : Fragment() {
     private lateinit var thisView: View
     private val user = MainController.getInstance().user
     private val storage = FirebaseStorage.getInstance().getReference("user").child(user.uid).child("user_Photo")
+    private val dbService = DbMovieServiceRoom.getInstance()
 
     private lateinit var fileWithLastPhoto: File
 
@@ -48,6 +53,21 @@ class PersonalCabinetFragment : Fragment() {
             pickImage()
         }
 
+        Thread {
+            val tvShowsCount = dbService.getMovieCount(TVEntity.TYPE.TV_SHOW)
+            val movieCount = dbService.getMovieCount(TVEntity.TYPE.MOVIE)
+            val achievementsDone = Achievement.getAchievements().size - AchievementService.getInstance().achievementsSize
+
+            try {
+                thisView.watched_movies.text = getString(R.string.achievements_done,movieCount)
+                thisView.watched_tv_shows.text = getString(R.string.tv_shows_watched,tvShowsCount)
+                thisView.achievements_done.text = getString(R.string.movies_watched,achievementsDone)
+            } finally {
+
+            }
+
+        }.start()
+
         thisView.nickname.setText(user.displayName)
 
         try {
@@ -61,7 +81,7 @@ class PersonalCabinetFragment : Fragment() {
         storage.downloadUrl.addOnSuccessListener { uri ->
             Picasso.with(activity).cancelRequest(thisView.profile_photo)
             Picasso.with(activity).load(uri).noPlaceholder().centerCrop().fit()
-                    .into(thisView.profile_photo,object :Callback{
+                    .into(thisView.profile_photo, object : Callback {
                         override fun onSuccess() {
                             tacticalSleeping()
 
@@ -71,7 +91,6 @@ class PersonalCabinetFragment : Fragment() {
                         }
 
                         override fun onError() {
-                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                         }
 
                     })
@@ -118,17 +137,17 @@ class PersonalCabinetFragment : Fragment() {
         super.onDestroy()
     }
 
-    private fun tacticalSleeping(){
+    private fun tacticalSleeping() {
         Thread.sleep(200)
     }
 
-    private fun buildBitmapFromImage(image : ImageView) : Bitmap {
+    private fun buildBitmapFromImage(image: ImageView): Bitmap {
         image.isDrawingCacheEnabled = true
         image.buildDrawingCache()
         return image.drawingCache
     }
 
-    private fun saveToFile(bitmap: Bitmap){
+    private fun saveToFile(bitmap: Bitmap) {
         var out: FileOutputStream? = null
         try {
             out = FileOutputStream(fileWithLastPhoto)
@@ -146,7 +165,7 @@ class PersonalCabinetFragment : Fragment() {
         }
     }
 
-    private fun saveToFirebase(bitmap: Bitmap){
+    private fun saveToFirebase(bitmap: Bitmap) {
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()

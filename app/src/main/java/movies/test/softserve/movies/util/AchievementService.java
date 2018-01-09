@@ -106,4 +106,7 @@ public class AchievementService {
         return service.getMoviesSizeWithGenre(achievement.getGenre(), TVEntity.TYPE.MOVIE) >= achievement.getNumber();
     }
 
+    public int getAchievementsSize() {
+        return achievements.size();
+    }
 }

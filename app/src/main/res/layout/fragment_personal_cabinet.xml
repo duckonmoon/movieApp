@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/top_margin"
     android:background="@color/main_background"
     tools:context="movies.test.softserve.movies.PersonalCabinetFragment">
 
@@ -52,6 +51,27 @@
                 android:textColorHint="@android:color/white" />
         </android.support.design.widget.TextInputLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/top_margin"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:id="@+id/watched_movies"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/top_margin"
+            android:textSize="16sp"
+            android:id="@+id/watched_tv_shows"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/top_margin"
+            android:layout_marginBottom="@dimen/top_margin"
+            android:textSize="16sp"
+            android:layout_height="wrap_content"
+            android:id="@+id/achievements_done"/>
 
     </LinearLayout>
 

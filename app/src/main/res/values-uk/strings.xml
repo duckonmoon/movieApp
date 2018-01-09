@@ -70,4 +70,11 @@
     <string name="enter_email">Введіть існуючу пошту</string>
     <string name="fail_sent_instructions">Не вдається відновити пошту</string>
     <string name="sent_instruction">Ми надіслали вам інструкцію на пошту по відновленню пароля</string>
+    <string name="additional">Додатково</string>
+    <string name="profile">Профіль</string>
+    <string name="nickname">Нікнейм</string>
+    <string name="phone">Номер телефону</string>
+    <string name="achievements_done">Досягнень виконано : %d</string>
+    <string name="movies_watched">Фільмів переглянуто : %d</string>
+    <string name="tv_shows_watched">Серіалів переглянуто : %d</string>
 </resources>

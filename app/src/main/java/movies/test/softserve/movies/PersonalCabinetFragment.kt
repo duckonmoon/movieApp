@@ -59,9 +59,9 @@ class PersonalCabinetFragment : Fragment() {
             val achievementsDone = Achievement.getAchievements().size - AchievementService.getInstance().achievementsSize
 
             try {
-                thisView.watched_movies.text = getString(R.string.achievements_done,movieCount)
+                thisView.watched_movies.text = getString(R.string.movies_watched,movieCount)
                 thisView.watched_tv_shows.text = getString(R.string.tv_shows_watched,tvShowsCount)
-                thisView.achievements_done.text = getString(R.string.movies_watched,achievementsDone)
+                thisView.achievements_done.text = getString(R.string.achievements_done,achievementsDone)
             } finally {
 
             }

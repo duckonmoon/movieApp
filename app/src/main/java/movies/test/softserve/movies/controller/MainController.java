@@ -155,12 +155,24 @@ public class MainController extends Application implements Observer, OnAchieveme
             Log.e("Changed", integer.toString());
         });
 
+
         user = mAuth.getCurrentUser();
+
+        reloadUserInfo();
+
         preferences = getSharedPreferences(LAST_DATE_EDIT_SHARED_PREFERENCES,
                 Context.MODE_PRIVATE);
 
         movieService.addListener(listener);
         tvShowsRepository.addOnFullTVShowGetListeners(tvShowListener);
+    }
+
+    private void reloadUserInfo() {
+        try{
+            user.reload();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -11,6 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -49,6 +51,18 @@ class PersonalCabinetFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         thisView = inflater.inflate(R.layout.fragment_personal_cabinet, container, false)
         thisView.setOnClickListener {}
+
+        thisView.done_display_name.setOnClickListener {
+            try {
+                val uPCR = UserProfileChangeRequest.Builder()
+                        .setDisplayName(thisView.nickname.text.toString())
+                        .build()
+                user.updateProfile(uPCR)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
         thisView.profile_photo.setOnClickListener {
             pickImage()
         }
@@ -58,10 +72,13 @@ class PersonalCabinetFragment : Fragment() {
             val movieCount = dbService.getMovieCount(TVEntity.TYPE.MOVIE)
             val achievementsDone = Achievement.getAchievements().size - AchievementService.getInstance().achievementsSize
 
+
             try {
-                thisView.watched_movies.text = getString(R.string.movies_watched,movieCount)
-                thisView.watched_tv_shows.text = getString(R.string.tv_shows_watched,tvShowsCount)
-                thisView.achievements_done.text = getString(R.string.achievements_done,achievementsDone)
+                activity!!.runOnUiThread {
+                    thisView.watched_movies.text = getString(R.string.movies_watched, movieCount)
+                    thisView.watched_tv_shows.text = getString(R.string.tv_shows_watched, tvShowsCount)
+                    thisView.achievements_done.text = getString(R.string.achievements_done, achievementsDone)
+                }
             } finally {
 
             }
@@ -69,6 +86,8 @@ class PersonalCabinetFragment : Fragment() {
         }.start()
 
         thisView.nickname.setText(user.displayName)
+
+        thisView.email.setText(user.email)
 
         try {
             if (fileWithLastPhoto.exists()) {

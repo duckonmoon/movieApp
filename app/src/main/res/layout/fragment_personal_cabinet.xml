@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_background"
-    tools:context="movies.test.softserve.movies.PersonalCabinetFragment">
+    tools:context="movies.test.softserve.movies.fragment.PersonalCabinetFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

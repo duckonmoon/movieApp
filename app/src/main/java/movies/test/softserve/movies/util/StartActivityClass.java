@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.net.Uri;
 
 import movies.test.softserve.movies.activity.LoginActivity;
-import movies.test.softserve.movies.activity.PasswordRestoreActivity;
-import movies.test.softserve.movies.activity.RegistrationActivity;
 import movies.test.softserve.movies.activity.MovieDetailsActivity;
 import movies.test.softserve.movies.activity.MoviesListActivity;
+import movies.test.softserve.movies.activity.PasswordRestoreActivity;
+import movies.test.softserve.movies.activity.RegistrationActivity;
 import movies.test.softserve.movies.activity.SearchActivity;
 import movies.test.softserve.movies.activity.SimilarActivity;
 import movies.test.softserve.movies.activity.TVShowDetailsActivity;

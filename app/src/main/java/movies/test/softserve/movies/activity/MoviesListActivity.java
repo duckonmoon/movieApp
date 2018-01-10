@@ -26,7 +26,6 @@ import android.widget.ProgressBar;
 
 import java.util.List;
 
-import movies.test.softserve.movies.PersonalCabinetFragment;
 import movies.test.softserve.movies.R;
 import movies.test.softserve.movies.adapter.MovieListWrapper;
 import movies.test.softserve.movies.adapter.MovieRecyclerViewAdapter;
@@ -36,6 +35,7 @@ import movies.test.softserve.movies.event.AddedItemsEvent;
 import movies.test.softserve.movies.fragment.AchievementsFragment;
 import movies.test.softserve.movies.fragment.GenreFragment;
 import movies.test.softserve.movies.fragment.MovieFragment;
+import movies.test.softserve.movies.fragment.PersonalCabinetFragment;
 import movies.test.softserve.movies.fragment.SearchFragment;
 import movies.test.softserve.movies.fragment.TVShowFragment;
 import movies.test.softserve.movies.fragment.WatchedFragment;
@@ -248,8 +248,8 @@ public class MoviesListActivity extends BaseActivity
                 viewModel.setAchievementsFragment(new AchievementsFragment());
             }
             transaction.replace(R.id.constraint_layout, viewModel.getAchievementsFragment());
-        } else if (id == R.id.profile){
-            if (viewModel.getPersonalCabinetFragment() == null){
+        } else if (id == R.id.profile) {
+            if (viewModel.getPersonalCabinetFragment() == null) {
                 viewModel.setPersonalCabinetFragment(new PersonalCabinetFragment());
             }
             transaction.replace(R.id.constraint_layout, viewModel.getPersonalCabinetFragment());

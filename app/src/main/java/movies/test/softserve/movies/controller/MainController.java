@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import movies.test.softserve.movies.R;
@@ -57,10 +56,8 @@ import movies.test.softserve.movies.util.Mapper;
 import movies.test.softserve.movies.util.RatingService;
 
 public class MainController extends Application implements Observer, OnAchievementDoneListener {
-    private static MainController INSTANCE;
-
     private static final String LAST_DATE_EDIT_SHARED_PREFERENCES = "LAST_DATE_EDIT";
-
+    private static MainController INSTANCE;
     private List<TVEntity> movies;
     private List<Genre> genres = new ArrayList<>();
     private Integer page;
@@ -76,7 +73,8 @@ public class MainController extends Application implements Observer, OnAchieveme
     private SharedPreferences preferences;
 
     private InfoUpToDateListener infoListener;
-
+    private AtomicInteger toDownload = new AtomicInteger();
+    private Long lDER;
     OnFullMovieInformationGet listener = new OnFullMovieInformationGet() {
         @Override
         public void onMovieGet(FullMovie movie, MovieFirebaseDTO movieDTO) {
@@ -93,7 +91,6 @@ public class MainController extends Application implements Observer, OnAchieveme
             checkIfAllDataIsTransported();
         }
     };
-
     OnFullTVShowInformationGetListener tvShowListener = new OnFullTVShowInformationGetListener() {
         @Override
         public void onFullTVShowGet(FullTVShow fullTVShow, MovieFirebaseDTO movieDTO) {
@@ -105,12 +102,6 @@ public class MainController extends Application implements Observer, OnAchieveme
             checkIfAllDataIsTransported();
         }
     };
-
-
-    private AtomicInteger toDownload = new AtomicInteger();
-    private Long lDER;
-
-
     private FirebaseAuth mAuth;
     private FirebaseUser user;
 
@@ -168,9 +159,9 @@ public class MainController extends Application implements Observer, OnAchieveme
     }
 
     private void reloadUserInfo() {
-        try{
+        try {
             user.reload();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -422,12 +413,6 @@ public class MainController extends Application implements Observer, OnAchieveme
         achievementService.addListener(this);
     }
 
-
-    private class BooleanHolder {
-        boolean aBoolean;
-    }
-
-
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -437,5 +422,9 @@ public class MainController extends Application implements Observer, OnAchieveme
     public boolean isAppInstalled(String packageName) {
         Intent mIntent = getPackageManager().getLaunchIntentForPackage(packageName);
         return mIntent != null;
+    }
+
+    private class BooleanHolder {
+        boolean aBoolean;
     }
 }

@@ -1,6 +1,8 @@
 package movies.test.softserve.movies.activity
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
@@ -16,8 +18,6 @@ import movies.test.softserve.movies.event.OnVideoGetListener
 import movies.test.softserve.movies.fragment.YoutubeFragment
 import movies.test.softserve.movies.service.MovieService
 import java.util.*
-import android.content.Intent
-import android.net.Uri
 
 
 class VideoActivity : BaseActivity() {

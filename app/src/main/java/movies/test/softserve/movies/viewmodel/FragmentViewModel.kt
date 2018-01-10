@@ -1,7 +1,6 @@
 package movies.test.softserve.movies.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import movies.test.softserve.movies.PersonalCabinetFragment
 import movies.test.softserve.movies.fragment.*
 
 /**

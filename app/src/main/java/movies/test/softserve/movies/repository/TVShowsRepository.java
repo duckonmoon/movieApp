@@ -129,10 +129,10 @@ public class TVShowsRepository {
         call.enqueue(new Callback<FullTVShow>() {
             @Override
             public void onResponse(Call<FullTVShow> call, Response<FullTVShow> response) {
-                if (onFullTVShowInformationGetListener != null && response.body()!=null) {
+                if (onFullTVShowInformationGetListener != null && response.body() != null) {
                     onFullTVShowInformationGetListener.onFullTVShowGet(response.body(), movieFirebaseDTO);
                 } else {
-                    Log.e("Error loading",movieFirebaseDTO.getId().toString());
+                    Log.e("Error loading", movieFirebaseDTO.getId().toString());
                     trytoGetFullTVShow(movieFirebaseDTO);
                 }
             }

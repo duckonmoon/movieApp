@@ -1,4 +1,4 @@
-package movies.test.softserve.movies
+package movies.test.softserve.movies.fragment
 
 
 import android.app.Activity.RESULT_OK
@@ -11,12 +11,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_personal_cabinet.view.*
+import movies.test.softserve.movies.R
 import movies.test.softserve.movies.controller.MainController
 import movies.test.softserve.movies.entity.Achievement
 import movies.test.softserve.movies.entity.TVEntity

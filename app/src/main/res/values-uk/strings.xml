@@ -77,4 +77,5 @@
     <string name="achievements_done">Досягнень виконано : %d</string>
     <string name="movies_watched">Фільмів переглянуто : %d</string>
     <string name="tv_shows_watched">Серіалів переглянуто : %d</string>
+    <string name="offline_mode">Неможливо здійснити дію у офлайн режимі</string>
 </resources>

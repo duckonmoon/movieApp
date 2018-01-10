@@ -33,13 +33,17 @@ class LoginActivity : AppCompatActivity() {
         btn_reset_password.setOnClickListener { StartActivityClass.passwordRestoreActivityStart(this) }
 
         if (mUser != null && mUser!!.isEmailVerified) {
-            val scene = Scene.getSceneForLayout(container, R.layout.loading_screen_layout, this)
-            TransitionManager.go(scene)
-            controller.getLastUpdates(object : InfoUpToDateListener {
-                override fun upToDate() {
-                    StartActivityClass.startMoviesListActivity(this@LoginActivity)
-                }
-            })
+            if (controller.networkState) {
+                val scene = Scene.getSceneForLayout(container, R.layout.loading_screen_layout, this)
+                TransitionManager.go(scene)
+                controller.getLastUpdates(object : InfoUpToDateListener {
+                    override fun upToDate() {
+                        StartActivityClass.startMoviesListActivity(this@LoginActivity)
+                    }
+                })
+            } else {
+                StartActivityClass.startMoviesListActivity(this@LoginActivity)
+            }
             return
         }
         btn_login.setOnClickListener({

@@ -7,6 +7,7 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -75,6 +76,8 @@ public class MainController extends Application implements Observer, OnAchieveme
     private InfoUpToDateListener infoListener;
     private AtomicInteger toDownload = new AtomicInteger();
     private Long lDER;
+
+    private Boolean networkState;
     OnFullMovieInformationGet listener = new OnFullMovieInformationGet() {
         @Override
         public void onMovieGet(FullMovie movie, MovieFirebaseDTO movieDTO) {
@@ -117,7 +120,6 @@ public class MainController extends Application implements Observer, OnAchieveme
         super.onCreate();
         database = Room.databaseBuilder(getApplicationContext(), AppRoomDatabase.class,
                 "movies").build();
-
         mAuth = FirebaseAuth.getInstance();
         INSTANCE = this;
         movies = new ArrayList<>();
@@ -156,6 +158,8 @@ public class MainController extends Application implements Observer, OnAchieveme
 
         movieService.addListener(listener);
         tvShowsRepository.addOnFullTVShowGetListeners(tvShowListener);
+
+        networkState = isNetworkConnected();
     }
 
     private void reloadUserInfo() {
@@ -221,6 +225,10 @@ public class MainController extends Application implements Observer, OnAchieveme
 
     public void setCurrentContext(Activity currentContext) {
         this.currentContext = currentContext;
+    }
+
+    public Boolean getNetworkState() {
+        return networkState;
     }
 
     @Override
@@ -422,6 +430,11 @@ public class MainController extends Application implements Observer, OnAchieveme
     public boolean isAppInstalled(String packageName) {
         Intent mIntent = getPackageManager().getLaunchIntentForPackage(packageName);
         return mIntent != null;
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 
     private class BooleanHolder {

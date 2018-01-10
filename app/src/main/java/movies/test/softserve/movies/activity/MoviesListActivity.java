@@ -70,7 +70,6 @@ public class MoviesListActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
-        //TODO mainController.updateInfoFirebase();
         mRecyclerView = findViewById(R.id.recyclerview);
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
         if (isTablet) {
@@ -79,7 +78,6 @@ public class MoviesListActivity extends BaseActivity
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         }
-
 
         mRecyclerView.setAdapter(new MovieListWrapper(new MovieRecyclerViewAdapter(mainController.getMovies(),
                 new MovieRecyclerViewAdapter.OnMovieSelect() {
@@ -154,7 +152,22 @@ public class MoviesListActivity extends BaseActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if (!mainController.getNetworkState()){
+            hideNavigationItems();
+            if (savedInstanceState == null) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                if (viewModel.getMovieFragment() == null) {
+                    viewModel.setMovieFragment(new MovieFragment());
+                }
+                transaction.replace(R.id.constraint_layout, viewModel.getMovieFragment());
+                transaction.commit();
+            }
+        }
+
     }
+
+
 
 
     @Override
@@ -197,12 +210,25 @@ public class MoviesListActivity extends BaseActivity
         } else {
             List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
             if (fragmentList.size() > 0) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                for (Fragment fragment
-                        : fragmentList) {
-                    transaction.remove(fragment);
+                if (mainController.getNetworkState()) {
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    for (Fragment fragment
+                            : fragmentList) {
+                        transaction.remove(fragment);
+                    }
+                    transaction.commit();
+                } else {
+                    if (viewModel.getMovieFragment() == null || !viewModel.getMovieFragment().isVisible()) {
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        viewModel.setMovieFragment(new MovieFragment());
+                        transaction.replace(R.id.constraint_layout, viewModel.getMovieFragment());
+                        transaction.commit();
+                        NavigationView navigationView = findViewById(R.id.nav_view);
+                        navigationView.getMenu().findItem(R.id.favourite).setChecked(true);
+                    } else {
+                        super.onBackPressed();
+                    }
                 }
-                transaction.commit();
             } else {
                 super.onBackPressed();
             }
@@ -261,6 +287,8 @@ public class MoviesListActivity extends BaseActivity
     }
 
 
+
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -296,6 +324,16 @@ public class MoviesListActivity extends BaseActivity
                 }
         );
 
+    }
+
+    private void hideNavigationItems() {
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        Menu navMenu = navigationView.getMenu();
+        navMenu.findItem(R.id.explore).setVisible(false);
+        navMenu.findItem(R.id.genres).setVisible(false);
+        navMenu.findItem(R.id.tv_shows).setVisible(false);
+        navMenu.findItem(R.id.search).setVisible(false);
+        navMenu.findItem(R.id.favourite).setChecked(true);
     }
 }
 

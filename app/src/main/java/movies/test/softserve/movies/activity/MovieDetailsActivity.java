@@ -127,6 +127,7 @@ public class MovieDetailsActivity extends BaseActivity {
             if (fromUser) {
                 service.rateMovie(movie.getId(), rating * 2);
             }
+
         });
         releaseDateView.setText(getString(R.string.release_date, movie.getReleaseDate()));
         voteCountView.setText(getString(R.string.vote_count, movie.getVoteAverage(), movie.getVoteCount()));

@@ -58,7 +58,6 @@
         <activity
             android:name=".activity.PasswordRestoreActivity"
             android:screenOrientation="portrait">
-
         </activity>
     </application>
 

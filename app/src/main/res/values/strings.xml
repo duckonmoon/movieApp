@@ -99,5 +99,6 @@
     <string name="movies_watched">Movies Watched : %d</string>
     <string name="tv_shows_watched">TVShows Watched : %d</string>
     <string name="done" translatable="false">done</string>
+    <string name="error" translatable="false">Smth went wrong</string>
     <string name="offline_mode">can\'t be done in offline Mode</string>
 </resources>

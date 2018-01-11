@@ -96,7 +96,7 @@ public class MovieService {
 
             @Override
             public void onFailure(@NonNull Call<FullMovie> call, @NonNull Throwable t) {
-                Log.e("Smth went wrong", t.getMessage());
+                Log.e(Constants.ERROR, t.getMessage());
             }
         });
     }
@@ -117,7 +117,7 @@ public class MovieService {
 
             @Override
             public void onFailure(@NonNull Call<FullMovie> call, @NonNull Throwable t) {
-                Log.e("Smth went wrong", t.getMessage());
+                Log.e(Constants.ERROR, t.getMessage());
                 tryToGetMovie(id, movieFirebaseDTO);
             }
         });
@@ -137,7 +137,7 @@ public class MovieService {
 
             @Override
             public void onFailure(@NonNull Call<GuestSession> call, @NonNull Throwable t) {
-                Log.e("Smth went wrong", t.getMessage());
+                Log.e(Constants.ERROR, t.getMessage());
             }
         });
 
@@ -150,7 +150,7 @@ public class MovieService {
             call.enqueue(new Callback<Code>() {
                 @Override
                 public void onResponse(@NonNull Call<Code> call, @NonNull Response<Code> response) {
-                    Log.d("Success", response.body().getStatusMessage());
+                    Log.d(Constants.SUCCESS, response.body().getStatusMessage());
                     for (OnInfoUpdatedListener listener :
                             onInfoUpdatedList) {
                         listener.OnInfoUpdated(value / 2);
@@ -159,7 +159,7 @@ public class MovieService {
 
                 @Override
                 public void onFailure(@NonNull Call<Code> call, @NonNull Throwable t) {
-                    Log.e("Smth went wrong", t.getMessage());
+                    Log.e(Constants.ERROR, t.getMessage());
                 }
             });
         } else {
@@ -215,8 +215,8 @@ public class MovieService {
             }
 
             @Override
-            public void onFailure(Call<Page> call, Throwable t) {
-                Log.e("Smth went wrong", t.getMessage());
+            public void onFailure(@NonNull Call<Page> call, @NonNull Throwable t) {
+                Log.e(Constants.ERROR, t.getMessage());
                 getMovieByGenreCompany(genre, productionCompany, page);
             }
         });
@@ -232,12 +232,12 @@ public class MovieService {
                         onListOfGenresGetListeners) {
                     listener.onListOfGenresGet(response.body().getGenres());
                 }
-                Log.w("Success", response.body().toString());
+                Log.w(Constants.SUCCESS, response.body().toString());
             }
 
             @Override
             public void onFailure(@NonNull Call<GenresContainer> call, @NonNull Throwable t) {
-                Log.e("Smth went wrong", t.getMessage());
+                Log.e(Constants.ERROR, t.getMessage());
             }
         });
     }
@@ -247,7 +247,7 @@ public class MovieService {
                 locale);
         call.enqueue(new Callback<VideoContainer>() {
             @Override
-            public void onResponse(Call<VideoContainer> call, Response<VideoContainer> response) {
+            public void onResponse(@NonNull Call<VideoContainer> call, @NonNull Response<VideoContainer> response) {
                 if (response.body().getResults() != null) {
                     for (OnVideoGetListener listener :
                             onVideoGetListeners) {
@@ -257,8 +257,8 @@ public class MovieService {
             }
 
             @Override
-            public void onFailure(Call<VideoContainer> call, Throwable t) {
-                Log.e("Smth went wrong", t.getMessage());
+            public void onFailure(@NonNull Call<VideoContainer> call, @NonNull Throwable t) {
+                Log.e(Constants.ERROR, t.getMessage());
             }
         });
 
@@ -275,7 +275,7 @@ public class MovieService {
                 Locale.getDefault().getLanguage());
         call.enqueue(new Callback<PosterContainer>() {
             @Override
-            public void onResponse(Call<PosterContainer> call, Response<PosterContainer> response) {
+            public void onResponse(@NonNull Call<PosterContainer> call, @NonNull Response<PosterContainer> response) {
                 for (OnPostersGetListener listener :
                         onPostersGetListeners) {
                     if (response.body() != null) {
@@ -287,8 +287,8 @@ public class MovieService {
             }
 
             @Override
-            public void onFailure(Call<PosterContainer> call, Throwable t) {
-                Log.e("Smth went wrong", t.getMessage());
+            public void onFailure(@NonNull Call<PosterContainer> call, @NonNull Throwable t) {
+                Log.e(Constants.ERROR, t.getMessage());
             }
         });
     }
@@ -297,7 +297,7 @@ public class MovieService {
         Call<Page> call = service.getSimilarMovies(movie_id, Constants.API_KEY, Locale.getDefault().getLanguage(), page);
         call.enqueue(new Callback<Page>() {
             @Override
-            public void onResponse(Call<Page> call, Response<Page> response) {
+            public void onResponse(@NonNull Call<Page> call, @NonNull Response<Page> response) {
                 if (response.body() != null) {
                     for (OnSimilarTVEntitiesGetListener listener :
                             onSimilarTVEntitiesGetListeners) {
@@ -307,8 +307,8 @@ public class MovieService {
             }
 
             @Override
-            public void onFailure(Call<Page> call, Throwable t) {
-                Log.e("Smth went wrong", t.getMessage());
+            public void onFailure(@NonNull Call<Page> call, @NonNull Throwable t) {
+                Log.e(Constants.ERROR, t.getMessage());
             }
         });
     }

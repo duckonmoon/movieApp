@@ -85,9 +85,9 @@ public class TVShowsRepository {
         Call<TVPage> call = service.getTopRatedTVShows(Constants.API_KEY, page, Locale.getDefault().getLanguage());
         call.enqueue(new Callback<TVPage>() {
             @Override
-            public void onResponse(Call<TVPage> call, Response<TVPage> response) {
+            public void onResponse(@NonNull Call<TVPage> call, @NonNull Response<TVPage> response) {
                 if (response.body() != null) {
-                    Log.w("Success", response.body().toString());
+                    Log.w(Constants.SUCCESS, response.body().toString());
                     tvShows.addAll(Mapper.mapFromTVShowToTVEntity(response.body().getResults()));
                     page++;
                     for (OnListOfTVShowsGetListener listener :
@@ -98,8 +98,8 @@ public class TVShowsRepository {
             }
 
             @Override
-            public void onFailure(Call<TVPage> call, Throwable t) {
-                Log.e("Smth went wrong", t.getMessage());
+            public void onFailure(@NonNull Call<TVPage> call, @NonNull Throwable t) {
+                Log.e(Constants.ERROR, t.getMessage());
             }
         });
     }
@@ -108,7 +108,7 @@ public class TVShowsRepository {
         Call<FullTVShow> call = service.getTVShow(id, Constants.API_KEY);
         call.enqueue(new Callback<FullTVShow>() {
             @Override
-            public void onResponse(Call<FullTVShow> call, Response<FullTVShow> response) {
+            public void onResponse(@NonNull Call<FullTVShow> call, @NonNull Response<FullTVShow> response) {
                 if (response.body() != null) {
                     for (OnFullTVShowGetListener listener :
                             onFullTVShowGetListeners) {
@@ -118,8 +118,8 @@ public class TVShowsRepository {
             }
 
             @Override
-            public void onFailure(Call<FullTVShow> call, Throwable t) {
-                Log.e("Smth went wrong", t.getMessage());
+            public void onFailure(@NonNull Call<FullTVShow> call, @NonNull Throwable t) {
+                Log.e(Constants.ERROR, t.getMessage());
             }
         });
     }
@@ -128,7 +128,7 @@ public class TVShowsRepository {
         Call<FullTVShow> call = service.getTVShow(movieFirebaseDTO.getId(), Constants.API_KEY);
         call.enqueue(new Callback<FullTVShow>() {
             @Override
-            public void onResponse(Call<FullTVShow> call, Response<FullTVShow> response) {
+            public void onResponse(@NonNull Call<FullTVShow> call, @NonNull Response<FullTVShow> response) {
                 if (onFullTVShowInformationGetListener != null && response.body() != null) {
                     onFullTVShowInformationGetListener.onFullTVShowGet(response.body(), movieFirebaseDTO);
                 } else {
@@ -138,8 +138,8 @@ public class TVShowsRepository {
             }
 
             @Override
-            public void onFailure(Call<FullTVShow> call, Throwable t) {
-                Log.e("Smth went wrong", t.getMessage());
+            public void onFailure(@NonNull Call<FullTVShow> call, @NonNull Throwable t) {
+                Log.e(Constants.ERROR, t.getMessage());
                 trytoGetFullTVShow(movieFirebaseDTO);
             }
         });
@@ -152,8 +152,8 @@ public class TVShowsRepository {
             Call<Code> call = service.rateTVShow(Constants.CONTENT_TYPE, tvShow_id, Constants.API_KEY, session.getGuestSessionId(), new Rating(value));
             call.enqueue(new Callback<Code>() {
                 @Override
-                public void onResponse(Call<Code> call, Response<Code> response) {
-                    Log.d("Success", response.body().getStatusMessage());
+                public void onResponse(@NonNull Call<Code> call, @NonNull Response<Code> response) {
+                    Log.d(Constants.SUCCESS, response.body().getStatusMessage());
                     for (OnInfoUpdatedListener listener
                             : onInfoUpdatedList) {
                         listener.OnInfoUpdated(value / 2);
@@ -161,8 +161,8 @@ public class TVShowsRepository {
                 }
 
                 @Override
-                public void onFailure(Call<Code> call, Throwable t) {
-                    Log.e("Smth went wrong", t.getMessage());
+                public void onFailure(@NonNull Call<Code> call, @NonNull Throwable t) {
+                    Log.e(Constants.ERROR, t.getMessage());
                 }
             });
         } else {
@@ -175,13 +175,13 @@ public class TVShowsRepository {
         Call<VideoContainer> call = service.getVideos(tv_id, season_number, Constants.API_KEY);
         call.enqueue(new Callback<VideoContainer>() {
             @Override
-            public void onResponse(Call<VideoContainer> call, Response<VideoContainer> response) {
-                Log.d("Success", "" + response.body().getResults());
+            public void onResponse(@NonNull Call<VideoContainer> call, @NonNull Response<VideoContainer> response) {
+                Log.d(Constants.SUCCESS, "" + response.body().getResults());
             }
 
             @Override
-            public void onFailure(Call<VideoContainer> call, Throwable t) {
-                Log.e("Smth went wrong", t.getMessage());
+            public void onFailure(@NonNull Call<VideoContainer> call, @NonNull Throwable t) {
+                Log.e(Constants.ERROR, t.getMessage());
             }
         });
     }
@@ -190,7 +190,7 @@ public class TVShowsRepository {
         Call<TVPage> call = service.getSimilarTVShows(tv_id, Constants.API_KEY, Locale.getDefault().getLanguage(), page);
         call.enqueue(new Callback<TVPage>() {
             @Override
-            public void onResponse(Call<TVPage> call, Response<TVPage> response) {
+            public void onResponse(@NonNull Call<TVPage> call, @NonNull Response<TVPage> response) {
                 if (response.body() != null) {
                     for (OnSimilarTVEntitiesGetListener listener :
                             onSimilarTVEntitiesGetListeners) {
@@ -200,8 +200,8 @@ public class TVShowsRepository {
             }
 
             @Override
-            public void onFailure(Call<TVPage> call, Throwable t) {
-                Log.e("Smth went wrong", t.getMessage());
+            public void onFailure(@NonNull Call<TVPage> call, @NonNull Throwable t) {
+                Log.e(Constants.ERROR, t.getMessage());
             }
         });
     }

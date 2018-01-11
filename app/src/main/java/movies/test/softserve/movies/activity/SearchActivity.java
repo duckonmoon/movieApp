@@ -121,7 +121,7 @@ public class SearchActivity extends BaseActivity {
                         case COUNTRIES:
                             break;
                         default:
-                            Log.e("Smth went wrong", "Nothing selected");
+                            Log.e(getString(R.string.error), "Nothing selected");
                             break;
                     }
                     return MovieListWrapper.State.Loading;

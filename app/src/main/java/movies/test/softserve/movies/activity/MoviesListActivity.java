@@ -153,7 +153,7 @@ public class MoviesListActivity extends BaseActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (!mainController.getNetworkState()){
+        if (!mainController.getNetworkState()) {
             hideNavigationItems();
             if (savedInstanceState == null) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -166,8 +166,6 @@ public class MoviesListActivity extends BaseActivity
         }
 
     }
-
-
 
 
     @Override
@@ -285,8 +283,6 @@ public class MoviesListActivity extends BaseActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
 
 
     @Override

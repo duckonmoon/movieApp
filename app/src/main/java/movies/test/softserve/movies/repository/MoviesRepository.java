@@ -1,6 +1,7 @@
 package movies.test.softserve.movies.repository;
 
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.io.IOException;
@@ -39,10 +40,9 @@ public class MoviesRepository extends Observable {
                 .addInterceptor(chain -> {
                     Request request = chain.request();
                     try {
-                        okhttp3.Response response = chain.proceed(request);
-                        return response;
+                        return chain.proceed(request);
                     } catch (Exception e) {
-                        Log.e("Smth went wrong", e.toString());
+                        Log.e(Constants.ERROR, e.toString());
                         numberOfRequests++;
                         try {
                             Thread.sleep(2000);
@@ -79,15 +79,19 @@ public class MoviesRepository extends Observable {
                 Locale.getDefault().getLanguage());
         call.enqueue(new Callback<Page>() {
             @Override
-            public void onResponse(Call<Page> call, Response<Page> response) {
-                movieList = Mapper.mapFromMovieToTVEntity(response.body().getMovies());
-                MoviesRepository.this.setChanged();
-                MoviesRepository.this.notifyObservers();
+            public void onResponse(@NonNull Call<Page> call, @NonNull Response<Page> response) {
+                try {
+                    movieList = Mapper.mapFromMovieToTVEntity(response.body().getMovies());
+                    MoviesRepository.this.setChanged();
+                    MoviesRepository.this.notifyObservers();
+                } catch (Exception e) {
+                    tryToGetAllMovies();
+                }
             }
 
             @Override
-            public void onFailure(Call<Page> call, Throwable t) {
-                Log.e("Smth went wrong", t.toString());
+            public void onFailure(@NonNull Call<Page> call, @NonNull Throwable t) {
+                Log.e(Constants.ERROR, t.toString());
 
             }
         });
@@ -100,15 +104,20 @@ public class MoviesRepository extends Observable {
                     Locale.getDefault().getLanguage());
             call.enqueue(new Callback<Page>() {
                 @Override
-                public void onResponse(Call<Page> call, Response<Page> response) {
-                    movieList = Mapper.mapFromMovieToTVEntity(response.body().getMovies());
-                    MoviesRepository.this.setChanged();
-                    MoviesRepository.this.notifyObservers();
+                public void onResponse(@NonNull Call<Page> call, @NonNull Response<Page> response) {
+                    try {
+                        movieList = Mapper.mapFromMovieToTVEntity(response.body().getMovies());
+                        MoviesRepository.this.setChanged();
+                        MoviesRepository.this.notifyObservers();
+                    } catch (Exception e) {
+                        tryToGetAllMovies();
+                    }
+
                 }
 
                 @Override
-                public void onFailure(Call<Page> call, Throwable t) {
-                    Log.e("Smth went wrong", t.toString());
+                public void onFailure(@NonNull Call<Page> call, @NonNull Throwable t) {
+                    Log.e(Constants.ERROR, t.toString());
 
                 }
             });

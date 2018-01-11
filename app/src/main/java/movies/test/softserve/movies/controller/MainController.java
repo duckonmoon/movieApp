@@ -34,6 +34,7 @@ import java.util.Observer;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import movies.test.softserve.movies.R;
+import movies.test.softserve.movies.constans.Constants;
 import movies.test.softserve.movies.db.entity.Movie;
 import movies.test.softserve.movies.db.entity.MovieFirebaseDTO;
 import movies.test.softserve.movies.entity.Achievement;
@@ -76,8 +77,6 @@ public class MainController extends Application implements Observer, OnAchieveme
     private InfoUpToDateListener infoListener;
     private AtomicInteger toDownload = new AtomicInteger();
     private Long lDER;
-
-    private Boolean networkState;
     OnFullMovieInformationGet listener = new OnFullMovieInformationGet() {
         @Override
         public void onMovieGet(FullMovie movie, MovieFirebaseDTO movieDTO) {
@@ -105,6 +104,7 @@ public class MainController extends Application implements Observer, OnAchieveme
             checkIfAllDataIsTransported();
         }
     };
+    private Boolean networkState;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
 
@@ -255,7 +255,7 @@ public class MainController extends Application implements Observer, OnAchieveme
                     })
                     .show();
         } catch (Exception e) {
-            Log.e("Smth went wrong", e.getMessage());
+            Log.e(Constants.ERROR, e.getMessage());
         }
     }
 
